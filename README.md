@@ -10,6 +10,7 @@ A set of codes for csv and for spectrum manipulation:
 
  TODO:
  - Merge partfiles of results
+ - Clean header
  - Additionnal parameter and file verifications
  - Implement boost:: recursive directory copy
  - Clean preprocessor intructions
@@ -20,7 +21,7 @@ A set of codes for csv and for spectrum manipulation:
 Codes work on Gentoo x64 and Ubuntu x64: bionic and eoan.
 
 Dependencies:
-- g++: C++ >17
+- g++: C++ =>17 mandatory (atm)
 - Boost >1.40
 - Boost::program_options
 - Boost::spirit
