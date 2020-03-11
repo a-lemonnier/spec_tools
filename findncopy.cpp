@@ -1,3 +1,11 @@
+/**
+ * \file findncopy.cpp
+ * \brief Copy files from a list in a new folder.
+ * \author Audric Lemonnier
+ * \version 0.1
+ * \date 09/03/2020
+ */
+
 #include <iostream>
 #include <cstdlib>
 #include <cstdio>

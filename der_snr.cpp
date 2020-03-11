@@ -1,3 +1,15 @@
+/**
+ * \file der_snr.cpp
+ * \brief An C++ implementation of the der_snr fortran code from: 
+ * F. Stoehr et al: DER_SNR: A Simple & General Spectroscopic Signal-to-Noise Measurement Algorithm,\n
+    394, Astronomical Data Analysis Software and Systems (ADASS) XVII\n
+    2008ASPC..394..505S
+ * This code is multi-threaded or not if not available.
+ * \author Audric Lemonnier
+ * \version 0.1
+ * \date 09/03/2020
+ */
+
 #include <iostream>
 #include <cstdlib>
 #include <cstdio>
