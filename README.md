@@ -16,7 +16,6 @@ A set of codes for csv and for spectrum manipulation:
  - Clean preprocessor intructions
  - Add C++11 and C++14 compatibility
 
-
 ---
 Codes work on Gentoo x64 and Ubuntu x64: bionic and eoan.
 
@@ -27,6 +26,21 @@ Dependencies:
 - Boost::spirit
 - Boost::tokenizer
 
+---
+> Get it:
+
+```
+gentoo - spec_tools/build % git clone https://github.com/a-lemonnier/spec_tools.git 
+Clonage dans 'spec_tools'...
+remote: Enumerating objects: 57, done.
+remote: Counting objects: 100% (57/57), done.
+remote: Compressing objects: 100% (46/46), done.
+remote: Total 57 (delta 10), reused 56 (delta 9), pack-reused 0
+Dépaquetage des objets: 100% (57/57), 535.09 Kio | 1.39 Mio/s, fait.
+gentoo - spec_tools/build % cd spec_tools
+```
+
+---
 > Compiling:
 ```
 gentoo - spec_tools/build % cmake .
