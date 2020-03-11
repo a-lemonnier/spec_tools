@@ -1,0 +1,40 @@
+cmake_minimum_required(VERSION 3.0)
+
+project(spec_tools)
+
+add_executable(threshold threshold.cpp)
+add_executable(findncopy findncopy.cpp)
+add_executable(trim trim.cpp)
+add_executable(der_snr der_snr.cpp)
+
+set_property(TARGET threshold PROPERTY CXX_STANDARD 17)
+set_property(TARGET threshold PROPERTY CXX_STANDARD_REQUIRED ON)
+
+set_property(TARGET findncopy PROPERTY CXX_STANDARD 17)
+set_property(TARGET findncopy PROPERTY CXX_STANDARD_REQUIRED ON)
+
+set_property(TARGET trim PROPERTY CXX_STANDARD 17)
+set_property(TARGET trim PROPERTY CXX_STANDARD_REQUIRED ON)
+
+set_property(TARGET der_snr PROPERTY CXX_STANDARD 17)
+set_property(TARGET der_snr PROPERTY CXX_STANDARD_REQUIRED ON)
+
+find_package( Boost 1.40 COMPONENTS program_options REQUIRED timer filesystem)
+
+#Parallel STL disabled
+#find_package(TBB REQUIRED tbb)
+
+include_directories( ${Boost_INCLUDE_DIR} )
+
+#Parallel STL disabled
+#target_link_libraries(threshold LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -ltbb)
+
+target_link_libraries(threshold LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
+target_link_libraries(findncopy LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
+target_link_libraries(trim LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
+target_link_libraries(der_snr LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
+
+install(TARGETS threshold RUNTIME DESTINATION bin)
+install(TARGETS findncopy RUNTIME DESTINATION bin)
+install(TARGETS trim RUNTIME DESTINATION bin)
+install(TARGETS der_snr RUNTIME DESTINATION bin)

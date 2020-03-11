@@ -1,0 +1,465 @@
+#include <iostream>
+#include <cstdlib>
+#include <cstdio>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <cmath>
+#include <functional> 
+#include <thread>
+#include <future>
+#include <boost/program_options.hpp>
+
+#if __has_include (<boost/timer/timer.hpp>)
+#include <boost/timer/timer.hpp>
+#define HAS_BOOST_TIMER
+#endif
+
+
+#if __has_include (<sys/syscall.h>)
+#include <sys/syscall.h>
+#define HAS_SYSCALL
+#endif
+
+#if __has_include (<filesystem>)
+#include <filesystem>
+#define FS_STD
+namespace fs = std::filesystem;
+#elif __has_include (<experimental/filesystem>) && !__has_include (<filesystem>)
+#include <experimental/filesystem>
+#define FS_STDEXP
+namespace fs = std::experimental::filesystem;
+#elif __has_include(<boost/filesystem.hpp>) && !__has_include (<filesystem>) && !__has_include (<experimental/filesystem>)
+#include <boost/filesystem.hpp>
+#define FS_BOOST
+namespace fs = boost::filesystem;
+#else
+#error "No filesystem header found"
+#endif
+
+#include "csv.h"
+
+// Reference
+// ----------------------------------------------------
+// F. Stoehr et al: DER_SNR: A Simple & General Spectroscopic Signal-to-Noise Measurement Algorithm
+// 394, Astronomical Data Analysis Software and Systems (ADASS) XVII
+// 2008ASPC..394..505S
+// ----------------------------------------------------
+
+// Prototype
+// ----------------------------------------------------
+
+void compute(const std::vector<std::string>& list, const std::string& sOutput);
+void compute_sep(const std::vector<std::string>& list, const std::string& sOutput, const char& cSep);
+
+bool write(std::vector<std::string> vsResults, const std::string& sOutput);
+bool write(std::vector<std::string> vsResults, const std::string& sOutput, const char& cSep);
+
+float der_snr(const std::vector<float> &vFlux);
+double der_snr(const std::vector<double> &vFlux);
+
+float median(const std::vector<float> &vFlux);
+double median(const std::vector<double> &vFlux);
+
+// ----------------------------------------------------
+
+int main(int argc, char** argv) {
+    
+#ifdef HAS_BOOST_TIMER    
+    boost::timer::cpu_timer btTimer;
+#endif
+    
+// Parse cmd line
+// ----------------------------------------------------  
+    
+    namespace po = boost::program_options;
+    po::options_description description("Usage");
+    
+    description.add_options()
+    ("help,h", "Display this help message")
+    ("filename,f",  po::value<std::string>(),"Filename of the spectrum")
+    ("directory,d",  po::value<std::string>(),"Directory where compute the S/N")
+    ("output,o",  po::value<std::string>()->default_value("output.csv"),"Filename of results")
+    ("separator,s",  po::value<char>()->default_value('\t'),"The column separator. Do not set this option for \\tab.")
+    ("exclude,e",  po::value<std::string>(),"Exclude a string in filenames");
+    
+    po::variables_map vm;
+    po::store(po::command_line_parser(argc, argv).options(description).run(), vm);
+    po::notify(vm);
+    
+     if (vm.count("help") || vm.size()<1 || (!vm.count("filename") && !vm.count("directory"))) {
+        std::cout << description;
+        std::cout << "\n";
+        std::cout << "Examples:\n";
+        std::cout << "./der_snr -i CPD-591792.obs\n";
+        std::cout << "- CPD-591792.obs: S/N = 95.68\n\n";
+        std::cout << "./der_snr -d data\n";
+        std::cout << "\033[3;32m\u25B6\033[0m \033[1;34mder_snr\033[0m\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m: starting 8 async threads\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759980)\033[0m: S/N for 521 files.\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759981)\033[0m: S/N for 521 files.\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759982)\033[0m: S/N for 521 files.\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759983)\033[0m: S/N for 521 files.\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759984)\033[0m: S/N for 521 files.\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759985)\033[0m: S/N for 521 files.\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759986)\033[0m: S/N for 521 files.\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759987)\033[0m: S/N for 524 files.\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m:  56.395825s wall, 323.050000s user + 0.450000s system = 323.500000s CPU (573.6%)\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m: output: output.csv\n";
+        
+        std::cout << "\nRef:\n";
+        std::cout << "F. Stoehr et al: DER_SNR: A Simple & General Spectroscopic Signal-to-Noise Measurement Algorithm\n";
+        std::cout << "394, Astronomical Data Analysis Software and Systems (ADASS) XVII\n";
+        std::cout << "2008ASPC..394..505S\n";
+        return EXIT_SUCCESS;
+    }
+    
+    // ----------------------------------------------------
+    
+    bool bDefExclude=false;
+    bool bDefSep=false;
+    
+    std::string sOutput;
+    std::string sExclude;
+    
+    char cSep;
+    
+    fs::path pDirectory;
+    fs::path pFilename;
+    fs::path pOutput;
+    
+    std::cout << "\033[3;32m\u25B6\033[0m \033[1;34mder_snr\033[0m\n";
+    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m: check command line\n";
+    
+    if (vm.count("directory") && vm.count("filename")) {
+        std::cerr << "\033[5;31m\u2639\033[0m \033[1;30mder_snr\033[0m: error: ambiguous entries\n";
+        return EXIT_FAILURE;
+    }
+    
+    if (vm.count("directory")) {
+        pDirectory=fs::path(vm["directory"].as<std::string>());
+        if (!fs::is_directory(pDirectory)) {
+            std::cerr << "\033[5;31m\u2639\033[0m \033[1;30mder_snr\033[0m: error: "+pDirectory.string()+" does not exist\n";
+            return EXIT_FAILURE;
+        }
+    }
+    
+    if (vm.count("filename")) {
+        pFilename=fs::path(vm["directory"].as<std::string>());
+        if (!fs::exists(pFilename)) {
+            std::cerr << "\033[5;31m\u2639\033[0m \033[1;30mder_snr\033[0m: error: "+pFilename.string()+" does not exist\n";
+            return EXIT_FAILURE;
+        }
+    }
+    
+    if (vm.count("output")) {
+        pOutput=fs::path(vm["output"].as<std::string>());
+        if (fs::exists(pOutput)) {
+            std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m: "+pOutput.string()+" exists: deleting\n";
+            fs::remove(pOutput);
+        }
+        sOutput=vm["output"].as<std::string>();
+    }
+    
+    if (vm.count("separator")) {
+        cSep=vm["separator"].as<char>();
+        bDefSep=true;
+    }
+    
+    if (vm.count("exclude")) {
+        sExclude=vm["exclude"].as<std::string>();
+        bDefExclude=true;
+    }
+    
+    if (vm.count("filename")) {
+        
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m: compute S/N for 1 file\n";
+        
+        std::string sFilename=vm["filename"].as<std::string>();
+        
+        _csv<float> csv(sFilename, '\t');
+        
+        if(csv.read()) {
+            
+            csv.set_verbose(_csv<float>::eVerbose::QUIET);
+            
+            std::cout << "- "+sFilename+": S/N = " << der_snr(csv.select_column(1)) << "\n";
+        }
+    }
+    
+    if (vm.count("directory")) {
+        
+        fs::recursive_directory_iterator step0(pDirectory);
+        std::vector<std::string> list;
+        
+        if (bDefExclude) {
+            for(auto &file: boost::make_iterator_range(step0,{}) ) 
+                // csv<> unable to parse non csv file
+                if (!fs::is_directory(file) && 
+                    file.path().has_extension() && 
+                    file.path().filename().string().find(std::string(".tar"))==std::string::npos &&
+                    file.path().filename().string().find(std::string(".tar.gz"))==std::string::npos &&
+                    file.path().filename().string().find(std::string(".tgz"))==std::string::npos &&
+                    file.path().filename().string().find(std::string(".zip"))==std::string::npos &&
+                    file.path().filename().string().find(std::string(".txt"))==std::string::npos &&
+                    file.path().filename().string().find(std::string(".directory"))==std::string::npos &&
+                    file.path().filename().string().find(sExclude)==std::string::npos )
+                    list.emplace_back(file.path().relative_path().string());       
+        }
+        else {
+            for(auto &file: boost::make_iterator_range(step0,{}) ) 
+                // csv<> unable to parse non csv file
+                if (!fs::is_directory(file) && 
+                    file.path().has_extension() && 
+                    file.path().filename().string().find(std::string(".tar"))==std::string::npos &&
+                    file.path().filename().string().find(std::string(".tar.gz"))==std::string::npos &&
+                    file.path().filename().string().find(std::string(".tgz"))==std::string::npos &&
+                    file.path().filename().string().find(std::string(".zip"))==std::string::npos &&
+                    file.path().filename().string().find(std::string(".txt"))==std::string::npos &&
+                    file.path().filename().string().find(std::string(".directory"))==std::string::npos )
+                    list.emplace_back(file.path().relative_path().string());
+        }
+        
+        int iMax_thread=std::thread::hardware_concurrency();
+        
+        if (iMax_thread>1) {
+            const std::size_t stSize_divided=list.size()/iMax_thread;
+            
+            std::vector<std::vector<std::string> > vvsList_divided;
+            
+            for(std::size_t i=0; i< iMax_thread-1; i++) 
+                vvsList_divided.emplace_back(std::vector<std::string>(list.begin()+i*stSize_divided, list.begin() + stSize_divided*(i+1)));
+            
+            // 1 extra thread for extra files : rest of division
+            vvsList_divided.emplace_back(std::vector<std::string>(list.begin()+(iMax_thread-1)*stSize_divided, list.end()));
+            
+            std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m: starting " << iMax_thread <<" async threads\n";
+            
+            // let's don't decide the flag
+            std::launch lFlag=std::launch::async | std::launch::deferred;
+            
+            std::vector<std::future<void> > vfThread;
+            
+            if (bDefSep) {
+                int iCount=0;
+                for(auto t_list: vvsList_divided) {
+                    iCount++;
+                    std::string sNewoutput="part"+std::to_string(iCount)+"_"+sOutput; 
+                    vfThread.emplace_back(std::async(lFlag, compute_sep, t_list, sNewoutput, cSep));
+                }
+            }
+            else {
+                int iCount=0;
+                for(auto t_list: vvsList_divided) {
+                    iCount++;
+                    std::string sNewoutput="part"+std::to_string(iCount)+"_"+sOutput; 
+                    vfThread.emplace_back(std::async(lFlag, compute, t_list, sNewoutput));
+                }
+            }
+            std::for_each(vfThread.begin(), vfThread.end(), [](std::future<void> &th) { th.get(); });
+        }  
+        else {
+            std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m: multi-threading disabled\n";
+            compute(list, sOutput);
+        }
+    }
+#ifdef HAS_BOOST_TIMER
+    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m: " << btTimer.format();
+#endif
+    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m: output: " << sOutput << "\n";    
+    
+    return EXIT_SUCCESS;
+}
+
+// ----------------------------------------------------
+// ----------------------------------------------------
+
+void compute(const std::vector<std::string>& vsList, const std::string& sOutput) {
+    std::vector<std::string> vsResults;
+    
+    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute("<< syscall(__NR_gettid) << ")\033[0m: compute S/N for " << vsList.size() << " files\n";
+    
+    vsResults.emplace_back("File\tSNR\n");
+    
+    for(auto sFile: vsList) {
+        
+        _csv<float> csv(sFile, '\t');
+        
+        if(csv.read()) {
+            
+            csv.set_verbose(_csv<float>::eVerbose::QUIET);
+            
+            vsResults.emplace_back(sFile+"\t"+std::to_string(der_snr(csv.select_column(1))) + "\n");
+        }
+    }
+    
+    write(vsResults, sOutput);
+}
+
+void compute_sep(const std::vector<std::string>& vsList, const std::string& sOutput, const char& cSep) {
+    std::vector<std::string> vsResults;
+    
+#ifdef HAS_SYSCALL
+    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute("<< syscall(__NR_gettid) << ")\033[0m: compute S/N for " << vsList.size() << " files\n";
+#else
+    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute()\033[0m: compute S/N for " << vsList.size() << " files\n";
+#endif
+    
+    vsResults.emplace_back("File\tSNR\n");
+    
+    for(auto sFile: vsList) {
+        
+        _csv<float> csv(sFile, cSep);
+        
+        if(csv.read()) {
+            
+            csv.set_verbose(_csv<float>::eVerbose::QUIET);
+            
+            vsResults.emplace_back(sFile+"\t"+std::to_string(der_snr(csv.select_column(1))) + "\n");
+        }
+    }
+    
+    write(vsResults, sOutput);
+}
+
+bool write(std::vector<std::string> vsResults, const std::string& sOutput) {
+    bool sStatus=true;
+    
+    std::fstream fFlux(sOutput, std::ios::out);
+    
+    if (fFlux) {
+        for(auto sS: vsResults)
+            fFlux << sS;
+        
+        fFlux.close();
+    }
+    else {
+        std::cerr << "\033[5;31m\u2639\033[0m \033[1;30mwrite()\033[0m: error: error: cannot open "+sOutput+"\n";
+        sStatus=false;
+    }
+    return sStatus;
+}
+
+float median(const std::vector<float> &vFlux) {    
+    int iSize=vFlux.size();
+    
+    if (iSize==0) {
+        std::cout << "\033[5;31m\u2639\033[0m \033[1;30mmedian()\033[0m: error flux is empty\n";
+        return 0;
+    }
+    
+    std::vector<float> vVec(vFlux);
+    std::sort(vVec.begin(), vVec.end());
+    
+    if (iSize%2==0)     
+        return (vVec[iSize/2-1]+vVec[iSize/2])/2;
+    else
+        return vVec[iSize/2];
+}
+
+double median(const std::vector<double> &vFlux) {
+    int iSize=vFlux.size();
+    
+    if (iSize==0) {
+        std::cout << "\033[5;31m\u2639\033[0m \033[1;30mmedian()\033[0m: error: flux is empty\n";
+        return 0;
+    }
+    
+    std::vector<double> vVec(vFlux);
+    std::sort(vVec.begin(), vVec.end());
+    
+    if (iSize%2==0)
+        return (vVec[iSize/2-1]+vVec[iSize/2])/2;
+    else
+        return vVec[iSize/2];
+    
+    return 0;
+}
+
+
+float der_snr(const std::vector<float> &vFlux) {
+    if (vFlux.empty()) {
+        std::cout << "\033[5;31m\u2639\033[0m \033[1;30mder_snr()\033[0m: error flux is empty\n";
+        return 0;
+    }
+    
+    if (vFlux.size()>4) {
+        std::vector<float> vNo0(vFlux);
+        
+        vNo0.erase(std::remove_if(vNo0.begin(), vNo0.end(), 
+                                   [&](float fF) { return fF<0; }),vNo0.end());
+        
+        std::vector<float> vSum0=std::vector<float>(vNo0.begin()+2, vNo0.end()-2);
+        std::vector<float> vSum1=std::vector<float>(vNo0.begin()  , vNo0.end()-4);
+        std::vector<float> vSum2=std::vector<float>(vNo0.begin()+4, vNo0.end()  );
+        
+        // Sum1 = Sum1 + Sum2 
+        std::transform(vSum1.begin(), vSum1.end(), 
+                       vSum2.begin(), vSum1.begin(), 
+                       std::plus<float>());
+        
+        // Sum0 = 2*Sum0 
+        std::transform(vSum0.begin(), vSum0.end(), 
+                       vSum0.begin(),
+                       std::bind(std::multiplies<float>(), std::placeholders::_1, 2.0));
+        
+        // Sum0 = Sum0 - Sum1
+        std::transform(vSum0.begin(), vSum0.end(), 
+                       vSum1.begin(), vSum0.begin(), 
+                       std::minus<float>());
+        
+        // Sum0 = abs(Sum0)
+        std::for_each(vSum0.begin(), vSum0.end(), 
+                      [](float &fF) { fF=abs(fF);});
+        
+        float fNoise=1.482602/sqrt(6)*median(vSum0);
+        float fSignal=median(vNo0);
+        
+        return fSignal/fNoise;
+    }
+    return -1;
+}
+
+double der_snr(const std::vector<double> &vFlux) {
+    if (vFlux.empty()) {
+        std::cout << "\033[5;31m\u2639\033[0m \033[1;30mder_snr()\033[0m: error: flux is empty\n";
+        return 0;
+    }
+    
+    if (vFlux.size()>4) {
+        std::vector<double> vNo0(vFlux);
+        
+        vNo0.erase(std::remove_if(vNo0.begin(), vNo0.end(), 
+                                  [](float fF) { return fF<0.0; }), vNo0.end());
+        
+        std::vector<double> vSum0=std::vector<double>(vNo0.begin()+2, vNo0.end()-2);
+        std::vector<double> vSum1=std::vector<double>(vNo0.begin()  , vNo0.end()-4);
+        std::vector<double> vSum2=std::vector<double>(vNo0.begin()+4, vNo0.end()  );
+        
+        // Sum1 = Sum1 + Sum2 
+        std::transform(vSum1.begin(), vSum1.end(), 
+                       vSum2.begin(), vSum1.begin(), 
+                       std::plus<double>());
+        
+        // Sum0 = 2*Sum0 
+        std::transform(vSum0.begin(), vSum0.end(), 
+                       vSum0.begin(),
+                       std::bind(std::multiplies<double>(), std::placeholders::_1, 2));
+        
+        // Sum0 = Sum0 - Sum1
+        std::transform(vSum0.begin(), vSum0.end(), 
+                       vSum1.begin(), vSum0.begin(), 
+                       std::minus<double>());
+        
+        // Sum0 = abs(Sum0)
+        std::for_each(vSum0.begin(), vSum0.end(), 
+                      [](double &fF) { fF=abs(fF);});
+        
+        double fNoise=1.482602/sqrt(6)*median(vSum0);
+        double fSignal=median(vNo0);
+        
+        return fSignal/fNoise;
+    }
+    return -1;
+}
