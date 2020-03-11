@@ -44,7 +44,7 @@ gentoo - /home/gentoo % cd spec_tools
 ---
 > Compiling:
 ```
-gentoo - spec_tools/build % cmake .
+gentoo - spec_tools/ % cmake .
 -- The C compiler identification is GNU 9.2.1
 -- The CXX compiler identification is GNU 9.2.1
 -- Check for working C compiler: /usr/bin/cc
@@ -70,7 +70,7 @@ gentoo - spec_tools/build % cmake .
 -- Generating done
 -- Build files have been written to: /home/gentoo/Prog/cpp/spec_tools
 
-gentoo - spec_tools/build % make
+gentoo - spec_tools/ % make
 Scanning dependencies of target findncopy
 [ 12%] Building CXX object CMakeFiles/findncopy.dir/findncopy.cpp.o
 [ 25%] Linking CXX executable findncopy
@@ -93,7 +93,7 @@ Scanning dependencies of target der_snr
 ---
 > findncopy
 ```
-gentoo - spec_tools/build % ./findncopy -h
+gentoo - spec_tools/ % ./findncopy -h
 Usage:
   -h [ --help ]                     Display this help message
   -n [ --namelist ] arg             Filename of the list of name to find
@@ -125,7 +125,7 @@ CPD-591662
 ---
 > trim
 ```
-gentoo - spec_tools/build % ./trim -h
+gentoo - spec_tools/ % ./trim -h
 Usage:
   -h [ --help ]                         Display this help message
   -l [ --min ] arg                      Minimum wavelength
@@ -153,7 +153,7 @@ Example:
 ---
 > threshold
 ```
-gentoo - spec_tools/build % ./threshold -h
+gentoo - spec_tools/ % ./threshold -h
 
 Usage:
   -h [ --help ]                         Display this help message
@@ -182,7 +182,7 @@ Example:
 ---
 > der_snr
 ```
-gentoo - spec_tools/build % ./der_snr -h
+gentoo - spec_tools/ % ./der_snr -h
 
 Usage:
   -h [ --help ]                     Display this help message
