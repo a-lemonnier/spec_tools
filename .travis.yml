@@ -1,0 +1,29 @@
+language: cpp
+compiler: gcc
+os: linux 
+arch: amd64 
+dist: bionic
+env:
+    - CXX_STANDARD=c++17
+addons:
+  apt:
+    packages:
+        - g++-7
+        - libboost-all-dev
+        - cmake-data
+        - cmake
+            
+script:
+    - cmake .
+    - make
+    
+after_success:
+    chmod +x run.sh && ./run.sh
+
+branches:
+  only:
+      - master
+notifications:
+  email: false
+
+      

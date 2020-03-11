@@ -1,0 +1,11 @@
+/doc/latex/*
+!/doc/latex/refman.pdf
+/doc/html/*
+spec_tools.kdev4
+/.kdev4
+Doxyfile
+/build
+CMakeCache.txt
+cmake_install.cmake
+/CMakeFiles
+.directory
