@@ -9,5 +9,6 @@
 ./der_snr -d data -o all_snr.csv
 ./der_snr -d spectra -o selected_snr.csv
 
-cat selected_snr.csv
+
+./shift -h
 

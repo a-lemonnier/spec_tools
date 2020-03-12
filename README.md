@@ -7,8 +7,10 @@ A set of codes for csv and for spectrum manipulation:
  - **trim**.cpp: cut spectrum between two wavelengths
  - **findncopy**.cpp: find and copy files from a file list
  - **der_snr**.cpp: compute the Signal-to-Noise of a spectrum
+ - **shift**.cpp: shift whole spectrum by a given wavelength
 
  TODO:
+ - shift.cpp
  - Merge partfiles of results
  - Clean header
  - Additionnal parameter and file verifications
