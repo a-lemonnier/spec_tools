@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 3.0)
 
 project(spec_tools)
 
-add_executable(threshold threshold.cpp)
-add_executable(findncopy findncopy.cpp)
-add_executable(trim trim.cpp)
-add_executable(der_snr der_snr.cpp)
-add_executable(shift shift.cpp)
+add_executable(threshold threshold.cpp msg.cpp)
+add_executable(findncopy findncopy.cpp msg.cpp)
+add_executable(trim trim.cpp msg.cpp)
+add_executable(der_snr der_snr.cpp msg.cpp)
+add_executable(shift shift.cpp msg.cpp)
 
 set_property(TARGET threshold PROPERTY CXX_STANDARD 17)
 set_property(TARGET threshold PROPERTY CXX_STANDARD_REQUIRED ON)

@@ -42,15 +42,34 @@ namespace fs = boost::filesystem;
 #endif
 
 #include "csv.h"
+#include "msg.h"
+
+// Enum
+// ----------------------------------------------------
+enum eMsg {START, MID, END, ERROR, THREADS };
+
+// ----------------------------------------------------
 
 // Prototype
 // ----------------------------------------------------
-void shift(const std::vector<std::string> &list, float fWavelength);
+void add(const std::vector<std::string> &list, float fWavelength);
+
+void msg(const std::string &sMsg, eMsg emType);
+
+template<typename _T>
+void msg(const std::string &sMsg, eMsg emType, _T TAdd);
+
+template<typename _T0, typename _T1>
+void msg(const std::string &sMsg, eMsg emType, _T0 T0Add, _T1 T1Add);
+
+template<typename _T0, typename _T1, typename _T2>
+void msg(const std::string &sMsg, eMsg emType, _T0 T0Add, _T1 T1Add, _T2 T2Add);
+
 
 // ----------------------------------------------------
 
 int main(int argc, char** argv) {
-    
+        
 #ifdef HAS_BOOST_TIMER    
     boost::timer::cpu_timer btTimer;
 #endif
@@ -66,14 +85,14 @@ int main(int argc, char** argv) {
     ("wavelength,w",  po::value<float>(),"Wavelength")
     ("filename,f",  po::value<std::string>(),"Shift a single file")
     ("input_folder,i",  po::value<std::string>(),"Name of the folder where original data are")
-    ("output_folder,o",  po::value<std::string>()->default_value("data_out"),"Set the directory where store new data.");
+    ("output,o",  po::value<std::string>()->default_value("data_out"),"Set the directory or the file where store new data.")
+    ("separator,s",  po::value<char>()->default_value('\t'),"The column separator. Do not set this option for \\tab.");
     
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(description).run(), vm);
     po::notify(vm);
     
     if (vm.count("help") || !vm.count("wavelength") || !(vm.count("input_folder") ^ vm.count("filename"))  || vm.size()<2) {
-        std::cout << !vm.count("wavelength") || !(vm.count("input_folder") ^ vm.count("filename"));
         std::cout << description;
         std::cout << "\nExample:\n";
         std::cout << "./shift -w 1.0 -i data -o spectra_shifted\n";
@@ -92,57 +111,69 @@ int main(int argc, char** argv) {
         return EXIT_SUCCESS;
     }
 
-// ----------------------------------------------------  
-    
     float fWavelength=vm["wavelength"].as<float>();
     
+    std::string sFilename;
+    std::string sOutput=vm["output"].as<std::string>();
+    char cSep=vm["separator"].as<char>();
+    
     fs::path pFilename;
-    fs::path path(vm["output_folder"].as<std::string>());
+    
+    // one copies the original folder and then works on the original
+    fs::path path(vm["output"].as<std::string>());
     fs::path path_out;
+ 
+// ----------------------------------------------------  
+    
+    _msg msgM;
+    
+    msgM.set_name("shift");
+    
+    msgM.msg(_msg::eMsg::START);
+    msgM.msg(_msg::eMsg::MID, "check command line");
     
     if (fWavelength<=0) {
-        std::cerr << "\033[5;31m\u2639\033[0m \033[1;30mshift\033[0m: bad wavelength: "+std::to_string(fWavelength)+"\n";
+         msgM.msg(_msg::eMsg::ERROR, "bad wavelength:", fWavelength);
         return EXIT_FAILURE;
     }
-   
+    
     if (vm.count("filename")) {
-        path=fs::path(vm["filename"].as<std::string>());
-        if (fs::exists(pFilename)) {
-            std::cerr << "\033[3;32m\u2690\033[0m \033[1;34mshift\033[0m: error file " << pFilename.string() << " exist\n";
+        sFilename=vm["filename"].as<std::string>();
+        path=fs::path(sFilename);
+        if (!fs::exists(path)) {
+            msgM.msg(_msg::eMsg::ERROR, "file", sFilename, "does not exist");
             return EXIT_FAILURE;
         }
     }
    
     if (vm.count("input_folder")) {
-        
+        sFilename=vm["input_folder"].as<std::string>();
         path_out=fs::path(vm["input_folder"].as<std::string>());
-        
         if (!fs::exists(path_out)) {
-            std::cerr << "\033[3;32m\u2690\033[0m \033[1;34mshift\033[0m: error directory " << path_out.string() << " does not exist\n";
+             msgM.msg(_msg::eMsg::ERROR, "directory", sFilename, "does not exist\n");
             return EXIT_FAILURE;
         }
         
+        // copy the original data with the available lib
         if (!fs::exists(path)) {
 #ifdef FS_STD 
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mthreshold\033[0m: copying folder using std::\n"; 
+        msgM.msg(_msg::eMsg::MID, "copying folder using std::"); 
         fs::copy(path_out,path, fs::copy_options::recursive);
 #endif
 #ifdef FS_STDEXP
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mthreshold\033[0m: copying folder using std::experimental\n"; 
+        msgM.msg(_msg::eMsg::MID, "copying folder using std::experimental"; 
         fs::copy(path_out,path, fs::copy_options::recursive);
 #endif
 #ifdef FS_BOOST
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mthreshold\033[0m: copying folder using boost:: : not implemented !\n";
+        msgM.msg(_msg::eMsg::MID, "copying folder using boost:: : not implemented !");
         return EXIT_FAILURE;
 #endif
         }
         else { 
-            std::cerr << "\033[5;31m\u2639\033[0m \033[1;30mshift\033[0m: error directory " << path.string() << " exists\n";
+            msgM.msg(_msg::eMsg::ERROR, "error directory", path.string(), "exists");
             return EXIT_FAILURE;
         }
     } 
-    
-    std::cout << "\033[3;32m\u25B6\033[0m \033[1;34mshift\033[0m\n";
     
      if (vm.count("input_folder") && fs::is_directory(path)) {
         
@@ -175,7 +206,7 @@ int main(int argc, char** argv) {
             // 1 extra thread for extra files : rest of division
             list_divided.emplace_back(std::vector<std::string>(list.begin()+(max_thread-1)*size_divided, list.end()));
             
-            std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift\033[0m: starting " << max_thread <<" async threads\n";
+            msgM.msg(_msg::eMsg::MID, "starting", max_thread, "async threads");
             
             // let's dont decide the flag
             std::launch flag=std::launch::async | std::launch::deferred;
@@ -183,20 +214,30 @@ int main(int argc, char** argv) {
             std::vector<std::future<void> > thread;
             
             for(auto t_list: list_divided)
-                thread.emplace_back(std::async(flag,shift,t_list,fWavelength));
+                thread.emplace_back(std::async(flag,add,t_list,fWavelength));
             
             std::for_each(thread.begin(), thread.end(), [](std::future<void> &th) { th.get(); });
         }  
         else {
-            std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift\033[0m: multi-threading disabled\n";
-            shift(list, fWavelength);
+            msgM.msg(_msg::eMsg::MID, "multi-threading disabled");
+            add(list, fWavelength);
         }
     }
     else {
-        //TODO: do it for one file            
+        msgM.msg(_msg::eMsg::MID, "shift the spectrum by", fWavelength);
+        
+        _csv<> csv(sFilename, cSep);
+        
+        csv.set_filename_out(sOutput);
+        
+        if (csv.read()) {
+            
+            
+        }
+        
     }
 #ifdef HAS_BOOST_TIMER
-    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift\033[0m: " << btTimer.format();
+    msgM.msg(_msg::eMsg::MID, btTimer.format());
 #endif
     
     return EXIT_SUCCESS;
@@ -205,14 +246,18 @@ int main(int argc, char** argv) {
 // ----------------------------------------------------
 // ----------------------------------------------------
 
-void shift(const std::vector<std::string> &list, float fWavelength) {
+
+void add(const std::vector<std::string> &list, float fWavelength) {
+    
+    _msg msgM;
+    msgM.set_name("add");
     
     // TODO: add a shift method in _csv
    
     
-#ifdef HAS_SYSCALL
-    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift("<< syscall(__NR_gettid) << ")\033[0m: " << list.size() << " files parsed.\n";
+#ifdef HAS_SYSCALL   
+    msgM.msg(_msg::eMsg::THREADS, syscall(__NR_gettid),":", list.size(), "files parsed.");
 #else
-    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift()\033[0m: " << list.size() << " files parsed.\n";
+    msgM.msg(_msg::eMsg::THREADS, list.size(), " files parsed.");
 #endif
 }

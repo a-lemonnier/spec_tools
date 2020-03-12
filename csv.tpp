@@ -464,7 +464,6 @@ bool _csv<_T>::set_separator(const char &sep) {
         set_separator('\t');
         bStatus=false;        
     }
-    
     return bStatus;
 }
 
@@ -541,7 +540,46 @@ bool _csv<_T>::check_dim() {
         }
     }
     else 
-        debug("data is empty");
+        debug("check_dim(): data is empty");
+    return bStatus;
+}
+
+template<typename _T> 
+bool _csv<_T>::shift(_T TVal) {
+    bStatus=false;
+    
+    if (this->get_data_size_i()>0) {
+        debug("add "+std::to_string(TVal)+" to the first column");
+        for(auto &TV: this->select_column(0))
+                TV+=TVal;
+        bStatus=true;
+    }
+    else 
+        debug("shift(): column is empty");    
+    
+    return bStatus;
+}
+
+template<typename _T> 
+bool _csv<_T>::shift(_T TVal, int iCol) {
+    bStatus=true;
+    if (iCol==0)
+        shift(TVal);
+    if (iCol==1) {
+        debug("add "+std::to_string(TVal)+" to the 2nd column");
+        this->data+=TVal;
+    }
+    if (iCol>1) {
+        if (iCol<get_data_size_j()) {
+            error("shift(): bad column selected");
+            bStatus=false;
+        }
+        else {
+            debug("add "+std::to_string(TVal)+" to the "+std::to_string(iCol)+" column");
+            for(auto &TV: this->select_column(iCol))
+                TV+=TVal;
+        }
+    }
     return bStatus;
 }
 

@@ -181,6 +181,7 @@ Example:
 ⚐ trim(2470790): 524 files parsed.
 ⚐ threshold:  57.269018s wall, 331.160000s user + 1.350000s system = 332.510000s CPU (580.6%)
 ```
+
 ---
 > der_snr
 ```
@@ -217,5 +218,35 @@ Ref:
 F. Stoehr et al: DER_SNR: A Simple & General Spectroscopic Signal-to-Noise Measurement Algorithm
 394, Astronomical Data Analysis Software and Systems (ADASS) XVII
 2008ASPC..394..505S
+
+```
+
+---
+> shift
+```
+gentoo - spec_tools/ % ./shift                                                                                                                                 22:50:55 | 0 | pts/4 | gentoo_x64_omen
+Usage:
+  -h [ --help ]                   Display this help message
+  -w [ --wavelength ] arg         Wavelength
+  -f [ --filename ] arg           Shift a single file
+  -i [ --input_folder ] arg       Name of the folder where original data are
+  -o [ --output ] arg (=data_out) Set the directory or the file where store new
+                                  data.
+  -s [ --separator ] arg (=     )     The column separator. Do not set this option 
+                                  for \tab.
+
+Example:
+./shift -w 1.0 -i data -o spectra_shifted
+▶ shift
+⚐ shift: starting 8 async threads
+⚐ add(2416052): 521 files parsed.
+⚐ add(2416051): 521 files parsed.
+⚐ add(2416054): 521 files parsed.
+⚐ add(2416053): 521 files parsed.
+⚐ add(2416055): 521 files parsed.
+⚐ add(2416050): 521 files parsed.
+⚐ add(2416056): 521 files parsed.
+⚐ add(2416057): 524 files parsed.
+⚐ shift:  52.909230s wall, 296.410000s user + 0.710000s system = 297.120000s CPU (561.6%)
 
 ```

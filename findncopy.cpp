@@ -36,6 +36,8 @@ namespace fs = boost::filesystem;
 #error "No filesystem header found"
 #endif
 
+#include "msg.h"
+
 // Prototype
 // ----------------------------------------------------
 std::vector<std::string> parse_filelist(std::fstream &flux);
@@ -106,7 +108,10 @@ int main(int argc, char** argv) {
 
 // ----------------------------------------------------  
     
-    std::cout << "\033[3;32m\u25B6\033[0m \033[1;34mfindncopy\033[0m\n";
+    _msg msgM;
+    msgM.set_name("findncopy");
+    
+    msgM.msg(_msg::eMsg::START);
 
     std::string sListname = vm["namelist"].as<std::string>();
     
@@ -148,12 +153,12 @@ int main(int argc, char** argv) {
         copy_file(vsFullrpath, sOfolder, sIfolder);
     }
     else {
-        std::cerr << "\033[5;31m\u2639\033[0m \033[1;30merror while opening file\033[0m\n";
+        msgM.msg(_msg::eMsg::ERROR, "error while opening file");
         return EXIT_FAILURE;
     }
 
 #ifdef HAS_BOOST_TIMER
-    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mfindncopy\033[0m: " << btTimer.format();
+    msgM.msg(_msg::eMsg::END, btTimer.format());
 #endif
     return EXIT_SUCCESS;
 }
@@ -164,21 +169,23 @@ int main(int argc, char** argv) {
 
 std::vector<std::string> parse_filelist(std::fstream &flux) {
     
-    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mparsing file\033[0m: ";
+    _msg msgM;
+    msgM.set_name("findncopy");
     
     std::vector<std::string> vsFilelist;
     std::string sS;
     while(std::getline(flux,sS)) {
         try { vsFilelist.emplace_back(sS); } 
-        catch(std::bad_alloc &ba) { std::cerr << "\033[5;31m\u2639\033[0m \033[1;30mbad alloc\033[0m\n"; }
+        catch(std::bad_alloc &ba) { msgM.msg(_msg::eMsg::ERROR, "bad alloc"); }
     }
-    std::cout << vsFilelist.size() << " lines\n";
+    msgM.msg(_msg::eMsg::MID, "parsing files:", vsFilelist.size(), "lines");
     return vsFilelist;
 }
 
 std::vector<std::string> get_fullrpath(std::vector<std::string>& vsFilelist, 
                                         const fs::path &fspPidir) {
-    std::cout << "\033[3;32m\u2690\033[0m \033[1;30msearching file\033[0m: ";
+     _msg msgM;
+    msgM.set_name("findncopy");
     
     std::vector<std::string> vsFullrpath;
     for(auto isF: vsFilelist) 
@@ -188,14 +195,15 @@ std::vector<std::string> get_fullrpath(std::vector<std::string>& vsFilelist,
                     vsFullrpath.emplace_back(ibsd_itr.path().string());
             }
         
-    std::cout << vsFullrpath.size() << " files found\n";
+    msgM.msg(_msg::eMsg::MID, "searching files:", vsFullrpath.size(), "files found");
     return vsFullrpath;
 }
 
 std::vector<std::string> get_fullrpath(std::vector<std::string>& vsFilelist, 
                                         const fs::path &fspPidir,
                                         const std::string &sExclude) {
-    std::cout << "\033[3;32m\u2690\033[0m \033[1;30msearching file\033[0m: ";
+    _msg msgM;
+    msgM.set_name("findncopy");
     
     std::vector<std::string> vsFullrpath;
     for(auto isF: vsFilelist) 
@@ -205,13 +213,17 @@ std::vector<std::string> get_fullrpath(std::vector<std::string>& vsFilelist,
                     vsFullrpath.emplace_back(ibsd_itr.path().string());
             }
         
-    std::cout << vsFullrpath.size() << " files found\n";
+    msgM.msg(_msg::eMsg::MID, "searching files:", vsFullrpath.size(), "files found");
     return vsFullrpath;
 }
 
 void erase_string(std::vector<std::string> &vsFullrpath, 
                   const std::string &sToerase) {
-    std::cout << "\033[3;32m\u2690\033[0m \033[1;30merasing string\033[0m: '" << sToerase << "'\n";
+    _msg msgM;
+    msgM.set_name("findncopy");
+    
+    msgM.msg(_msg::eMsg::MID, "erasing string:", sToerase);
+ 
     std::for_each(vsFullrpath.begin(), vsFullrpath.end(), [&](std::string &sS) {
             size_t stPos = sS.find(sToerase);
             if (stPos!=std::string::npos)
@@ -221,7 +233,10 @@ void erase_string(std::vector<std::string> &vsFullrpath,
 
 std::vector<std::string> make_dir_list(const fs::path &fspPath, 
                                         const std::string &sDirbase) {
-    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcreating directory list\033[0m: ";
+    _msg msgM;
+    msgM.set_name("findncopy");
+    
+    msgM.msg(_msg::eMsg::MID, "creating directory lists");
     
     std::vector<std::string> vsDirlist;//=new std::vector<std::string>;
     
@@ -236,23 +251,27 @@ std::vector<std::string> make_dir_list(const fs::path &fspPath,
             vsDirlist.emplace_back(sPath);
         }
     }
-    std::cout << "done\n";
     return vsDirlist;
 }
 
 void make_dir(const std::vector<std::string> &vsBaserpath, 
               const std::string &sOfolder) {
-    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcreating folders\033[0m: ";
+    _msg msgM;
+    msgM.set_name("findncopy");
+    
+    msgM.msg(_msg::eMsg::MID, "creating folders");
+
     for(auto sP: vsBaserpath) 
         if (!fs::exists((fs::path(sOfolder+sP))))
             fs::create_directories(fs::path(sOfolder+sP));
-    std::cout << "done\n";
 }
 
 void copy_file(std::vector<std::string> &vsFullrpath,
                const std::string &sOfolder,
                const std::string &sIfolder) {
-    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcopying files\033[0m: ";
+    _msg msgM;
+    msgM.set_name("findncopy");
+    
     int iCount=0;
     for(auto sF: vsFullrpath) 
         if (!fs::exists(fs::path(sOfolder+"/"+sF))) {
@@ -260,7 +279,7 @@ void copy_file(std::vector<std::string> &vsFullrpath,
             iCount++;
         }
         
-    std::cout << iCount << " files copied\n";
+    msgM.msg(_msg::eMsg::MID, "copying files:", iCount , "files copied");
 }
                
 // ----------------------------------------------------

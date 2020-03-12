@@ -24,8 +24,8 @@
  * \brief A basic class for csv manipulation
  * 
  * \author Audric Lemonnier
- * \version 0.5
- * \date 09/03/2020
+ * \version 0.6
+ * \date 12/03/2020
  * 
  */
 
@@ -287,7 +287,18 @@ public:
      */
     bool check_dim();
     
-    
+    /**
+     * \fn bool(_T TVal)
+     * \return true if all seems OK
+     */
+    bool shift(_T TVal);
+
+    /**
+     * \fn bool(_T TVal, int iCol)
+     * \return true if all seems OK
+     */
+    bool shift(_T TVal, int iCol);
+
     /**
      * \fn bool apply_max_threshold(_T TVal)
      * \brief Delete \f$i\f$ line from the grid where \f$\mathbf{data}[i][j]>val\f$.
@@ -333,7 +344,7 @@ public:
      * \brief Delete data and header.
      */
     void clear();
-    
+
     _csv( _csv& other);
     
     _csv& operator=(const _csv& other) const; 
