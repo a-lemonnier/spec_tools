@@ -161,7 +161,7 @@ int main(int argc, char** argv) {
         fs::copy(path_out,path, fs::copy_options::recursive);
 #endif
 #ifdef FS_STDEXP
-        msgM.msg(_msg::eMsg::MID, "copying folder using std::experimental"; 
+        msgM.msg(_msg::eMsg::MID, "copying folder using std::experimental"); 
         fs::copy(path_out,path, fs::copy_options::recursive);
 #endif
 #ifdef FS_BOOST
