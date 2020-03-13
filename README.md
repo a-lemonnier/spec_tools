@@ -1,4 +1,4 @@
-# spec_tools [![Build Status](https://travis-ci.com/a-lemonnier/spec_tools.svg?token=SBy1idJoqQDAzQdHoDpQ&branch=master)](https://travis-ci.com/a-lemonnier/spec_tools)
+# spec_tools [![Build Status](https://cloud.drone.io/api/badges/a-lemonnier/spec_tools/status.svg)](https://cloud.drone.io/a-lemonnier/spec_tools)
 
 
 A set of codes for csv and for spectrum manipulation:
