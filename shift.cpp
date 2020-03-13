@@ -247,17 +247,17 @@ int main(int argc, char** argv) {
 // ----------------------------------------------------
 
 
-void add(const std::vector<std::string> &list, float fWavelength) {
-    
+void add(const std::vector<std::string> &list, float fWavelength) {    
     _msg msgM;
+    msgM.set_threadname("add");
     msgM.set_name("add");
     
     // TODO: add a shift method in _csv
    
     
 #ifdef HAS_SYSCALL   
-    msgM.msg(_msg::eMsg::THREADS, syscall(__NR_gettid),":", list.size(), "files parsed.");
+    msgM.msg(_msg::eMsg::THREADS, "(", syscall(__NR_gettid),"):", list.size(), "files parsed.");
 #else
-    msgM.msg(_msg::eMsg::THREADS, list.size(), " files parsed.");
+    msgM.msg(_msg::eMsg::MID, list.size(), " files parsed.");
 #endif
 }
