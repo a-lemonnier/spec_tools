@@ -47,7 +47,6 @@ _msg::~_msg() {
     sThd_suf.clear();
 }
 
-
 void _msg::msg(const std::string& sMsg) const {
      std::cout << sMid_pre << sName << sSuf
                << ":"
@@ -88,7 +87,6 @@ void _msg::msg(eMsg emType, const std::string& sMsg) const {
                       << "\n";
             break;
     }
-    
 }
 
 void _msg::error(const std::string& sMsg) const {

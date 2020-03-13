@@ -10,6 +10,7 @@ A set of codes for csv and for spectrum manipulation:
  - **shift**.cpp: shift whole spectrum by a given wavelength
 
  TODO:
+ - Make classes
  - shift.cpp
  - Merge partfiles of results
  - Clean header

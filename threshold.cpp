@@ -42,6 +42,7 @@ namespace fs = boost::filesystem;
 #endif
 
 #include "csv.h"
+#include "msg.h"
 
 // Prototype
 // ----------------------------------------------------
@@ -66,6 +67,9 @@ int main(int argc, char **argv) {
 #ifdef HAS_BOOST_TIMER    
     boost::timer::cpu_timer btTimer;
 #endif
+    
+    // Parse cmd line
+    // ----------------------------------------------------  
     
     namespace po = boost::program_options;
     po::options_description description("Usage");
@@ -99,32 +103,38 @@ int main(int argc, char **argv) {
         return EXIT_SUCCESS;
     }
     
-    std::cout << "\033[3;32m\u25B6\033[0m \033[1;34mthreshold\033[0m\n";
-    
     fs::path path(vm["output_folder"].as<std::string>());
     fs::path path_out(vm["input_folder"].as<std::string>());
     
+    // ---------------------------------------------------- 
+    
+    _msg msgM;
+    msgM.set_name("threshold");
+    
+    msgM.msg(_msg::eMsg::START);
+    msgM.msg(_msg::eMsg::MID, "check command line");    
+    
     if (!fs::exists(path_out)) {
-        std::cerr << "\033[5;31m\u2639\033[0m \033[1;30mthreshold\033[0m: error directory " << path_out.string() << " does not exist\n";
+        msgM.msg(_msg::eMsg::ERROR, "error directory", path_out.string(), "does not exist");
         return EXIT_FAILURE;
     }
     
     if (!fs::exists(path)) {
 #ifdef FS_STD 
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mthreshold\033[0m: copying folder using std::\n"; 
+        msgM.msg(_msg::eMsg::MID, "copying folder using std::"); 
         fs::copy(path_out,path, fs::copy_options::recursive);
 #endif
 #ifdef FS_STDEXP
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mthreshold\033[0m: copying folder using std::experimental\n"; 
+        msgM.msg(_msg::eMsg::MID, "copying folder using std::experimental"); 
         fs::copy(path_out,path, fs::copy_options::recursive);
 #endif
 #ifdef FS_BOOST
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mthreshold\033[0m: copying folder using boost:: : not implemented !\n";
+        msgM.msg(_msg::eMsg::MID, "copying folder using boost:: : not implemented !");
         return EXIT_FAILURE;
 #endif
     }
     else { 
-        std::cerr << "\033[5;31m\u2639\033[0m \033[1;30mthreshold\033[0m: error directory " << path.string() << " exists\n";
+        msgM.msg(_msg::eMsg::ERROR, "error directory", path.string(), " exists");
         return EXIT_FAILURE;
     }
     
@@ -160,7 +170,7 @@ int main(int argc, char **argv) {
             // 1 extra thread for extra files : rest of division
             list_divided.emplace_back(std::vector<std::string>(list.begin()+(max_thread-1)*size_divided, list.end()));
             
-            std::cout << "\033[3;32m\u2690\033[0m \033[1;30mthreshold\033[0m: starting " << max_thread <<" async threads\n";
+            msgM.msg(_msg::eMsg::MID, "starting", max_thread, "async threads");
             
             // let's dont decide the flag
             std::launch flag=std::launch::async | std::launch::deferred;
@@ -173,13 +183,13 @@ int main(int argc, char **argv) {
             std::for_each(thread.begin(), thread.end(), [](std::future<void> &th) { th.get(); });
         }  
         else {
-            std::cout << "\033[3;32m\u2690\033[0m \033[1;30mthreshold\033[0m: multi-threading disabled\n";
+            msgM.msg(_msg::eMsg::MID, "multi-threading disabled");
             trim(list, vm["threshold"].as<double>());
         }
     }
     
 #ifdef HAS_BOOST_TIMER
-     std::cout << "\033[3;32m\u2690\033[0m \033[1;30mthreshold\033[0m: " << btTimer.format();
+     msgM.msg(_msg::eMsg::END, btTimer.format());
 #endif
      
     return EXIT_SUCCESS;
@@ -187,6 +197,10 @@ int main(int argc, char **argv) {
 
 
 void trim(const std::vector<std::string> &list, double threshold) {
+    
+    _msg msgM;
+    msgM.set_name("compute()");
+    msgM.set_threadname("compute()");
     
     for(auto file: list ) {
         
@@ -204,10 +218,11 @@ void trim(const std::vector<std::string> &list, double threshold) {
             csv.write();
         }
     } 
+    
 #ifdef HAS_SYSCALL
-    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mtrim("<< syscall(__NR_gettid) << ")\033[0m: " << list.size() << " files parsed.\n";
+    msgM.msg(_msg::eMsg::THREADS, "(", syscall(__NR_gettid), "): ", list.size(), "files parsed");
 #else
-    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mtrim()\033[0m: " << list.size() << " files parsed.\n";
+    msgM.msg(_msg::eMsg::MID, list.size(), " files parsed");
 #endif
     
 }

@@ -51,6 +51,7 @@ namespace fs = boost::filesystem;
 #endif
 
 #include "csv.h"
+#include "msg.h"
 
 // Reference
 // ----------------------------------------------------
@@ -127,8 +128,6 @@ int main(int argc, char** argv) {
         return EXIT_SUCCESS;
     }
     
-    // ----------------------------------------------------
-    
     bool bDefExclude=false;
     bool bDefSep=false;
     
@@ -141,8 +140,13 @@ int main(int argc, char** argv) {
     fs::path pFilename;
     fs::path pOutput;
     
-    std::cout << "\033[3;32m\u25B6\033[0m \033[1;34mder_snr\033[0m\n";
-    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m: check command line\n";
+    // ----------------------------------------------------
+    
+    _msg msgM;
+    msgM.set_name("der_snr");
+    
+    msgM.msg(_msg::eMsg::START);
+    msgM.msg(_msg::eMsg::MID, "check command line");
     
     if (vm.count("directory") && vm.count("filename")) {
         std::cerr << "\033[5;31m\u2639\033[0m \033[1;30mder_snr\033[0m: error: ambiguous entries\n";
@@ -152,7 +156,7 @@ int main(int argc, char** argv) {
     if (vm.count("directory")) {
         pDirectory=fs::path(vm["directory"].as<std::string>());
         if (!fs::is_directory(pDirectory)) {
-            std::cerr << "\033[5;31m\u2639\033[0m \033[1;30mder_snr\033[0m: error: "+pDirectory.string()+" does not exist\n";
+            msgM.msg(_msg::eMsg::ERROR, pDirectory.string(),"does not exist");
             return EXIT_FAILURE;
         }
     }
@@ -160,7 +164,7 @@ int main(int argc, char** argv) {
     if (vm.count("filename")) {
         pFilename=fs::path(vm["directory"].as<std::string>());
         if (!fs::exists(pFilename)) {
-            std::cerr << "\033[5;31m\u2639\033[0m \033[1;30mder_snr\033[0m: error: "+pFilename.string()+" does not exist\n";
+            msgM.msg(_msg::eMsg::ERROR, "error:", pFilename.string(),"does not exist");
             return EXIT_FAILURE;
         }
     }
@@ -168,7 +172,7 @@ int main(int argc, char** argv) {
     if (vm.count("output")) {
         pOutput=fs::path(vm["output"].as<std::string>());
         if (fs::exists(pOutput)) {
-            std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m: "+pOutput.string()+" exists: deleting\n";
+            msgM.msg(_msg::eMsg::MID, pOutput.string(), " exists: deleting");
             fs::remove(pOutput);
         }
         sOutput=vm["output"].as<std::string>();
@@ -186,7 +190,7 @@ int main(int argc, char** argv) {
     
     if (vm.count("filename")) {
         
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m: compute S/N for 1 file\n";
+        msgM.msg(_msg::eMsg::MID, "compute S/N for 1 file");
         
         std::string sFilename=vm["filename"].as<std::string>();
         
@@ -196,7 +200,7 @@ int main(int argc, char** argv) {
             
             csv.set_verbose(_csv<float>::eVerbose::QUIET);
             
-            std::cout << "- "+sFilename+": S/N = " << der_snr(csv.select_column(1)) << "\n";
+            msgM.msg(_msg::eMsg::MID,sFilename,": S/N =", der_snr(csv.select_column(1)));
         }
     }
     
@@ -246,7 +250,7 @@ int main(int argc, char** argv) {
             // 1 extra thread for extra files : rest of division
             vvsList_divided.emplace_back(std::vector<std::string>(list.begin()+(iMax_thread-1)*stSize_divided, list.end()));
             
-            std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m: starting " << iMax_thread <<" async threads\n";
+            msgM.msg(_msg::eMsg::MID, "starting", iMax_thread, " async threads");
             
             // let's don't decide the flag
             std::launch lFlag=std::launch::async | std::launch::deferred;
@@ -272,15 +276,17 @@ int main(int argc, char** argv) {
             std::for_each(vfThread.begin(), vfThread.end(), [](std::future<void> &th) { th.get(); });
         }  
         else {
-            std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m: multi-threading disabled\n";
+            msgM.msg(_msg::eMsg::MID, "multi-threading disabled");
             compute(list, sOutput);
         }
     }
-#ifdef HAS_BOOST_TIMER
-    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m: " << btTimer.format();
-#endif
-    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m: output: " << sOutput << "\n";    
     
+    msgM.msg(_msg::eMsg::MID, "output:", sOutput);   
+    
+#ifdef HAS_BOOST_TIMER
+    msgM.msg(_msg::eMsg::END, btTimer.format());
+#endif
+     
     return EXIT_SUCCESS;
 }
 
@@ -288,10 +294,18 @@ int main(int argc, char** argv) {
 // ----------------------------------------------------
 
 void compute(const std::vector<std::string>& vsList, const std::string& sOutput) {
+
+    _msg msgM;
+    msgM.set_name("compute()");
+    msgM.set_threadname("compute()");
+    
+#ifdef HAS_SYSCALL
+    msgM.msg(_msg::eMsg::THREADS, "(", syscall(__NR_gettid), "): compute S/N for", vsList.size(), "files");
+#else
+    msgM.msg(_msg::eMsg::MID, "compute S/N for", vsList.size(), "files\n";
+#endif
+    
     std::vector<std::string> vsResults;
-    
-    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute("<< syscall(__NR_gettid) << ")\033[0m: compute S/N for " << vsList.size() << " files\n";
-    
     vsResults.emplace_back("File\tSNR\n");
     
     for(auto sFile: vsList) {
@@ -305,17 +319,20 @@ void compute(const std::vector<std::string>& vsList, const std::string& sOutput)
             vsResults.emplace_back(sFile+"\t"+std::to_string(der_snr(csv.select_column(1))) + "\n");
         }
     }
-    
     write(vsResults, sOutput);
 }
 
 void compute_sep(const std::vector<std::string>& vsList, const std::string& sOutput, const char& cSep) {
     std::vector<std::string> vsResults;
     
+    _msg msgM;
+    msgM.set_name("compute()");
+    msgM.set_threadname("compute()");
+    
 #ifdef HAS_SYSCALL
-    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute("<< syscall(__NR_gettid) << ")\033[0m: compute S/N for " << vsList.size() << " files\n";
+    msgM.msg(_msg::eMsg::THREADS, "(", syscall(__NR_gettid), "): compute S/N for", vsList.size(), "files");
 #else
-    std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute()\033[0m: compute S/N for " << vsList.size() << " files\n";
+    msgM.msg(_msg::eMsg::MID, "compute S/N for", vsList.size(), "files\n";
 #endif
     
     vsResults.emplace_back("File\tSNR\n");
@@ -331,7 +348,6 @@ void compute_sep(const std::vector<std::string>& vsList, const std::string& sOut
             vsResults.emplace_back(sFile+"\t"+std::to_string(der_snr(csv.select_column(1))) + "\n");
         }
     }
-    
     write(vsResults, sOutput);
 }
 
@@ -347,7 +363,10 @@ bool write(std::vector<std::string> vsResults, const std::string& sOutput) {
         fFlux.close();
     }
     else {
-        std::cerr << "\033[5;31m\u2639\033[0m \033[1;30mwrite()\033[0m: error: error: cannot open "+sOutput+"\n";
+        _msg msgM;
+        msgM.set_name("write()");
+        
+        msgM.msg(_msg::eMsg::ERROR, "error: error: cannot open", sOutput);
         sStatus=false;
     }
     return sStatus;
@@ -357,7 +376,9 @@ float median(const std::vector<float> &vFlux) {
     int iSize=vFlux.size();
     
     if (iSize==0) {
-        std::cout << "\033[5;31m\u2639\033[0m \033[1;30mmedian()\033[0m: error flux is empty\n";
+        _msg msgM;
+        msgM.set_name("median()");
+        msgM.msg(_msg::eMsg::MID, "error: flux is empty");
         return 0;
     }
     
@@ -374,7 +395,9 @@ double median(const std::vector<double> &vFlux) {
     int iSize=vFlux.size();
     
     if (iSize==0) {
-        std::cout << "\033[5;31m\u2639\033[0m \033[1;30mmedian()\033[0m: error: flux is empty\n";
+        _msg msgM;
+        msgM.set_name("median()");
+        msgM.msg(_msg::eMsg::MID, "error: flux is empty");
         return 0;
     }
     
@@ -392,7 +415,9 @@ double median(const std::vector<double> &vFlux) {
 
 float der_snr(const std::vector<float> &vFlux) {
     if (vFlux.empty()) {
-        std::cout << "\033[5;31m\u2639\033[0m \033[1;30mder_snr()\033[0m: error flux is empty\n";
+        _msg msgM;
+        msgM.set_name("der_snr()");
+        msgM.msg(_msg::eMsg::MID, "error: flux is empty");
         return 0;
     }
     
@@ -435,7 +460,9 @@ float der_snr(const std::vector<float> &vFlux) {
 
 double der_snr(const std::vector<double> &vFlux) {
     if (vFlux.empty()) {
-        std::cout << "\033[5;31m\u2639\033[0m \033[1;30mder_snr()\033[0m: error: flux is empty\n";
+        _msg msgM;
+        msgM.set_name("der_snr()");
+        msgM.msg(_msg::eMsg::MID, "error: flux is empty");
         return 0;
     }
     
