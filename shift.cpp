@@ -52,7 +52,8 @@ enum eMsg {START, MID, END, ERROR, THREADS };
 
 // Prototype
 // ----------------------------------------------------
-void add(const std::vector<std::string> &list, float fWavelength);
+void add(const std::vector<std::string> &vsList, float fWavelength);
+void add_sep(const std::vector<std::string> &vsList, char cSep , float fWavelength);
 
 void msg(const std::string &sMsg, eMsg emType);
 
@@ -214,27 +215,31 @@ int main(int argc, char** argv) {
             std::vector<std::future<void> > thread;
             
             for(auto t_list: list_divided)
-                thread.emplace_back(std::async(flag,add,t_list,fWavelength));
+                thread.emplace_back(std::async(flag, add_sep, t_list, cSep, fWavelength));
             
             std::for_each(thread.begin(), thread.end(), [](std::future<void> &th) { th.get(); });
         }  
         else {
             msgM.msg(_msg::eMsg::MID, "multi-threading disabled");
-            add(list, fWavelength);
+            add_sep(list, cSep, fWavelength);
         }
     }
     else {
         msgM.msg(_msg::eMsg::MID, "shift the spectrum by", fWavelength);
         
-        _csv<> csv(sFilename, cSep);
+        _csv<float> csv(sFilename, cSep);
         
         csv.set_filename_out(sOutput);
         
         if (csv.read()) {
             
+            csv.set_verbose(_csv<float>::eVerbose::QUIET);
+            
+            csv.shift(fWavelength);
+            
+            csv.write();
             
         }
-        
     }
 #ifdef HAS_BOOST_TIMER
     msgM.msg(_msg::eMsg::MID, btTimer.format());
@@ -247,17 +252,56 @@ int main(int argc, char** argv) {
 // ----------------------------------------------------
 
 
-void add(const std::vector<std::string> &list, float fWavelength) {    
+void add(const std::vector<std::string> &vsList, float fWavelength) {    
     _msg msgM;
     msgM.set_threadname("add");
     msgM.set_name("add");
     
-    // TODO: add a shift method in _csv
-   
+     for(auto sFile: vsList) {
+        
+        _csv<float> csv(sFile, '\t');
+        
+        if(csv.read()) {
+            
+            csv.set_verbose(_csv<float>::eVerbose::QUIET);
+            
+            csv.shift(fWavelength);
+            
+            csv.write();
+            
+        }
+     }
     
 #ifdef HAS_SYSCALL   
-    msgM.msg(_msg::eMsg::THREADS, "(", syscall(__NR_gettid),"):", list.size(), "files parsed.");
+    msgM.msg(_msg::eMsg::THREADS, "(", syscall(__NR_gettid),"):", vsList.size(), "files parsed.");
 #else
-    msgM.msg(_msg::eMsg::MID, list.size(), " files parsed.");
+    msgM.msg(_msg::eMsg::MID, vsList.size(), " files parsed.");
+#endif
+}
+
+void add_sep(const std::vector<std::string> &vsList, char cSep , float fWavelength) {    
+    _msg msgM;
+    msgM.set_threadname("add");
+    msgM.set_name("add");
+    
+     for(auto sFile: vsList) {
+        
+        _csv<float> csv(sFile, cSep);
+        
+        if(csv.read()) {
+            
+            csv.set_verbose(_csv<float>::eVerbose::QUIET);
+            
+            csv.shift(fWavelength);
+            
+            csv.write();
+            
+        }    
+    }
+    
+#ifdef HAS_SYSCALL   
+    msgM.msg(_msg::eMsg::THREADS, "(", syscall(__NR_gettid),"):", vsList.size(), "files parsed.");
+#else
+    msgM.msg(_msg::eMsg::MID, vsList.size(), " files parsed.");
 #endif
 }

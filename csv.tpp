@@ -550,7 +550,7 @@ bool _csv<_T>::shift(_T TVal) {
     
     if (this->get_data_size_i()>0) {
         debug("add "+std::to_string(TVal)+" to the first column");
-        for(auto &TV: this->select_column(0))
+        for(auto TV: this->select_column(0))
                 TV+=TVal;
         bStatus=true;
     }
