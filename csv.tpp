@@ -414,8 +414,8 @@ bool _csv<_T>::set_column(const std::vector<_T>& vCol, int iCol) {
     int iSize_i=get_data_size_i();
     int iSize_j=get_data_size_j();
     
-    if (iCol>iSize_j+1) {
-        error("set_column(): invalid column number");
+    if (iCol>iSize_j) {
+        error("set_column(): column number out of range");
         return bStatus;
     }
     
@@ -423,15 +423,10 @@ bool _csv<_T>::set_column(const std::vector<_T>& vCol, int iCol) {
         error("set_column(): column size mismatches");
         return bStatus;
     }
-    
-    if (iSize==iSize_i && iCol==iSize_j+1) {
-        for(int i; i<iSize_i; i++) 
-            this->vvData[i].emplace_back(vCol[i]);
-        bStatus=true;       
-    }
-    
-    if (iSize==iSize_i && iCol<iSize_j) {
-        this->vvData[iCol]=vCol;       
+    else {
+        for(int i=0; i<iSize; i++)
+            this->vvData[i][iCol]=vCol[i];       
+        
         bStatus=true;       
     }
     
