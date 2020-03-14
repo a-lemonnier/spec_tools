@@ -17,7 +17,6 @@
  */
 
 
-
 template<typename _T> 
 _csv<_T>::_csv(): 
       vvData(std::vector<std::vector<_T> >(0))
@@ -29,7 +28,6 @@ _csv<_T>::_csv():
     debug("initing csv with empty parameters: fill them");
 
 }
-
 
 template<typename _T> 
 _csv<_T>::_csv(const std::string &sFilename, const char &cSep):
@@ -333,7 +331,7 @@ bool _csv<_T>::write() {
 
 template<typename _T> 
 const std::vector<_T> _csv<_T>::select_line(int line) const {
-    if (line<1 || line>=get_data_size_i()) {
+    if (line<0 || line>get_data_size_i()) {
         error("select_line(): invalid line number");
         return std::vector<_T>(0);
     }
@@ -349,7 +347,7 @@ const std::vector<_T> _csv<_T>::select_line(int line) const {
 
 template<typename _T> 
 const std::vector<_T> _csv<_T>::select_column(int col) const {
-    if (col<1 || col>=get_data_size_j()) {
+    if (col<0 || col>get_data_size_j()) {
         error("select_column(): invalid column number");
         return std::vector<_T>(0);
     }
@@ -367,7 +365,7 @@ const std::vector<_T> _csv<_T>::select_column(int col) const {
 
 template<typename _T> 
 const std::vector<std::vector<_T> > _csv<_T>::select(int iLine_min, int iLine_max, int iCol_min, int iCol_max) const {
-    if (iLine_min<1 || iCol_min<1 || iLine_max>=get_data_size_i() ||  iCol_max>=get_data_size_j()) {
+    if (iLine_min<0 || iCol_min<0 || iLine_max>get_data_size_i() ||  iCol_max>get_data_size_j()) {
         error("select(): invalid selection");
         std::vector<std::vector<_T> >(0);
     }
@@ -403,6 +401,78 @@ bool _csv<_T>::set_data(const std::vector<std::vector<_T> > &vvData) {
     return bStatus;
 }
 
+template<typename _T> 
+bool _csv<_T>::set_column(const std::vector<_T>& vCol, int iCol) {
+    bStatus=false;
+    
+    if (vCol.empty()) {
+        debug("set_column(): column is empty");
+        return bStatus;
+    }
+    
+    int iSize=vCol.size();
+    int iSize_i=get_data_size_i();
+    int iSize_j=get_data_size_j();
+    
+    if (iCol>iSize_j+1) {
+        error("set_column(): invalid column number");
+        return bStatus;
+    }
+    
+    if (iSize!=iSize_i) {
+        error("set_column(): column size mismatches");
+        return bStatus;
+    }
+    
+    if (iSize==iSize_i && iCol==iSize_j+1) {
+        for(int i; i<iSize_i; i++) 
+            this->vvData[i].emplace_back(vCol[i]);
+        bStatus=true;       
+    }
+    
+    if (iSize==iSize_i && iCol<iSize_j) {
+        this->vvData[iCol]=vCol;       
+        bStatus=true;       
+    }
+    
+    return bStatus;
+}
+
+template<typename _T> 
+bool _csv<_T>::set_row(const std::vector<_T>& vRow, int iRow) {
+    bStatus=true;
+    
+     if (vRow.empty()) {
+        debug("set_row(): row is empty");
+        return bStatus;
+    }
+    
+    int iSize=vRow.size();
+    int iSize_i=get_data_size_i();
+    int iSize_j=get_data_size_j();
+    
+    if (iRow>iSize_i+1) {
+        error("set_row(): invalid row number");
+        return bStatus;
+    }   
+    
+    if (iSize!=iSize_j) {
+        error("set_row(): row size mismatches");
+        return bStatus;
+    }
+    
+    if (iSize==iSize_j && iRow==iSize_i+1) {
+        this->vvData.emplace_back(vRow);
+        bStatus=true;       
+    }
+    
+    if (iSize==iSize_j && iRow<iSize_i) {
+        this->vvData[iRow]=vRow;       
+        bStatus=true;       
+    }
+    
+    return bStatus;
+}
 
 template<typename _T> 
 bool _csv<_T>::set_header(const std::vector<std::string> &iCol_name) {
@@ -550,8 +620,15 @@ bool _csv<_T>::shift(_T TVal) {
     
     if (this->get_data_size_i()>0) {
         debug("add "+std::to_string(TVal)+" to the first column");
-        for(auto TV: this->select_column(0))
-                TV+=TVal;
+
+        std::vector<_T> vTmp(this->select_column(0));
+        
+        std::transform(vTmp.begin(), vTmp.end(),
+                       vTmp.begin(),
+                       std::bind(std::plus<_T>(), std::placeholders::_1, TVal));
+        
+         set_column(vTmp,0);
+        
         bStatus=true;
     }
     else 
@@ -576,8 +653,14 @@ bool _csv<_T>::shift(_T TVal, int iCol) {
         }
         else {
             debug("add "+std::to_string(TVal)+" to the "+std::to_string(iCol)+" column");
-            for(auto &TV: this->select_column(iCol))
-                TV+=TVal;
+            
+            std::vector<_T> vTmp(this->select_column(iCol));
+            
+            std::transform(vTmp.begin(), vTmp.end(),
+                           vTmp.begin(),
+                           std::bind(std::plus<_T>(), std::placeholders::_1, TVal));
+            
+            set_column(vTmp,iCol);
         }
     }
     return bStatus;

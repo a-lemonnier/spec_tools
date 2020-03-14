@@ -24,8 +24,8 @@
  * \brief A basic class for csv manipulation
  * 
  * \author Audric Lemonnier
- * \version 0.6
- * \date 12/03/2020
+ * \version 0.7
+ * \date 13/03/2020
  * 
  */
 
@@ -175,6 +175,24 @@ public:
      * \return true if all seems OK
      */
     bool set_data(const std::vector<std::vector<_T> > &vvData);
+    
+    /**
+     * \fn bool set_column(const std::vector<_T>& vCol, int iCol)
+     * \brief Set a column with a vector.
+     * \param vCol std::vector<_T> vCol
+     * \param iCol Select a column 
+     * \return true if all seems OK
+     */
+    bool set_column(const std::vector<_T>& vCol, int iCol);
+    
+    /**
+     * \fn bool set_column(const std::vector<_T>& vRow, int iRow)
+     * \brief Set a row with a vector.
+     * \param vRow std::vector<_T> vRow
+     * \param iRow Select a row 
+     * \return true if all seems OK
+     */
+    bool set_row(const std::vector<_T>& vRow, int iRow);
     
     /**
      * \fn bool set_header(const std::vector<std::string> &vsHeader)

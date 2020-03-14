@@ -132,12 +132,7 @@ int main(int argc, char** argv) {
     
     msgM.msg(_msg::eMsg::START);
     msgM.msg(_msg::eMsg::MID, "check command line");
-    
-    if (fWavelength<=0) {
-         msgM.msg(_msg::eMsg::ERROR, "bad wavelength:", fWavelength);
-        return EXIT_FAILURE;
-    }
-    
+        
     if (vm.count("filename")) {
         sFilename=vm["filename"].as<std::string>();
         path=fs::path(sFilename);
