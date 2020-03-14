@@ -3,7 +3,7 @@
  * \brief Remove value under a threshold in a folder or in a file. This code is multi-threaded or not if not available.
  * \author Audric Lemonnier
  * \version 0.1
- * \date 09/03/2020
+ * \date 14/03/2020
  */
 
 #include <iostream>

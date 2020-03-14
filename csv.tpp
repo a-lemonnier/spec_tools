@@ -1,22 +1,3 @@
-/*
- * csv: A basic class for csv manipulation
- * Copyright (C) 2020  A. Lemonnier <lemonnier.audric@gmail.com>
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 template<typename _T> 
 _csv<_T>::_csv(): 
       vvData(std::vector<std::vector<_T> >(0))
@@ -385,18 +366,19 @@ template<typename _T>
 bool _csv<_T>::set_data(const std::vector<std::vector<_T> > &vvData) {
     bStatus=true;
     debug("setting data");
-    if (this->empty()) {
+    if (vvData.empty()) {
         bStatus=false;
         error("set_data(): data are empty");
         return bStatus;
     }
-    if (this->check_dim()) {
-        bStatus=false;
-        error("set_data(): data dimensions mismatch");
-        return bStatus;
-    }
     
-    std::copy(vvData.begin(), vvData.end(), this->vvData.begin());
+    this->vvData=vvData;
+    
+//     if (this->check_dim()) {
+//         bStatus=false;
+//         error("set_data(): data dimensions mismatch");
+//         return bStatus;
+//     }
     
     return bStatus;
 }

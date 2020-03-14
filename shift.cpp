@@ -3,7 +3,7 @@
  * \brief Shift whole spectrum by a given wavelength. This code is multi-threaded or not if not available.
  * \author Audric Lemonnier
  * \version 0.1
- * \date 09/03/2020
+ * \date 14/03/2020
  */
 
 #include <iostream>
@@ -47,7 +47,6 @@ namespace fs = boost::filesystem;
 // Enum
 // ----------------------------------------------------
 enum eMsg {START, MID, END, ERROR, THREADS };
-
 // ----------------------------------------------------
 
 // Prototype
@@ -65,8 +64,6 @@ void msg(const std::string &sMsg, eMsg emType, _T0 T0Add, _T1 T1Add);
 
 template<typename _T0, typename _T1, typename _T2>
 void msg(const std::string &sMsg, eMsg emType, _T0 T0Add, _T1 T1Add, _T2 T2Add);
-
-
 // ----------------------------------------------------
 
 int main(int argc, char** argv) {
@@ -96,18 +93,12 @@ int main(int argc, char** argv) {
     if (vm.count("help") || !vm.count("wavelength") || !(vm.count("input_folder") ^ vm.count("filename"))  || vm.size()<2) {
         std::cout << description;
         std::cout << "\nExample:\n";
-        std::cout << "./shift -w 1.0 -i data -o spectra_shifted\n";
+        std::cout << "./shift -w -1.0 -f CD-592728.obs\n";
         std::cout << "\033[3;32m\u25B6\033[0m \033[1;34mshift\033[0m\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift\033[0m: starting 8 async threads\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift(2416052)\033[0m: 521 files parsed.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift(2416051)\033[0m: 521 files parsed.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift(2416054)\033[0m: 521 files parsed.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift(2416053)\033[0m: 521 files parsed.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift(2416055)\033[0m: 521 files parsed.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift(2416050)\033[0m: 521 files parsed.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift(2416056)\033[0m: 521 files parsed.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift(2416057)\033[0m: 524 files parsed.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift\033[0m:  52.909230s wall, 296.410000s user + 0.710000s system = 297.120000s CPU (561.6%)\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift\033[0m: check command line\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift\033[0m: shift the spectrum by -1\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift\033[0m: output: data_out\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift\033[0m: 0.043272s wall, 0.040000s user + 0.000000s system = 0.040000s CPU (92.4%)\n";
 
         return EXIT_SUCCESS;
     }
@@ -236,8 +227,11 @@ int main(int argc, char** argv) {
             
         }
     }
+    
+    msgM.msg(_msg::eMsg::MID, "output:", sOutput);
+    
 #ifdef HAS_BOOST_TIMER
-    msgM.msg(_msg::eMsg::MID, btTimer.format());
+    msgM.msg(_msg::eMsg::END, btTimer.format());
 #endif
     
     return EXIT_SUCCESS;

@@ -8,10 +8,11 @@ A set of codes for csv and for spectrum manipulation:
  - **findncopy**.cpp: find and copy files from a file list
  - **der_snr**.cpp: compute the Signal-to-Noise of a spectrum
  - **shift**.cpp: shift whole spectrum by a given wavelength
+ - **gen_rand_spec**.cpp: generate a set of spectra between two wavelengths
 
  TODO:
+ - gen_rand_spec.cpp: rand distrib, threads
  - Make classes
- - shift.cpp
  - Merge partfiles of results
  - Clean header
  - Additionnal parameter and file verifications
@@ -225,7 +226,7 @@ F. Stoehr et al: DER_SNR: A Simple & General Spectroscopic Signal-to-Noise Measu
 ---
 > shift
 ```
-gentoo - spec_tools/ % ./shift                                                                                                                                 22:50:55 | 0 | pts/4 | gentoo_x64_omen
+gentoo - spec_tools/ % ./shift -h
 Usage:
   -h [ --help ]                   Display this help message
   -w [ --wavelength ] arg         Wavelength
@@ -237,17 +238,24 @@ Usage:
                                   for \tab.
 
 Example:
-./shift -w 1.0 -i data -o spectra_shifted
-▶ shift
-⚐ shift: starting 8 async threads
-⚐ add(2416052): 521 files parsed.
-⚐ add(2416051): 521 files parsed.
-⚐ add(2416054): 521 files parsed.
-⚐ add(2416053): 521 files parsed.
-⚐ add(2416055): 521 files parsed.
-⚐ add(2416050): 521 files parsed.
-⚐ add(2416056): 521 files parsed.
-⚐ add(2416057): 524 files parsed.
-⚐ shift:  52.909230s wall, 296.410000s user + 0.710000s system = 297.120000s CPU (561.6%)
+./shift -w -1.0 -f CD-592728.obs
+▶ shift 
+⚐ shift: check command line 
+⚐ shift: shift the spectrum by -1 
+⚐ shift: output: data_out 
+⚐ shift:  0.043272s wall, 0.040000s user + 0.000000s system = 0.040000s CPU (92.4%)
+
+```
+
+---
+> genrandspec
+```
+gentoo - spec_tools/ % ./genrandspec 
+▶ genrandspec 
+⚐ genrandspec: check command line 
+⚐ genrandspec: create 8 folders 
+⚐ genrandspec: start 8 async threads 
+⚐ genrandspec: output: rand_spectra.dat 
+⚐ genrandspec:  0.156242s wall, 0.150000s user + 0.000000s system = 0.150000s CPU (96.0%)
 
 ```
