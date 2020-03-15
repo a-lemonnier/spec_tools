@@ -7,7 +7,7 @@ add_executable(findncopy findncopy.cpp msg.cpp)
 add_executable(trim trim.cpp msg.cpp)
 add_executable(der_snr der_snr.cpp msg.cpp)
 add_executable(shift shift.cpp msg.cpp)
-add_executable(genrandspec gen_rand_spec.cpp msg.cpp)
+add_executable(genrandspec genrandspec.cpp msg.cpp)
 
 set_property(TARGET threshold PROPERTY CXX_STANDARD 17)
 set_property(TARGET threshold PROPERTY CXX_STANDARD_REQUIRED ON)
