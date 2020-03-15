@@ -206,7 +206,10 @@ std::vector<std::vector<float> > randomize(float fMinw, float fMaxw, float fStep
     std::random_device rdDev;
     
     std::default_random_engine dreEngine(rdDev());
-    std::uniform_real_distribution<float> uniform_dist(0.9, 1.0);
+    std::normal_distribution<float> gauss_dist(0.95, 0.1);
+    std::uniform_real_distribution<float> uniform_dist(0, 0.5);
+    std::uniform_real_distribution<float> uniform_dist2(0, 0.005);
+    std::cauchy_distribution<float> cauchy_distrib(0,0.1); 
     
     int iSize=abs(fMaxw-fMinw)/fStep;
     
@@ -219,7 +222,14 @@ std::vector<std::vector<float> > randomize(float fMinw, float fMaxw, float fStep
     for(int i=0;i<iSize;i++)
         vX[i]=fMinw+fStep*i;
     
-    std::generate(vY.begin(), vY.end(), [&]() { return uniform_dist(dreEngine);});     
+    float fX=1.0;
+    std::generate(vY.begin(), vY.end(), [&]() { 
+        float fV=cauchy_distrib(dreEngine);
+        float fThres0=uniform_dist2(dreEngine);
+        float fThres=uniform_dist(dreEngine);
+        if (fV<-fThres0) fV=-fThres0;
+        if (fV>fThres) fV=fThres;
+        return (fX+0.01*gauss_dist(dreEngine)-fV);});     
    
     for(int i=0;i<iSize;i++) 
         vvfRand.emplace_back(std::vector<float>({vX[i], vY[i]}));
