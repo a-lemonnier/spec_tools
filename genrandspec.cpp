@@ -37,7 +37,7 @@ namespace fs = boost::filesystem;
 #include "csv.h"
 #include "msg.h"
 
-#define MaxFilepDir 50
+#define MaxFilepDir 200
 
 // Prototype
 // ----------------------------------------------------

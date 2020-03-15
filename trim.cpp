@@ -200,7 +200,7 @@ void trim(const std::vector<std::string> &list, float min, float max) {
     
     _msg msgM;
     msgM.set_threadname("trim");
-    msgM.set_name("trim");
+    msgM.set_name("trim()");
     
     for(auto file: list ) {
         
@@ -220,7 +220,7 @@ void trim(const std::vector<std::string> &list, float min, float max) {
         }
     }
 #ifdef HAS_SYSCALL
-   msgM.msg(_msg::eMsg::THREADS, "(", syscall(__NR_gettid), "):", list.size(), "files parsed");
+   msgM.msg(_msg::eMsg::THREADS, list.size(), "files parsed");
 #else
     msgM.msg(_msg::eMsg::MID, list.size(), " files parsed.");
 #endif

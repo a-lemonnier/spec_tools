@@ -321,10 +321,10 @@ void compute_sep(const std::vector<std::string>& vsList, const std::string& sOut
     
     _msg msgM;
     msgM.set_name("compute()");
-    msgM.set_threadname("compute()");
+    msgM.set_threadname("compute");
     
 #ifdef HAS_SYSCALL
-    msgM.msg(_msg::eMsg::THREADS, "(", syscall(__NR_gettid), "): compute S/N for", vsList.size(), "files");
+    msgM.msg(_msg::eMsg::THREADS, "compute S/N for", vsList.size(), "files");
 #else
     msgM.msg(_msg::eMsg::MID, "compute S/N for", vsList.size(), "files\n";
 #endif
@@ -421,9 +421,13 @@ float der_snr(const std::vector<float> &vFlux) {
         vNo0.erase(std::remove_if(vNo0.begin(), vNo0.end(), 
                                    [&](float fF) { return fF<0; }),vNo0.end());
         
+        int iSize=vNo0.size();
+        
+        std::vector<float> vSum; vSum.resize(iSize);
         std::vector<float> vSum0=std::vector<float>(vNo0.begin()+2, vNo0.end()-2);
         std::vector<float> vSum1=std::vector<float>(vNo0.begin()  , vNo0.end()-4);
         std::vector<float> vSum2=std::vector<float>(vNo0.begin()+4, vNo0.end()  );
+        
         
         // Sum1 = Sum1 + Sum2 
         std::transform(vSum1.begin(), vSum1.end(), 
@@ -443,6 +447,11 @@ float der_snr(const std::vector<float> &vFlux) {
         // Sum0 = abs(Sum0)
         std::for_each(vSum0.begin(), vSum0.end(), 
                       [](float &fF) { fF=abs(fF);});
+        
+        
+//         for(int i=0; i<iSize; i++) 
+//             vSum[i]=abs(2*vSum0[i]-vSum1[i]-vSum2[i]);
+            
         
         float fNoise=1.482602/sqrt(6)*median(vSum0);
         float fSignal=median(vNo0);
