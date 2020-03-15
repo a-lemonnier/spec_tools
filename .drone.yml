@@ -12,7 +12,7 @@ steps:
     - apt-get update -y
     - apt-get install -y make gcc g++ cmake perl libboost-all-dev
     - cmake .
-    - make
+    - make -j$(nproc)
     - ./genrandspec
     - ./findncopy -i rand_spectra -o selected -n star_list.txt -e sky
     - ./threshold -i selected -o spectra -t 1

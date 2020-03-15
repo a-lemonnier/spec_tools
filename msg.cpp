@@ -47,13 +47,13 @@ void _msg::msg(eMsg emType, const std::string& sMsg) const {
             break;
         case eMsg::MID:
             std::cout << sMid_pre << sName << sSuf
-                      << ": "
+                      << " "
                       << sMsg
                       << "\n";  
             break;
         case eMsg::END:
             std::cout << sEnd_pre << sName << sSuf
-                      << ": "
+                      << " "
                       << sMsg
                       << "\n";  
             break;
@@ -81,7 +81,7 @@ void _msg::msg(eMsg emType, const std::string& sMsg) const {
 
 void _msg::error(const std::string& sMsg) const {
      std::cout << sErr_pre << sName << sSuf
-               << ": "
+               << " "
                << sMsg
                << "\n";
 }
