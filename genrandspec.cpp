@@ -37,7 +37,7 @@ namespace fs = boost::filesystem;
 #include "csv.h"
 #include "msg.h"
 
-#define MaxFilepDir 200
+#define MaxFilepDir 50
 
 // Prototype
 // ----------------------------------------------------
@@ -95,7 +95,6 @@ int main(int argc, char** argv) {
     if (!(fMax<fMin) && !(fMax>fMin) ) {
         msgM.msg(_msg::eMsg::ERROR, "invalid boundaries");
         return EXIT_FAILURE;
-        
     }
     
     if (vm["maxw"].as<float>() < vm["minw"].as<float>()) {
@@ -139,7 +138,6 @@ int main(int argc, char** argv) {
                     vfThread.emplace_back(std::async(flag, run, sFile, cSep, fMin, fMax, fStep));
             
             std::for_each(vfThread.begin(), vfThread.end(), [](std::future<void> &th) { th.get(); });
-            
             
         }
         else {

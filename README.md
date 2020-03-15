@@ -12,7 +12,6 @@ A set of codes for csv and for spectrum manipulation:
 
  TODO:
  - Make classes
- - Merge partfiles of results
  - Clean header
  - Additionnal parameter and file verifications
  - Implement boost:: recursive directory copy
@@ -73,36 +72,37 @@ gentoo - spec_tools/ % cmake .
 -- Generating done
 -- Build files have been written to: /home/gentoo/Prog/cpp/spec_tools
 
-gentoo - spec_tools/ % make
-[  5%] Building CXX object CMakeFiles/der_snr.dir/der_snr.cpp.o
-[ 11%] Building CXX object CMakeFiles/der_snr.dir/msg.cpp.o
-[ 16%] Linking CXX executable der_snr
-[ 16%] Built target der_snr
-Scanning dependencies of target trim
-[ 22%] Building CXX object CMakeFiles/trim.dir/trim.cpp.o
-[ 27%] Building CXX object CMakeFiles/trim.dir/msg.cpp.o
-[ 33%] Linking CXX executable trim
-[ 33%] Built target trim
-Scanning dependencies of target threshold
-[ 38%] Building CXX object CMakeFiles/threshold.dir/threshold.cpp.o
-[ 44%] Building CXX object CMakeFiles/threshold.dir/msg.cpp.o
-[ 50%] Linking CXX executable threshold
-[ 50%] Built target threshold
+gentoo - spec_tools/ % make -j$(nproc)
 Scanning dependencies of target findncopy
-[ 55%] Building CXX object CMakeFiles/findncopy.dir/findncopy.cpp.o
-[ 61%] Building CXX object CMakeFiles/findncopy.dir/msg.cpp.o
-[ 66%] Linking CXX executable findncopy
-[ 66%] Built target findncopy
+Scanning dependencies of target der_snr
+Scanning dependencies of target threshold
+Scanning dependencies of target trim
 Scanning dependencies of target shift
-[ 72%] Building CXX object CMakeFiles/shift.dir/shift.cpp.o
-[ 77%] Building CXX object CMakeFiles/shift.dir/msg.cpp.o
-[ 83%] Linking CXX executable shift
-[ 83%] Built target shift
 Scanning dependencies of target genrandspec
-[ 88%] Building CXX object CMakeFiles/genrandspec.dir/genrandspec.cpp.o
-[ 94%] Building CXX object CMakeFiles/genrandspec.dir/msg.cpp.o
-[100%] Linking CXX executable genrandspec
-[100%] Built target genrandspec
+[  5%] Building CXX object CMakeFiles/findncopy.dir/findncopy.cpp.o
+[ 11%] Building CXX object CMakeFiles/der_snr.dir/der_snr.cpp.o
+[ 33%] Building CXX object CMakeFiles/threshold.dir/msg.cpp.o
+[ 33%] Building CXX object CMakeFiles/der_snr.dir/msg.cpp.o
+[ 33%] Building CXX object CMakeFiles/findncopy.dir/msg.cpp.o
+[ 33%] Building CXX object CMakeFiles/threshold.dir/threshold.cpp.o
+[ 38%] Building CXX object CMakeFiles/shift.dir/shift.cpp.o
+[ 50%] Building CXX object CMakeFiles/trim.dir/msg.cpp.o
+[ 50%] Building CXX object CMakeFiles/trim.dir/trim.cpp.o
+[ 66%] Building CXX object CMakeFiles/genrandspec.dir/genrandspec.cpp.o
+[ 66%] Building CXX object CMakeFiles/genrandspec.dir/msg.cpp.o
+[ 66%] Building CXX object CMakeFiles/shift.dir/msg.cpp.o
+[ 72%] Linking CXX executable findncopy
+[ 72%] Built target findncopy
+[ 77%] Linking CXX executable genrandspec
+[ 77%] Built target genrandspec
+[ 83%] Linking CXX executable trim
+[ 88%] Linking CXX executable threshold
+[ 94%] Linking CXX executable shift
+[ 94%] Built target trim
+[ 94%] Built target threshold
+[ 94%] Built target shift
+[100%] Linking CXX executable der_snr
+[100%] Built target der_snr
 
 ```
 
@@ -214,19 +214,29 @@ Examples:
 ./der_snr -f CPD-591792.obs
 - CPD-591792.obs: S/N = 95.68
 
-./der_snr -d data
-▶ der_snr
-⚐ der_snr: starting 8 async threads
-⚐ compute(806557): compute S/N for 521 files
-⚐ compute(806558): compute S/N for 521 files
-⚐ compute(806559): compute S/N for 521 files
-⚐ compute(806560): compute S/N for 521 files
-⚐ compute(806561): compute S/N for 521 files
-⚐ compute(806562): compute S/N for 521 files
-⚐ compute(806564): compute S/N for 524 files
-⚐ compute(806563): compute S/N for 521 files
-⚐ der_snr:  56.395825s wall, 323.050000s user + 0.450000s system = 323.500000s CPU (573.6%)
-⚐ der_snr: output: output.csv
+./der_snr -d data -o snr.csv
+▶ der_snr 
+⚐ der_snr check command line 
+⚐ der_snr starting 8  async threads 
+⚐ compute(321893): compute S/N for 521 files 
+⚐ compute(321894): compute S/N for 521 files 
+⚐ compute(321895): compute S/N for 521 files 
+⚐ compute(321896): compute S/N for 521 files 
+⚐ compute(321897): compute S/N for 521 files 
+⚐ compute(321898): compute S/N for 521 files 
+⚐ compute(321900): compute S/N for 524 files 
+⚐ compute(321899): compute S/N for 521 files 
+⚐ merge() merge file part1_snr.csv 
+⚐ merge() merge file part2_snr.csv 
+⚐ merge() merge file part3_snr.csv 
+⚐ merge() merge file part4_snr.csv 
+⚐ merge() merge file part5_snr.csv 
+⚐ merge() merge file part6_snr.csv 
+⚐ merge() merge file part7_snr.csv 
+⚐ merge() merge file part8_snr.csv 
+⚐ der_snr output: snr.csv 
+⚐ der_snr  55.801060s wall, 321.340000s user + 0.210000s system = 321.550000s CPU (576.2%)
+
 
 Ref:
 F. Stoehr et al: DER_SNR: A Simple & General Spectroscopic Signal-to-Noise Measurement Algorithm

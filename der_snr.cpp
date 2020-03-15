@@ -60,6 +60,8 @@ namespace fs = boost::filesystem;
 void compute(const std::vector<std::string>& list, const std::string& sOutput);
 void compute_sep(const std::vector<std::string>& list, const std::string& sOutput, const char& cSep);
 
+bool merge(const std::string &sPattern);
+
 bool write(std::vector<std::string> vsResults, const std::string& sOutput);
 bool write(std::vector<std::string> vsResults, const std::string& sOutput, const char& cSep);
 
@@ -251,6 +253,8 @@ int main(int argc, char** argv) {
             
             std::vector<std::future<void> > vfThread;
             
+            std::vector<std::vector<std::string> > vvsRes;
+            
             if (bDefSep) {
                 int iCount=0;
                 for(auto t_list: vvsList_divided) {
@@ -268,6 +272,8 @@ int main(int argc, char** argv) {
                 }
             }
             std::for_each(vfThread.begin(), vfThread.end(), [](std::future<void> &th) { th.get(); });
+            
+            merge(sOutput);            
         }  
         else {
             msgM.msg(_msg::eMsg::MID, "multi-threading disabled");
@@ -291,7 +297,7 @@ void compute(const std::vector<std::string>& vsList, const std::string& sOutput)
 
     _msg msgM;
     msgM.set_name("compute()");
-    msgM.set_threadname("compute()");
+    msgM.set_threadname("compute");
     
 #ifdef HAS_SYSCALL
     msgM.msg(_msg::eMsg::THREADS, "compute S/N for", vsList.size(), "files");
@@ -300,7 +306,7 @@ void compute(const std::vector<std::string>& vsList, const std::string& sOutput)
 #endif
     
     std::vector<std::string> vsResults;
-    vsResults.emplace_back("File\tSNR\n");
+    //vsResults.emplace_back("File\tSNR\n");
     
     for(auto sFile: vsList) {
         
@@ -329,7 +335,7 @@ void compute_sep(const std::vector<std::string>& vsList, const std::string& sOut
     msgM.msg(_msg::eMsg::MID, "compute S/N for", vsList.size(), "files\n";
 #endif
     
-    vsResults.emplace_back("File\tSNR\n");
+//     vsResults.emplace_back("File\tSNR\n");
     
     for(auto sFile: vsList) {
         
@@ -360,10 +366,42 @@ bool write(std::vector<std::string> vsResults, const std::string& sOutput) {
         _msg msgM;
         msgM.set_name("write()");
         
-        msgM.msg(_msg::eMsg::ERROR, "error: error: cannot open", sOutput);
+        msgM.msg(_msg::eMsg::ERROR, "cannot open", sOutput);
         sStatus=false;
     }
     return sStatus;
+}
+
+bool merge(const std::string &sPattern) {
+    _msg msgM;
+    msgM.set_name("merge()");
+        
+    std::fstream fFlux0(sPattern, std::ios::out);
+    
+    if (fFlux0) {
+        int iCount=1;
+        fs::path pTmp("part"+std::to_string(iCount)+"_"+sPattern);
+        while(fs::exists(pTmp)) {
+            msgM.msg(_msg::eMsg::MID, "merge file", pTmp.string());
+            
+            std::fstream fFlux1(pTmp.string(), std::ios::in);
+            std::string sLine;
+            
+            while(std::getline(fFlux1, sLine))
+                fFlux0 << sLine << "\n";
+            fFlux1.close();
+            
+            fs::remove(pTmp);
+            iCount++;
+            pTmp=fs::path("part"+std::to_string(iCount)+"_"+sPattern);
+        }
+        fFlux0.close();
+    }
+    else {
+        msgM.msg(_msg::eMsg::ERROR, "cannot open", sPattern);
+        return false;
+    }
+    return true;    
 }
 
 float median(const std::vector<float> &vFlux) {    
