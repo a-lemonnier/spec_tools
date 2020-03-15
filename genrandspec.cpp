@@ -7,6 +7,7 @@
 #include <numeric>
 #include <string>
 #include <cmath>
+#include <random>
 #include <thread>
 #include <future>
 #include <ctime>
@@ -148,7 +149,7 @@ int main(int argc, char** argv) {
     }
     else {
         msgM.msg(_msg::eMsg::MID, "multi-threading disabled");
-        msgM.msg(_msg::eMsg::MID, "create directory");
+        msgM.msg(_msg::eMsg::MID, "generate spectrum");
         
         _csv<float> csv;
         
@@ -202,6 +203,11 @@ void run(const std::string& sOutput, char cSep, float fMinw, float fMaxw, float 
 
 std::vector<std::vector<float> > randomize(float fMinw, float fMaxw, float fStep) {
     
+    std::random_device rdDev;
+    
+    std::default_random_engine dreEngine(rdDev());
+    std::uniform_real_distribution<float> uniform_dist(0.9, 1.0);
+    
     int iSize=abs(fMaxw-fMinw)/fStep;
     
     std::vector<std::vector<float> > vvfRand;
@@ -213,7 +219,7 @@ std::vector<std::vector<float> > randomize(float fMinw, float fMaxw, float fStep
     for(int i=0;i<iSize;i++)
         vX[i]=fMinw+fStep*i;
     
-    std::generate(vY.begin(), vY.end(), [&]() { return std::rand() ;});     
+    std::generate(vY.begin(), vY.end(), [&]() { return uniform_dist(dreEngine);});     
    
     for(int i=0;i<iSize;i++) 
         vvfRand.emplace_back(std::vector<float>({vX[i], vY[i]}));

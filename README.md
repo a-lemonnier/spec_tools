@@ -8,10 +8,9 @@ A set of codes for csv and for spectrum manipulation:
  - **findncopy**.cpp: find and copy files from a file list
  - **der_snr**.cpp: compute the Signal-to-Noise of a spectrum
  - **shift**.cpp: shift whole spectrum by a given wavelength
- - **gen_rand_spec**.cpp: generate a set of spectra between two wavelengths for test purposes
+ - **gen_rand_spec**.cpp: generate a set of randomized-flux spectra between two wavelengths for test purposes
 
  TODO:
- - gen_rand_spec.cpp: rand distrib
  - Make classes
  - Merge partfiles of results
  - Clean header
@@ -75,22 +74,35 @@ gentoo - spec_tools/ % cmake .
 -- Build files have been written to: /home/gentoo/Prog/cpp/spec_tools
 
 gentoo - spec_tools/ % make
-Scanning dependencies of target findncopy
-[ 12%] Building CXX object CMakeFiles/findncopy.dir/findncopy.cpp.o
-[ 25%] Linking CXX executable findncopy
-[ 25%] Built target findncopy
+[  5%] Building CXX object CMakeFiles/der_snr.dir/der_snr.cpp.o
+[ 11%] Building CXX object CMakeFiles/der_snr.dir/msg.cpp.o
+[ 16%] Linking CXX executable der_snr
+[ 16%] Built target der_snr
+Scanning dependencies of target trim
+[ 22%] Building CXX object CMakeFiles/trim.dir/trim.cpp.o
+[ 27%] Building CXX object CMakeFiles/trim.dir/msg.cpp.o
+[ 33%] Linking CXX executable trim
+[ 33%] Built target trim
 Scanning dependencies of target threshold
-[ 37%] Building CXX object CMakeFiles/threshold.dir/threshold.cpp.o
+[ 38%] Building CXX object CMakeFiles/threshold.dir/threshold.cpp.o
+[ 44%] Building CXX object CMakeFiles/threshold.dir/msg.cpp.o
 [ 50%] Linking CXX executable threshold
 [ 50%] Built target threshold
-Scanning dependencies of target trim
-[ 62%] Building CXX object CMakeFiles/trim.dir/trim.cpp.o
-[ 75%] Linking CXX executable trim
-[ 75%] Built target trim
-Scanning dependencies of target der_snr
-[ 87%] Building CXX object CMakeFiles/der_snr.dir/der_snr.cpp.o
-[100%] Linking CXX executable der_snr
-[100%] Built target der_snr
+Scanning dependencies of target findncopy
+[ 55%] Building CXX object CMakeFiles/findncopy.dir/findncopy.cpp.o
+[ 61%] Building CXX object CMakeFiles/findncopy.dir/msg.cpp.o
+[ 66%] Linking CXX executable findncopy
+[ 66%] Built target findncopy
+Scanning dependencies of target shift
+[ 72%] Building CXX object CMakeFiles/shift.dir/shift.cpp.o
+[ 77%] Building CXX object CMakeFiles/shift.dir/msg.cpp.o
+[ 83%] Linking CXX executable shift
+[ 83%] Built target shift
+Scanning dependencies of target genrandspec
+[ 88%] Building CXX object CMakeFiles/genrandspec.dir/genrandspec.cpp.o
+[ 94%] Building CXX object CMakeFiles/genrandspec.dir/msg.cpp.o
+[100%] Linking CXX executable genrandspec
+[100%] Built target genrandspec
 
 ```
 
