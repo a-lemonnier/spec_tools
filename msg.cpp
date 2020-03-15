@@ -5,7 +5,8 @@ _msg::_msg(): sSuf("\033[0m"),
               sMid_pre("\033[3;32m\u2690\033[0m \033[1;30m"),
               sEnd_pre("\033[3;32m\u2690\033[0m \033[1;30m"),
               sThd_pre("\033[3;32m\u2690\033[0m \033[1;30m"),
-              sThd_suf("\033[0m"),
+              sThd_suf("\033[1;95m"),
+              
               sErr_pre("\033[5;31m\u2639\033[0m \033[1;30m")
 {
 
@@ -57,8 +58,15 @@ void _msg::msg(eMsg emType, const std::string& sMsg) const {
                       << "\n";  
             break;
         case eMsg::THREADS:
-            std::cout << sThd_pre << sThreadname << sSuf
-                      << ": "
+            std::cout << sThd_pre << sThreadname 
+                      << "("
+                      << sSuf
+                      << sThd_suf
+                      << syscall(__NR_gettid)
+                      << sSuf
+                      << "\033[1;30m"
+                      << "): "
+                      << sSuf
                       << sMsg
                       << "\n";  
             break;

@@ -5,6 +5,12 @@
 #include <string>
 #include <sstream>
 
+#if __has_include (<sys/syscall.h>) && __has_include (<unistd.h>)
+#include <unistd.h>
+#include <sys/syscall.h>
+#define HAS_SYSCALL
+#endif
+
 /**
  * @todo write docs
  */

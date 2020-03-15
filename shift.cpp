@@ -20,11 +20,6 @@
 #define HAS_BOOST_TIMER
 #endif
 
-#if __has_include (<sys/syscall.h>)
-#include <sys/syscall.h>
-#define HAS_SYSCALL
-#endif
-
 #if __has_include (<filesystem>)
 #include <filesystem>
 #define FS_STD
@@ -262,7 +257,7 @@ void add(const std::vector<std::string> &vsList, float fWavelength) {
      }
     
 #ifdef HAS_SYSCALL   
-    msgM.msg(_msg::eMsg::THREADS, "(", syscall(__NR_gettid),"):", vsList.size(), "files parsed.");
+    msgM.msg(_msg::eMsg::THREADS, vsList.size(), "files parsed.");
 #else
     msgM.msg(_msg::eMsg::MID, vsList.size(), " files parsed.");
 #endif
@@ -289,7 +284,7 @@ void add_sep(const std::vector<std::string> &vsList, char cSep , float fWaveleng
     }
     
 #ifdef HAS_SYSCALL   
-    msgM.msg(_msg::eMsg::THREADS, "(", syscall(__NR_gettid),"):", vsList.size(), "files parsed.");
+    msgM.msg(_msg::eMsg::THREADS, vsList.size(), "files parsed.");
 #else
     msgM.msg(_msg::eMsg::MID, vsList.size(), " files parsed.");
 #endif

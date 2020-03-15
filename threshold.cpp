@@ -20,11 +20,6 @@
 #define HAS_BOOST_TIMER
 #endif
 
-#if __has_include (<sys/syscall.h>)
-#include <sys/syscall.h>
-#define HAS_SYSCALL
-#endif
-
 #if __has_include (<filesystem>)
 #include <filesystem>
 #define FS_STD
@@ -220,7 +215,7 @@ void trim(const std::vector<std::string> &list, double threshold) {
     } 
     
 #ifdef HAS_SYSCALL
-    msgM.msg(_msg::eMsg::THREADS, "(", syscall(__NR_gettid), "): ", list.size(), "files parsed");
+    msgM.msg(_msg::eMsg::THREADS, list.size(), "files parsed");
 #else
     msgM.msg(_msg::eMsg::MID, list.size(), " files parsed");
 #endif

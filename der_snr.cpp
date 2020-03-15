@@ -28,12 +28,6 @@
 #define HAS_BOOST_TIMER
 #endif
 
-
-#if __has_include (<sys/syscall.h>)
-#include <sys/syscall.h>
-#define HAS_SYSCALL
-#endif
-
 #if __has_include (<filesystem>)
 #include <filesystem>
 #define FS_STD
@@ -300,7 +294,7 @@ void compute(const std::vector<std::string>& vsList, const std::string& sOutput)
     msgM.set_threadname("compute()");
     
 #ifdef HAS_SYSCALL
-    msgM.msg(_msg::eMsg::THREADS, "(", syscall(__NR_gettid), "): compute S/N for", vsList.size(), "files");
+    msgM.msg(_msg::eMsg::THREADS, "compute S/N for", vsList.size(), "files");
 #else
     msgM.msg(_msg::eMsg::MID, "compute S/N for", vsList.size(), "files\n";
 #endif

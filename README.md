@@ -255,7 +255,15 @@ gentoo - spec_tools/ % ./genrandspec
 ⚐ genrandspec: check command line 
 ⚐ genrandspec: create 8 folders 
 ⚐ genrandspec: start 8 async threads 
-⚐ genrandspec: output: rand_spectra.dat 
-⚐ genrandspec:  0.156242s wall, 0.150000s user + 0.000000s system = 0.150000s CPU (96.0%)
+⚐ genrandspec: create directories 
+⚐ run(3280006): create spectra in rand_spectra/0 
+⚐ run(3280007): create spectra in rand_spectra/1 
+⚐ run(3280008): create spectra in rand_spectra/2 
+⚐ run(3280009): create spectra in rand_spectra/3 
+⚐ run(3280010): create spectra in rand_spectra/4 
+⚐ run(3280011): create spectra in rand_spectra/5 
+⚐ run(3280012): create spectra in rand_spectra/6 
+⚐ run(3280013): create spectra in rand_spectra/7 
+⚐ genrandspec:  10.694788s wall, 77.990000s user + 3.050000s system = 81.040000s CPU (757.8%)
 
 ```
