@@ -8,10 +8,10 @@ A set of codes for csv and for spectrum manipulation:
  - **findncopy**.cpp: find and copy files from a file list
  - **der_snr**.cpp: compute the Signal-to-Noise of a spectrum
  - **shift**.cpp: shift whole spectrum by a given wavelength
- - **gen_rand_spec**.cpp: generate a set of spectra between two wavelengths
+ - **gen_rand_spec**.cpp: generate a set of spectra between two wavelengths for test purposes
 
  TODO:
- - gen_rand_spec.cpp: rand distrib, threads
+ - gen_rand_spec.cpp: rand distrib
  - Make classes
  - Merge partfiles of results
  - Clean header
