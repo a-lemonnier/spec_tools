@@ -101,21 +101,39 @@ int main(int argc, char** argv) {
         std::cout << description;
         std::cout << "\n";
         std::cout << "Examples:\n";
-        std::cout << "./der_snr -i CPD-591792.obs\n";
-        std::cout << "- CPD-591792.obs: S/N = 95.68\n\n";
+        std::cout << "./der_snr -f CPD-591792.obs\n";
+        std::cout << "\033[3;32m\u25B6\033[0m \033[1;34mder_snr\033[0m\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m check command line\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m compute S/N for 1 file\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m CPD-591792.obs: S/N = 95.68\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m output: output.csv\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m  0.039347s wall, 0.040000s user + 0.000000s system = 0.040000s CPU (101.7%)\n";
+        std::cout << "\n";
+        
         std::cout << "./der_snr -d data\n";
         std::cout << "\033[3;32m\u25B6\033[0m \033[1;34mder_snr\033[0m\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m: starting 8 async threads\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759980)\033[0m: S/N for 521 files.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759981)\033[0m: S/N for 521 files.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759982)\033[0m: S/N for 521 files.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759983)\033[0m: S/N for 521 files.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759984)\033[0m: S/N for 521 files.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759985)\033[0m: S/N for 521 files.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759986)\033[0m: S/N for 521 files.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759987)\033[0m: S/N for 524 files.\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m check command line\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m starting 8 async threads\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759980)\033[0m S/N for 521 files\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759981)\033[0m S/N for 521 files\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759982)\033[0m S/N for 521 files\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759983)\033[0m S/N for 521 files\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759984)\033[0m S/N for 521 files\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759985)\033[0m S/N for 521 files\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759986)\033[0m S/N for 521 files\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mcompute(759987)\033[0m S/N for 524 files\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mmerge()\033[0m merge file part1_snr.csv\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mmerge()\033[0m merge file part2_snr.csv\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mmerge()\033[0m merge file part3_snr.csv\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mmerge()\033[0m merge file part4_snr.csv\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mmerge()\033[0m merge file part5_snr.csv\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mmerge()\033[0m merge file part6_snr.csv\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mmerge()\033[0m merge file part7_snr.csv\n";
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mmerge()\033[0m merge file part8_snr.csv\n";
+
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m: output: output.csv\n";        
         std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m:  56.395825s wall, 323.050000s user + 0.450000s system = 323.500000s CPU (573.6%)\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mder_snr\033[0m: output: output.csv\n";
+
         
         std::cout << "\nRef:\n";
         std::cout << "F. Stoehr et al: DER_SNR: A Simple & General Spectroscopic Signal-to-Noise Measurement Algorithm\n";
@@ -158,7 +176,7 @@ int main(int argc, char** argv) {
     }
     
     if (vm.count("filename")) {
-        pFilename=fs::path(vm["directory"].as<std::string>());
+        pFilename=fs::path(vm["filename"].as<std::string>());
         if (!fs::exists(pFilename)) {
             msgM.msg(_msg::eMsg::ERROR, "error:", pFilename.string(),"does not exist");
             return EXIT_FAILURE;
@@ -335,7 +353,7 @@ void compute_sep(const std::vector<std::string>& vsList, const std::string& sOut
     msgM.msg(_msg::eMsg::MID, "compute S/N for", vsList.size(), "files\n";
 #endif
     
-//     vsResults.emplace_back("File\tSNR\n");
+//     vsResults.emplace_back("File\tSNR\n");    
     
     for(auto sFile: vsList) {
         
