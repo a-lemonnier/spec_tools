@@ -288,6 +288,13 @@ public:
     bool check_dim();
     
     /**
+     * \fn bool transform_lin(_T TA, _T TB, int iCol)
+     * \brief Do Y=aX+b to the iCol-column
+     * \return true if all seems OK
+     */    
+    bool transform_lin(_T TA, _T TB, int iCol);
+    
+    /**
      * \fn bool(_T TVal)
      * \return true if all seems OK
      */

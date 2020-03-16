@@ -68,6 +68,9 @@ int main(int argc, char** argv) {
 #ifdef HAS_BOOST_TIMER    
     boost::timer::cpu_timer btTimer;
 #endif
+
+    _msg msgM;
+    msgM.set_name("findncopy");
     
 // Parse cmd line
 // ----------------------------------------------------  
@@ -94,22 +97,19 @@ int main(int argc, char** argv) {
         std::cout << "# cat tar_list.txt\n";
         std::cout << "HD87205\nHD87205\nHD87309\nHD87309\n...\n";
         std::cout << "# ./findncopy -n star_list.txt -i data -o spectra -e sky\n";
-        std::cout << "\033[3;32m\u25B6\033[0m \033[1;34mfindncopy\033[0m\n";
-        std::cout << "\033[3;32m\u2690\033[0m parsing file: 36 lines\n";
-        std::cout << "\033[3;32m\u2690\033[0m searching file: 240 files found\n";
-        std::cout << "\033[3;32m\u2690\033[0m erasing string: 'data'\n";
-        std::cout << "\033[3;32m\u2690\033[0m creating directory list: done\n";
-        std::cout << "\033[3;32m\u2690\033[0m creating folders: done\n";
-        std::cout << "\033[3;32m\u2690\033[0m copying files: 174 files copied\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mfindncopy\033[0m:  0.176172s wall, 0.130000s user + 0.040000s system = 0.170000s CPU (96.5%)\n";
+        msgM.msg(_msg::eMsg::START);
+        msgM.msg(_msg::eMsg::MID, "parsing file: 36 lines");
+        msgM.msg(_msg::eMsg::MID, "searching file: 240 files found");
+        msgM.msg(_msg::eMsg::MID, "erasing string: 'data'");
+        msgM.msg(_msg::eMsg::MID, "creating directory list: done");
+        msgM.msg(_msg::eMsg::MID, "creating folders: done");
+        msgM.msg(_msg::eMsg::MID, "copying files: 174 files copied");
+        msgM.msg(_msg::eMsg::END, " 0.176172s wall, 0.130000s user + 0.040000s system = 0.170000s CPU (96.5%)\n");
 
         return EXIT_SUCCESS;
     }
 
 // ----------------------------------------------------  
-    
-    _msg msgM;
-    msgM.set_name("findncopy");
     
     msgM.msg(_msg::eMsg::START);
 

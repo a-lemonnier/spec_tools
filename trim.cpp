@@ -56,6 +56,9 @@ int main(int argc, char** argv) {
     boost::timer::cpu_timer btTimer;
 #endif
 
+    _msg msgM;
+    msgM.set_name("trim");
+    
 // Parse cmd line
 // ----------------------------------------------------  
     
@@ -74,20 +77,22 @@ int main(int argc, char** argv) {
     po::notify(vm);
     
     if (vm.count("help") || !vm.count("min") || !vm.count("max") || !vm.count("input_folder")  || vm.size()<2) {
+        msgM.set_threadname("trim");
         std::cout << description;
         std::cout << "\nExample:\n";
         std::cout << "./trim -l 4700 -u 4800 -i data -o spectra_trimmed\n";
-        std::cout << "\033[3;32m\u25B6\033[0m \033[1;34mtrim\033[0m\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mtrim\033[0m: starting 8 async threads\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mtrim(2416052)\033[0m: 521 files parsed.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mtrim(2416051)\033[0m: 521 files parsed.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mtrim(2416054)\033[0m: 521 files parsed.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mtrim(2416053)\033[0m: 521 files parsed.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mtrim(2416055)\033[0m: 521 files parsed.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mtrim(2416050)\033[0m: 521 files parsed.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mtrim(2416056)\033[0m: 521 files parsed.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mtrim(2416057)\033[0m: 524 files parsed.\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mtrim\033[0m:  52.909230s wall, 296.410000s user + 0.710000s system = 297.120000s CPU (561.6%)\n";
+        msgM.msg(_msg::eMsg::START);
+        msgM.msg(_msg::eMsg::MID, "check command line");
+        msgM.msg(_msg::eMsg::MID, "starting 8 async threads");
+        msgM.msg(_msg::eMsg::THREADS, "521 files parsed");
+        msgM.msg(_msg::eMsg::THREADS, "521 files parsed");
+        msgM.msg(_msg::eMsg::THREADS, "521 files parsed");
+        msgM.msg(_msg::eMsg::THREADS, "521 files parsed");
+        msgM.msg(_msg::eMsg::THREADS, "521 files parsed");
+        msgM.msg(_msg::eMsg::THREADS, "521 files parsed");
+        msgM.msg(_msg::eMsg::THREADS, "521 files parsed");
+        msgM.msg(_msg::eMsg::THREADS, "524 files parsed");
+        msgM.msg(_msg::eMsg::END, " 52.909230s wall, 296.410000s user + 0.710000s system = 297.120000s CPU (561.6%)\n");
 
         return EXIT_SUCCESS;
     }   
@@ -107,10 +112,7 @@ int main(int argc, char** argv) {
     fs::path path_out(vm["input_folder"].as<std::string>());
      
 // ----------------------------------------------------  
-    
-    _msg msgM;
-    msgM.set_name("trim");
-    
+
     msgM.msg(_msg::eMsg::START);
     msgM.msg(_msg::eMsg::MID, "check command line");
     

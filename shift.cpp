@@ -39,6 +39,8 @@ namespace fs = boost::filesystem;
 #include "csv.h"
 #include "msg.h"
 
+#define CLIGHT 299792458 // m/s
+
 // Enum
 // ----------------------------------------------------
 enum eMsg {START, MID, END, ERROR, THREADS };
@@ -49,16 +51,7 @@ enum eMsg {START, MID, END, ERROR, THREADS };
 void add(const std::vector<std::string> &vsList, float fWavelength);
 void add_sep(const std::vector<std::string> &vsList, char cSep , float fWavelength);
 
-void msg(const std::string &sMsg, eMsg emType);
-
-template<typename _T>
-void msg(const std::string &sMsg, eMsg emType, _T TAdd);
-
-template<typename _T0, typename _T1>
-void msg(const std::string &sMsg, eMsg emType, _T0 T0Add, _T1 T1Add);
-
-template<typename _T0, typename _T1, typename _T2>
-void msg(const std::string &sMsg, eMsg emType, _T0 T0Add, _T1 T1Add, _T2 T2Add);
+void transform_sep(const std::vector<std::string> &vsList, char cSep , float fVr);
 // ----------------------------------------------------
 
 int main(int argc, char** argv) {
@@ -66,6 +59,9 @@ int main(int argc, char** argv) {
 #ifdef HAS_BOOST_TIMER    
     boost::timer::cpu_timer btTimer;
 #endif
+    
+    _msg msgM;
+    msgM.set_name("shift");
 
 // Parse cmd line
 // ----------------------------------------------------  
@@ -76,6 +72,7 @@ int main(int argc, char** argv) {
     description.add_options()
     ("help,h", "Display this help message")
     ("wavelength,w",  po::value<float>(),"Wavelength")
+    ("velocity,v",  po::value<float>()->default_value(0),"Radial velocity of the source (m/s)")
     ("filename,f",  po::value<std::string>(),"Shift a single file")
     ("input_folder,i",  po::value<std::string>(),"Name of the folder where original data are")
     ("output,o",  po::value<std::string>()->default_value("data_out"),"Set the directory or the file where store new data.")
@@ -85,20 +82,31 @@ int main(int argc, char** argv) {
     po::store(po::command_line_parser(argc, argv).options(description).run(), vm);
     po::notify(vm);
     
-    if (vm.count("help") || !vm.count("wavelength") || !(vm.count("input_folder") ^ vm.count("filename"))  || vm.size()<2) {
+    if (vm.count("help") || !(vm.count("wavelength") ^ vm.count("velocity")) || !(vm.count("input_folder") ^ vm.count("filename"))  || vm.size()<2) {
         std::cout << description;
         std::cout << "\nExample:\n";
         std::cout << "./shift -w -1.0 -f CD-592728.obs\n";
-        std::cout << "\033[3;32m\u25B6\033[0m \033[1;34mshift\033[0m\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift\033[0m: check command line\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift\033[0m: shift the spectrum by -1\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift\033[0m: output: data_out\n";
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30mshift\033[0m: 0.043272s wall, 0.040000s user + 0.000000s system = 0.040000s CPU (92.4%)\n";
+        msgM.msg(_msg::eMsg::START);
+        msgM.msg(_msg::eMsg::MID, "check command line");
+        msgM.msg(_msg::eMsg::MID, "shift the spectrum by -1");
+        msgM.msg(_msg::eMsg::MID, "output: data_out");
+        msgM.msg(_msg::eMsg::END," 0.043272s wall, 0.040000s user + 0.000000s system = 0.040000s CPU (92.4%)\n");
 
         return EXIT_SUCCESS;
     }
 
-    float fWavelength=vm["wavelength"].as<float>();
+    bool bDefVr=false;
+    
+    float fVr;
+    float fWavelength;
+    
+    if (vm.count("velocity")) {
+        fVr=vm["velocity"].as<float>();
+        bDefVr=true;
+    }
+    else 
+        fWavelength=vm["wavelength"].as<float>();
+    
     
     std::string sFilename;
     std::string sOutput=vm["output"].as<std::string>();
@@ -111,11 +119,7 @@ int main(int argc, char** argv) {
     fs::path path_out;
  
 // ----------------------------------------------------  
-    
-    _msg msgM;
-    
-    msgM.set_name("shift");
-    
+        
     msgM.msg(_msg::eMsg::START);
     msgM.msg(_msg::eMsg::MID, "check command line");
         
@@ -195,18 +199,28 @@ int main(int argc, char** argv) {
             
             std::vector<std::future<void> > thread;
             
-            for(auto t_list: list_divided)
-                thread.emplace_back(std::async(flag, add_sep, t_list, cSep, fWavelength));
+            if (!bDefVr)
+                for(auto t_list: list_divided)
+                    thread.emplace_back(std::async(flag, add_sep, t_list, cSep, fWavelength));
+            else
+                for(auto t_list: list_divided)
+                    thread.emplace_back(std::async(flag, transform_sep, t_list, cSep, fVr));                
             
             std::for_each(thread.begin(), thread.end(), [](std::future<void> &th) { th.get(); });
         }  
         else {
             msgM.msg(_msg::eMsg::MID, "multi-threading disabled");
-            add_sep(list, cSep, fWavelength);
+            if (!bDefVr)
+                add_sep(list, cSep, fWavelength);
+            else
+                transform_sep(list, cSep, fVr);
         }
     }
     else {
-        msgM.msg(_msg::eMsg::MID, "shift the spectrum by", fWavelength);
+        if (!bDefVr)
+            msgM.msg(_msg::eMsg::MID, "shift the spectrum by", fWavelength);
+        else
+            msgM.msg(_msg::eMsg::MID, "correct radial velocity vr =", fVr, "and 1/(\u03B2+1) =", 1/(1+fVr/CLIGHT));
         
         _csv<float> csv(sFilename, cSep);
         
@@ -216,7 +230,12 @@ int main(int argc, char** argv) {
             
             csv.set_verbose(_csv<float>::eVerbose::QUIET);
             
-            csv.shift(fWavelength);
+            if (!bDefVr)
+                csv.shift(fWavelength);
+            else {
+                float fBeta=1/(1+fVr/CLIGHT);
+                csv.transform_lin(fBeta, 0., 0);
+            }
             
             csv.write();
             
@@ -277,6 +296,35 @@ void add_sep(const std::vector<std::string> &vsList, char cSep , float fWaveleng
             csv.set_verbose(_csv<float>::eVerbose::QUIET);
             
             csv.shift(fWavelength);
+            
+            csv.write();
+            
+        }    
+    }
+    
+#ifdef HAS_SYSCALL   
+    msgM.msg(_msg::eMsg::THREADS, vsList.size(), "files parsed.");
+#else
+    msgM.msg(_msg::eMsg::MID, vsList.size(), " files parsed.");
+#endif
+}
+
+void transform_sep(const std::vector<std::string> &vsList, char cSep , float fVr) {
+    _msg msgM;
+    msgM.set_threadname("transform");
+    msgM.set_name("transform");
+    
+     for(auto sFile: vsList) {
+        
+        _csv<float> csv(sFile, cSep);
+        
+        if(csv.read()) {
+            
+            csv.set_verbose(_csv<float>::eVerbose::QUIET);
+            
+            float fBeta=1/(1+fVr/CLIGHT);
+            
+            csv.transform_lin(fBeta, 0, 0);
             
             csv.write();
             

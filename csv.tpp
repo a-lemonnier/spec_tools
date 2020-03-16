@@ -342,8 +342,6 @@ const std::vector<_T> _csv<_T>::select_column(int col) const {
     return vvRes;    
 }
 
-
-
 template<typename _T> 
 const std::vector<std::vector<_T> > _csv<_T>::select(int iLine_min, int iLine_max, int iCol_min, int iCol_max) const {
     if (iLine_min<0 || iCol_min<0 || iLine_max>get_data_size_i() ||  iCol_max>get_data_size_j()) {
@@ -360,7 +358,6 @@ const std::vector<std::vector<_T> > _csv<_T>::select(int iLine_min, int iLine_ma
     return vvRes; 
     
 }
-
 
 template<typename _T> 
 bool _csv<_T>::set_data(const std::vector<std::vector<_T> > &vvData) {
@@ -588,6 +585,28 @@ bool _csv<_T>::check_dim() {
     }
     else 
         debug("check_dim(): data is empty");
+    return bStatus;
+}
+
+template<typename _T> 
+bool _csv<_T>::transform_lin(_T TA, _T TB, int iCol) {
+    bStatus=true;
+
+    if (iCol<0 || iCol>get_data_size_j()) {
+        error("shift(): bad column selected");
+        bStatus=false;
+    }
+    
+    debug("transform "
+          +std::to_string(vvData.size())
+          +" values in the "
+          +std::to_string(iCol)
+          +"th column: X'=a*X+b="
+          +std::to_string(TA)
+          +"*X+"+std::to_string(TB));
+    
+    std::for_each(vvData.begin(), vvData.end(), [&](std::vector<_T> &vV) { vV[iCol]=TA*vV[iCol]+TB; });
+    
     return bStatus;
 }
 
