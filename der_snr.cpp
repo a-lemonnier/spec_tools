@@ -123,7 +123,7 @@ int main(int argc, char** argv) {
     po::store(po::command_line_parser(argc, argv).options(description).run(), vm);
     po::notify(vm);
     
-     if (vm.count("help") || vm.size()<1 || (!vm.count("filename") && !vm.count("directory"))) {
+     if (vm.count("help") || vm.size()<1 || !(vm.count("filename") ^ vm.count("directory"))) {
         std::cout << description;
         std::cout << "\n";
         std::cout << "Examples:\n";
@@ -188,7 +188,7 @@ int main(int argc, char** argv) {
     msgM.msg(_msg::eMsg::MID, "check command line");
     
     if (vm.count("directory") && vm.count("filename")) {
-        std::cerr << "\033[5;31m\u2639\033[0m \033[1;30mder_snr\033[0m: error: ambiguous entries\n";
+        msgM.msg(_msg::eMsg::ERROR, "ambiguous entries");
         return EXIT_FAILURE;
     }
     

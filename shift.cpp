@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
     description.add_options()
     ("help,h", "Display this help message")
     ("wavelength,w",  po::value<float>(),"Wavelength")
-    ("velocity,v",  po::value<float>()->default_value(0),"Radial velocity of the source (m/s)")
+    ("velocity,v",  po::value<float>(),"Radial velocity of the source (m/s)")
     ("filename,f",  po::value<std::string>(),"Shift a single file")
     ("input_folder,i",  po::value<std::string>(),"Name of the folder where original data are")
     ("output,o",  po::value<std::string>()->default_value("data_out"),"Set the directory or the file where store new data.")
