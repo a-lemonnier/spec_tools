@@ -2,8 +2,8 @@
  * \file shift.cpp
  * \brief Shift whole spectrum by a given wavelength. This code is multi-threaded or not if not available.
  * \author Audric Lemonnier
- * \version 0.1
- * \date 14/03/2020
+ * \version 0.2
+ * \date 16/03/2020
  */
 
 #include <iostream>
@@ -41,16 +41,26 @@ namespace fs = boost::filesystem;
 
 #define CLIGHT 299792458 // m/s
 
-// Enum
-// ----------------------------------------------------
-enum eMsg {START, MID, END, ERROR, THREADS };
-// ----------------------------------------------------
 
 // Prototype
 // ----------------------------------------------------
+/**
+ * \fn void add(const std::vector<std::string> &vsList, float fWavelength)
+ * \brief Add the defined wavelength to the first column of spectra. Default sep is '\\t'.
+ */
 void add(const std::vector<std::string> &vsList, float fWavelength);
+
+/**
+ * \fn void add_sep(const std::vector<std::string> &vsList, char cSep , float fWavelength)
+ * \brief Add the defined wavelength to the first column of spectra.
+ */
 void add_sep(const std::vector<std::string> &vsList, char cSep , float fWavelength);
 
+/**
+ * \fn void transform_sep(const std::vector<std::string> &vsList, char cSep , float fVr)
+ * \brief Correct the radial velocity effect on spectra. Perform a linear transformation.
+ * \param fVr Radial Velocity
+ */
 void transform_sep(const std::vector<std::string> &vsList, char cSep , float fVr);
 // ----------------------------------------------------
 

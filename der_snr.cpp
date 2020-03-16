@@ -7,7 +7,7 @@
  * This code is multi-threaded or not if not available.
  * \author Audric Lemonnier
  * \version 0.1
- * \date 14/03/2020
+ * \date 16/03/2020
  */
 
 #include <iostream>
@@ -58,16 +58,39 @@ namespace fs = boost::filesystem;
 // ----------------------------------------------------
 
 void compute(const std::vector<std::string>& list, const std::string& sOutput);
+
+/**
+ * \fn void compute_sep(const std::vector<std::string>& list, const std::string& sOutput, const char& cSep)
+ * \brief Compute S/N for all the string in the vector of strings. Used in the multithreaded mode.
+ */
 void compute_sep(const std::vector<std::string>& list, const std::string& sOutput, const char& cSep);
 
+/**
+ * \fn bool merge(const std::string &sPattern)
+ * \brief Merge files from threads following a filename pattern, i.e. the given output name.
+ */
 bool merge(const std::string &sPattern);
 
+
 bool write(std::vector<std::string> vsResults, const std::string& sOutput);
+
+/**
+ * \fn bool write(std::vector<std::string> vsResults, const std::string& sOutput, const char& cSep)
+ * \brief Write on disk results
+ */
 bool write(std::vector<std::string> vsResults, const std::string& sOutput, const char& cSep);
 
+/**
+ * \fn float der_snr(const std::vector<float> &vFlux)
+ * \brief Compute the S/N with der_snr method.
+ */
 float der_snr(const std::vector<float> &vFlux);
 double der_snr(const std::vector<double> &vFlux);
 
+/**
+ * \fn float median(const std::vector<float> &vFlux)
+ * \brief Simple computation of the median
+ */
 float median(const std::vector<float> &vFlux);
 double median(const std::vector<double> &vFlux);
 

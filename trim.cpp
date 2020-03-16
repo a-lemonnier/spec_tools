@@ -2,8 +2,8 @@
  * \file der_snr
  * \brief Delete a wavelength outside a wavelength range for a file or a folder. This code is multi-threaded or not if not available.
  * \author Audric Lemonnier
- * \version 0.1
- * \date 09/03/2020
+ * \version 0.2
+ * \date 16/03/2020
  */
 
 #include <iostream>

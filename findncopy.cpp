@@ -40,24 +40,51 @@ namespace fs = boost::filesystem;
 
 // Prototype
 // ----------------------------------------------------
+/**
+ * \fn std::vector<std::string> parse_filelist(std::fstream &flux)
+ * \brief Create a vector of strings from the filelist
+ */
 std::vector<std::string> parse_filelist(std::fstream &flux);
 
+/**
+ * \fn std::vector<std::string> get_fullrpath(std::vector<std::string>& vsFilelist, const fs::path &fspPidir)
+ * \brief Get the full relative path of all file
+ */
 std::vector<std::string> get_fullrpath(std::vector<std::string>& vsFilelist, 
                                         const fs::path &fspPidir);
 
+/**
+ * \fn std::vector<std::string> get_fullrpath(std::vector<std::string>& vsFilelist, const fs::path &fspPidir, const std::string &sExclude)
+ * \brief Get the full relative path of all file and exclude a string in paths
+ */
 std::vector<std::string> get_fullrpath(std::vector<std::string>& vsFilelist, 
                                         const fs::path &fspPidir,
                                         const std::string &sExclude);
 
+/**
+ * \fn void erase_string(std::vector<std::string> &vsFullrpath, const std::string &sToerase)
+ * \brief Erase a string pattern in the path list
+ */
 void erase_string(std::vector<std::string> &vsFullrpath, 
                   const std::string &sToerase);
 
+/**
+ * \fn std::vector<std::string> make_dir_list(const fs::path &fspPath, const std::string &sDirbase)
+ * \brief Make a list of the folder structure
+ */
 std::vector<std::string> make_dir_list(const fs::path &fspPath, 
                                         const std::string &sDirbase);
-
+/**
+ * \fn void make_dir(const std::vector<std::string> &vsBaserpath, const std::string &sOfolder)
+ * \brief Recreate the folder structure
+ */
 void make_dir(const std::vector<std::string> &vsBaserpath,  
               const std::string &sOfolder);
 
+/**
+ * \fn void copy_file(std::vector<std::string> &vsFullrpath, const std::string &sOfolder, const std::string &sIfolder)
+ * \brief Copy the found files
+ */
 void copy_file(std::vector<std::string> &vsFullrpath,
                const std::string &sOfolder,
                const std::string &sIfolder);
