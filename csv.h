@@ -6,8 +6,8 @@
  * \brief A basic class for csv manipulation
  * 
  * \author Audric Lemonnier
- * \version 0.7
- * \date 13/03/2020
+ * \version 0.8
+ * \date 17/03/2020
  * 
  */
 
@@ -16,7 +16,12 @@
 
 // #include <execution> //Parallel STL disabled
 
+#include <ctime>
+#include <chrono>
+
 #include <cmath>
+#include <numeric>
+#include <random>
 
 #include <cstdarg>
 
@@ -288,6 +293,12 @@ public:
     bool check_dim();
     
     /**
+     * \fn bool genrandspec(_T TMin, _T TMax, _T TStep)
+     * \brief Generate a normalized random spectrum with random gaussian absoption profiles. For TStep < 0.05, you may want to initialize with double.
+     */
+    bool genrandspec(_T TMin, _T TMax, _T TStep);
+    
+    /**
      * \fn bool transform_lin(_T TA, _T TB, int iCol)
      * \brief Do Y=aX+b to the iCol-column
      * \return true if all seems OK
@@ -296,12 +307,14 @@ public:
     
     /**
      * \fn bool(_T TVal)
+     * \brief Shift first column 
      * \return true if all seems OK
      */
     bool shift(_T TVal);
 
     /**
      * \fn bool(_T TVal, int iCol)
+     * \brief Shift the column iCol by TVal 
      * \return true if all seems OK
      */
     bool shift(_T TVal, int iCol);
@@ -345,7 +358,7 @@ public:
      * \brief Set to zero data. One should find this useful...
      */
     void zeroize();
-    
+
     /**
      * \fn void clear()
      * \brief Delete data and header.
@@ -437,6 +450,13 @@ private:
    
     eVerbose evVerbose; /**< Verbose define verbosity */
     bool bStatus; /**< Status is used to return error status  */
+    
+    /**
+     * \fn _T Gaussian(_T x, _T x0, _T sigma) const
+     * \brief Gaussian function used for spectra generation
+     */
+    _T Gaussian(_T x, _T x0, _T sigma) const;
+
     
 };
 

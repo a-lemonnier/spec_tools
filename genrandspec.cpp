@@ -2,8 +2,8 @@
  * \file genrandspec.cpp
  * \brief Generate a set of randomized-flux spectra between two wavelengths for test purposes
  * \author Audric Lemonnier
- * \version 0.1
- * \date 15/03/2020
+ * \version 0.3
+ * \date 17/03/2020
  */
 
 #include <iostream>
@@ -49,7 +49,7 @@ namespace fs = boost::filesystem;
  * \define MaxFilepDir
  * \brief Set the maximum number of files to create in a folder
  */
-#define MaxFilepDir 50
+#define MaxFilepDir 10
 
 // Prototype
 // ----------------------------------------------------
@@ -58,12 +58,6 @@ namespace fs = boost::filesystem;
  * \brief Write random spectra on disk
  */
 void run(const std::string& sOutput, char cSep, float fMinw, float fMaxw, float fStep);
-
-/**
- * \fn std::vector<std::vector<float> > randomize(float fMinw, float fMaxw, float fStep)
- * \brief Store a random spectrum in a 2D vector 
- */
-std::vector<std::vector<float> > randomize(float fMinw, float fMaxw, float fStep);
 // ----------------------------------------------------
 
 int main(int argc, char** argv) {
@@ -71,6 +65,9 @@ int main(int argc, char** argv) {
 #ifdef HAS_BOOST_TIMER    
     boost::timer::cpu_timer btTimer;
 #endif
+    
+    _msg msgM;
+    msgM.set_name("genrandspec");
     
 // Parse cmd line
 // ----------------------------------------------------  
@@ -102,9 +99,6 @@ int main(int argc, char** argv) {
     fs::path pOutput(vm["output"].as<std::string>());
     
     // ----------------------------------------------------
-    
-    _msg msgM;
-    msgM.set_name("genrandspec");
     
     msgM.msg(_msg::eMsg::START);
     msgM.msg(_msg::eMsg::MID, "check command line");
@@ -176,14 +170,14 @@ int main(int argc, char** argv) {
         csv.set_filename_out(sOutput);
         csv.set_separator(cSep);
         
-        csv.set_data(randomize(fMin,fMax,fStep));
+        csv.genrandspec(fMin,fMax,fStep);
         
         csv.write();
         
         msgM.msg(_msg::eMsg::MID, "output:", sOutput);   
         
     }
-        
+
     
 #ifdef HAS_BOOST_TIMER
     msgM.msg(_msg::eMsg::END, btTimer.format());
@@ -209,50 +203,18 @@ void run(const std::string& sOutput, char cSep, float fMinw, float fMaxw, float 
 #endif
     
     for(int i=0; i< MaxFilepDir; i++) {
-        std::fstream fFlux(sOutput+"/"+std::to_string(i)+".dat", std::ios::out);
-        std::vector<std::vector<float> > vvfData(randomize(fMinw,fMaxw,fStep));
+        std::string sFname=sOutput+"/"+std::to_string(i)+".dat";
         
-        for(int k=0; k<vvfData.size(); k++)
-            fFlux << vvfData[k][0] << cSep << vvfData[k][1] << "\n";
+        _csv<float> csv;
         
-        fFlux.close();
+        csv.set_verbose(_csv<float>::eVerbose::QUIET);
+        
+        csv.set_separator(cSep);
+        csv.set_filename_out(sFname);
+        
+        csv.genrandspec(fMinw,fMaxw,fStep);
+        
+        csv.write();
+        
     }
 }
-
-std::vector<std::vector<float> > randomize(float fMinw, float fMaxw, float fStep) {
-    
-    std::random_device rdDev;
-    
-    std::default_random_engine dreEngine(rdDev());
-    std::normal_distribution<float> gauss_dist(0.95, 0.1);
-    std::uniform_real_distribution<float> uniform_dist(0, 0.5);
-    std::uniform_real_distribution<float> uniform_dist2(0, 0.005);
-    std::cauchy_distribution<float> cauchy_distrib(0,0.1); 
-    
-    int iSize=abs(fMaxw-fMinw)/fStep;
-    
-    std::vector<std::vector<float> > vvfRand;
-    std::vector<float> vX, vY;
-    
-    vX.resize(iSize);
-    vY.resize(iSize);
-        
-    for(int i=0;i<iSize;i++)
-        vX[i]=fMinw+fStep*i;
-    
-    float fX=1.0;
-    std::generate(vY.begin(), vY.end(), [&]() { 
-        float fV=cauchy_distrib(dreEngine);
-        float fThres0=uniform_dist2(dreEngine);
-        float fThres=uniform_dist(dreEngine);
-        if (fV<-fThres0) fV=-fThres0;
-        if (fV>fThres) fV=fThres;
-        return (fX+0.01*gauss_dist(dreEngine)-fV);});     
-   
-    for(int i=0;i<iSize;i++) 
-        vvfRand.emplace_back(std::vector<float>({vX[i], vY[i]}));
-    
-    return vvfRand;
-}
-
-

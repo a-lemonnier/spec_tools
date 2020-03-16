@@ -589,6 +589,57 @@ bool _csv<_T>::check_dim() {
 }
 
 template<typename _T> 
+bool _csv<_T>::genrandspec(_T TMin, _T TMax, _T TStep) {
+    bStatus=false;
+    
+    if (TMax<=TMin || TStep<1.0e-100) 
+        error("genrandspec(): invalid boundaries");
+    else {
+        
+        debug("genrandspec(): overwrite data with random 2D spectrum");
+                
+        std::mt19937 mteEngine(std::chrono::system_clock::now().time_since_epoch().count());
+        
+        std::cauchy_distribution<float> urdCauchy(0, 0.01);
+        std::normal_distribution<_T> ndNoise(0.995,0.005);
+        std::normal_distribution<_T> ndFWHM(TStep,10*TStep);
+
+        int iPlimit=abs(TMax-TMin)/TStep;
+        
+        this->clear();
+        vvData.resize(iPlimit);
+        
+        std::vector<std::vector<_T> > vAtomicline;
+        vAtomicline.reserve(iPlimit);
+
+        for(int i=0; i<iPlimit; i++) {
+            if (urdCauchy(mteEngine)>0.4) 
+                vAtomicline.emplace_back(std::vector<_T>({i*TStep+TMin,ndFWHM(mteEngine)}));
+        }
+        
+        debug("genrandspec(): "+std::to_string(vAtomicline.size())+" lines have been generated");
+            
+        
+        for(int i=0;i<iPlimit;i++) {
+            _T TLambda=TMin+i*TStep;
+            _T TFlux=ndNoise(mteEngine);
+            
+            for(auto aT0: vAtomicline) 
+                    TFlux-=Gaussian(TLambda, aT0[0], aT0[1]);
+            
+            if (TFlux<0) TFlux=0;
+    
+            this->vvData[i]={TLambda,TFlux};
+        }
+
+        
+        bStatus=true;
+    }
+    
+    return bStatus;
+}
+
+template<typename _T> 
 bool _csv<_T>::transform_lin(_T TA, _T TB, int iCol) {
     bStatus=true;
 
@@ -710,7 +761,6 @@ bool _csv<_T>::apply_max_threshold(_T TVal, int iCol) {
     
     int iPrev_size=get_data_size_i();
     int iH_size=get_data_size_j();
-    
     
     vvData.erase(std::remove_if( vvData.begin(),vvData.end(),[&]( std::vector<_T> v){ 
         for(int i=0;i<iH_size;i++) {
@@ -967,11 +1017,8 @@ _csv<_T>& _csv<_T>::operator/(const _csv& other) const {
                        std::back_inserter(vvRes), std::divides<_T>());
         
         return vvRes;
-    }
-
-    
+    }    
 }
-
 
 template<typename _T>    
 _csv<_T>& _csv<_T>::operator/(const _T &other) const {
@@ -990,3 +1037,7 @@ _csv<_T>& _csv<_T>::operator/(const _T &other) const {
     return vvRes;  
 }
 
+template<typename _T>
+_T _csv<_T>::Gaussian(_T TX, _T TX0, _T TSigma) const {
+    return sqrt(0.5/M_PI)*exp(-0.5*pow((TX-TX0)/TSigma,2));
+}

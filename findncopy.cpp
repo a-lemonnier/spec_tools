@@ -11,9 +11,11 @@
 #include <cstdio>
 #include <fstream>
 #include <vector>
-#include <algorithm>
 #include <string>
+#include <algorithm>
+
 #include <boost/program_options.hpp>
+
 
 #if __has_include (<boost/timer/timer.hpp>)
 #include <boost/timer/timer.hpp>

@@ -11,12 +11,10 @@ A set of codes for csv and for spectrum manipulation:
  - **gen_rand_spec**.cpp: generate a set of randomized-flux spectra between two wavelengths for test purposes
 
  TODO:
- - Add shift by radial velocity
  - Generate more physical random spectra
- - Add Doc
  - Make classes
  - Clean header
- - Additionnal parameter and file verifications
+ - Additionnal parameters and file verifications
  - Implement boost:: recursive directory copy
  - Clean preprocessor intructions
  - Add C++11 and C++14 compatibility
@@ -37,11 +35,12 @@ Dependencies:
 ```
 gentoo - /home/gentoo % git clone https://github.com/a-lemonnier/spec_tools.git 
 Clonage dans 'spec_tools'...
-remote: Enumerating objects: 57, done.
-remote: Counting objects: 100% (57/57), done.
-remote: Compressing objects: 100% (46/46), done.
-remote: Total 57 (delta 10), reused 56 (delta 9), pack-reused 0
-Dépaquetage des objets: 100% (57/57), 535.09 Kio | 1.39 Mio/s, fait.
+remote: Enumerating objects: 229, done.
+remote: Counting objects: 100% (229/229), done.
+remote: Compressing objects: 100% (167/167), done.
+remote: Total 229 (delta 133), reused 144 (delta 51), pack-reused 0
+Réception d'objets: 100% (229/229), 1005.07 Kio | 2.48 Mio/s, fait.
+Résolution des deltas: 100% (133/133), fait.
 
 gentoo - /home/gentoo % cd spec_tools
 ```
@@ -50,8 +49,8 @@ gentoo - /home/gentoo % cd spec_tools
 > Compiling:
 ```
 gentoo - spec_tools/ % cmake .
--- The C compiler identification is GNU 9.2.1
--- The CXX compiler identification is GNU 9.2.1
+-- The C compiler identification is GNU 9.2.0
+-- The CXX compiler identification is GNU 9.2.0
 -- Check for working C compiler: /usr/bin/cc
 -- Check for working C compiler: /usr/bin/cc -- works
 -- Detecting C compiler ABI info
@@ -64,16 +63,11 @@ gentoo - spec_tools/ % cmake .
 -- Detecting CXX compiler ABI info - done
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
--- Boost version: 1.67.0
--- Found the following Boost libraries:
---   filesystem
---   program_options
---   timer
---   system
---   chrono
+-- Found Boost: /usr/include (found suitable version "1.72.0", minimum required is "1.40") found components: program_options timer filesystem chrono 
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /home/gentoo/Prog/cpp/spec_tools
+
 
 gentoo - spec_tools/ % make -j$(nproc)
 Scanning dependencies of target findncopy
