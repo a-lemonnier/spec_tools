@@ -19,6 +19,6 @@ steps:
     - ./trim -l 4700 -u 4800 -i rand_spectra -o spectra_trimmed
     - ./der_snr -d rand_spectra -o all_snr.csv
     - ./der_snr -d spectra -o selected_snr.csv
-    - ./der_snr -f 0.dat
+    - ./der_snr -f rand_spectra/0/0.dat
     - ./shift  -v 1.0e5 -i rand_spectra
 
