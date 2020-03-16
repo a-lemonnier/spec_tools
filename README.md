@@ -11,6 +11,9 @@ A set of codes for csv and for spectrum manipulation:
  - **gen_rand_spec**.cpp: generate a set of randomized-flux spectra between two wavelengths for test purposes
 
  TODO:
+ - Add shift by radial velocity
+ - Generate more physical random spectra
+ - Add Doc
  - Make classes
  - Clean header
  - Additionnal parameter and file verifications
