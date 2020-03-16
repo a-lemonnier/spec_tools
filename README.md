@@ -11,7 +11,6 @@ A set of codes for csv and for spectrum manipulation:
  - **gen_rand_spec**.cpp: generate a set of randomized-flux spectra between two wavelengths for test purposes
 
  TODO:
- - Generate more physical random spectra
  - Make classes
  - Clean header
  - Additionnal parameters and file verifications
@@ -152,14 +151,14 @@ Example:
 ./trim -l 4700 -u 4800 -i data -o spectra_trimmed
 ▶ trim
 ⚐ trim: starting 8 async threads
-⚐ trim(2416052): 521 files parsed.
-⚐ trim(2416051): 521 files parsed.
-⚐ trim(2416054): 521 files parsed.
-⚐ trim(2416053): 521 files parsed.
-⚐ trim(2416055): 521 files parsed.
-⚐ trim(2416050): 521 files parsed.
-⚐ trim(2416056): 521 files parsed.
-⚐ trim(2416057): 524 files parsed.
+⚡ trim(2416052): 521 files parsed.
+⚡ trim(2416051): 521 files parsed.
+⚡ trim(2416054): 521 files parsed.
+⚡ trim(2416053): 521 files parsed.
+⚡ trim(2416055): 521 files parsed.
+⚡ trim(2416050): 521 files parsed.
+⚡ trim(2416056): 521 files parsed.
+⚡ trim(2416057): 524 files parsed.
 ⚐ trim:  52.909230s wall, 296.410000s user + 0.710000s system = 297.120000s CPU (561.6%)
 ```
 
@@ -182,14 +181,14 @@ Example:
 ./threshold -i data -o spectra -t 0
 ▶ threshold
 ⚐ threshold: starting 8 async threads
-⚐ trim(2470785): 521 files parsed.
-⚐ trim(2470786): 521 files parsed.
-⚐ trim(2470787): 521 files parsed.
-⚐ trim(2470784): 521 files parsed.
-⚐ trim(2470783): 521 files parsed.
-⚐ trim(2470788): 521 files parsed.
-⚐ trim(2470789): 521 files parsed.
-⚐ trim(2470790): 524 files parsed.
+⚡ trim(2470785): 521 files parsed.
+⚡ trim(2470786): 521 files parsed.
+⚡ trim(2470787): 521 files parsed.
+⚡ trim(2470784): 521 files parsed.
+⚡ trim(2470783): 521 files parsed.
+⚡ trim(2470788): 521 files parsed.
+⚡ trim(2470789): 521 files parsed.
+⚡ trim(2470790): 524 files parsed.
 ⚐ threshold:  57.269018s wall, 331.160000s user + 1.350000s system = 332.510000s CPU (580.6%)
 ```
 
@@ -215,14 +214,14 @@ Examples:
 ▶ der_snr 
 ⚐ der_snr check command line 
 ⚐ der_snr starting 8  async threads 
-⚐ compute(321893): compute S/N for 521 files 
-⚐ compute(321894): compute S/N for 521 files 
-⚐ compute(321895): compute S/N for 521 files 
-⚐ compute(321896): compute S/N for 521 files 
-⚐ compute(321897): compute S/N for 521 files 
-⚐ compute(321898): compute S/N for 521 files 
-⚐ compute(321900): compute S/N for 524 files 
-⚐ compute(321899): compute S/N for 521 files 
+⚡ compute(321893): compute S/N for 521 files 
+⚡ compute(321894): compute S/N for 521 files 
+⚡ compute(321895): compute S/N for 521 files 
+⚡ compute(321896): compute S/N for 521 files 
+⚡ compute(321897): compute S/N for 521 files 
+⚡ compute(321898): compute S/N for 521 files 
+⚡ compute(321900): compute S/N for 524 files 
+⚡ compute(321899): compute S/N for 521 files 
 ⚐ merge() merge file part1_snr.csv 
 ⚐ merge() merge file part2_snr.csv 
 ⚐ merge() merge file part3_snr.csv 
@@ -275,14 +274,14 @@ gentoo - spec_tools/ % ./genrandspec
 ⚐ genrandspec: create 8 folders 
 ⚐ genrandspec: start 8 async threads 
 ⚐ genrandspec: create directories 
-⚐ run(3280006): create spectra in rand_spectra/0 
-⚐ run(3280007): create spectra in rand_spectra/1 
-⚐ run(3280008): create spectra in rand_spectra/2 
-⚐ run(3280009): create spectra in rand_spectra/3 
-⚐ run(3280010): create spectra in rand_spectra/4 
-⚐ run(3280011): create spectra in rand_spectra/5 
-⚐ run(3280012): create spectra in rand_spectra/6 
-⚐ run(3280013): create spectra in rand_spectra/7 
+⚡ run(3280006): create spectra in rand_spectra/0 
+⚡ run(3280007): create spectra in rand_spectra/1 
+⚡ run(3280008): create spectra in rand_spectra/2 
+⚡ run(3280009): create spectra in rand_spectra/3 
+⚡ run(3280010): create spectra in rand_spectra/4 
+⚡ run(3280011): create spectra in rand_spectra/5 
+⚡ run(3280012): create spectra in rand_spectra/6 
+⚡ run(3280013): create spectra in rand_spectra/7 
 ⚐ genrandspec:  10.694788s wall, 77.990000s user + 3.050000s system = 81.040000s CPU (757.8%)
 
 ```
