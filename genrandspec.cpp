@@ -1,3 +1,11 @@
+/**
+ * \file genrandspec.cpp
+ * \brief Generate a set of randomized-flux spectra between two wavelengths for test purposes
+ * \author Audric Lemonnier
+ * \version 0.1
+ * \date 15/03/2020
+ */
+
 #include <iostream>
 #include <cstdlib>
 #include <cstdio>
@@ -37,12 +45,24 @@ namespace fs = boost::filesystem;
 #include "csv.h"
 #include "msg.h"
 
+/**
+ * \define MaxFilepDir
+ * \brief Set the maximum number of files to create in a folder
+ */
 #define MaxFilepDir 50
 
 // Prototype
 // ----------------------------------------------------
+/**
+ * \fn void run(const std::string& sOutput, char cSep, float fMinw, float fMaxw, float fStep)
+ * \brief Write random spectra on disk
+ */
 void run(const std::string& sOutput, char cSep, float fMinw, float fMaxw, float fStep);
 
+/**
+ * \fn std::vector<std::vector<float> > randomize(float fMinw, float fMaxw, float fStep)
+ * \brief Store a random spectrum in a 2D vector 
+ */
 std::vector<std::vector<float> > randomize(float fMinw, float fMaxw, float fStep);
 // ----------------------------------------------------
 
