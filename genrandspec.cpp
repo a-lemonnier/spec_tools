@@ -177,14 +177,12 @@ int main(int argc, char** argv) {
         msgM.msg(_msg::eMsg::MID, "output:", sOutput);   
         
     }
-
     
 #ifdef HAS_BOOST_TIMER
     msgM.msg(_msg::eMsg::END, btTimer.format());
 #endif
      
     return EXIT_SUCCESS;
-    
 }
 
 // ----------------------------------------------------

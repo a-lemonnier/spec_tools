@@ -1,6 +1,3 @@
-#ifndef CSV_H
-#define CSV_H
-
 /**
  * \file csv.h
  * \brief A basic class for csv manipulation
@@ -11,12 +8,14 @@
  * 
  */
 
+#ifndef CSV_H
+#define CSV_H
+
 #include <iostream>
 #include <fstream>
 
 // #include <execution> //Parallel STL disabled
 
-#include <ctime>
 #include <chrono>
 
 #include <cmath>
@@ -46,7 +45,6 @@
  * \brief This is the templated _csv class, initialized with double by default. STL parallel execution policy does not provide enhancements for simple operations.
  * 
  */
-
 template<typename _T=double> 
 class _csv {
 public:
