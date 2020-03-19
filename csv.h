@@ -242,25 +242,25 @@ public:
      const char get_separator() const;
     
     /**
-     * \fn  const int get_header_size() const
+     * \fn  const size_t get_header_size() const
      * \brief Get size of the header.
-     * \return int
+     * \return size_t
      */
-     const int get_header_size() const;
+     const size_t get_header_size() const;
     
     /**
-     * \fn  const int get_data_size_i() const
+     * \fn  const size_t get_data_size_i() const
      * \brief Get data line size.
-     * \return int
+     * \return size_t
      */
-     const int get_data_size_i() const;
+     const size_t get_data_size_i() const;
     
     /**
-     * \fn const int get_data_size_j() const
+     * \fn const size_t get_data_size_j() const
      * \brief Get data column size.
-     * \return int
+     * \return size_t
      */
-     const int get_data_size_j() const;
+     const size_t get_data_size_j() const;
     
     /**
      * \fn const std::vector<std::vector<_T> >& get_data() const

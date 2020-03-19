@@ -213,8 +213,8 @@ bool _csv<_T>::show() const{
         table << std::fixed;
      
         // *********** data
-        int iData_size_i=get_data_size_i();
-        int iData_size_j=get_data_size_j();
+        size_t iData_size_i=get_data_size_i();
+        size_t iData_size_j=get_data_size_j();
         for(int i=0; i<iData_size_i; i++) {
             std::string tmp;
             
@@ -243,7 +243,7 @@ bool _csv<_T>::show(int iiLine_stop) const {
         
         // *********** header
         if (!this->vsHeader.empty()) {
-            int iHeader_size=get_header_size(); 
+            size_t iHeader_size=get_header_size(); 
             for(int i=0; i<iHeader_size; i++)
                table << std::setw(25) << get_header()[i];
 
@@ -252,7 +252,7 @@ bool _csv<_T>::show(int iiLine_stop) const {
         table << std::fixed;
         
         // *********** data
-        int iData_size_j=get_data_size_j();
+        size_t iData_size_j=get_data_size_j();
         for(int i=0; i<iiLine_stop; i++) {
             std::string tmp;
             
@@ -319,7 +319,7 @@ const std::vector<_T> _csv<_T>::select_line(int line) const {
     
     std::vector<_T> vvRes;
     
-    int iData_size_j=get_data_size_j();
+    size_t iData_size_j=get_data_size_j();
     for(int j=0;j<iData_size_j;j++)
         vvRes.emplace_back(vvData[line][j]);
     
@@ -334,7 +334,7 @@ const std::vector<_T> _csv<_T>::select_column(int col) const {
     }
     
     std::vector<_T> vvRes;
-    int iData_size_i=get_data_size_i();
+    size_t iData_size_i=get_data_size_i();
     
     for(int i=0;i<iData_size_i;i++)
         vvRes.emplace_back(vvData[i][col]);
@@ -356,7 +356,6 @@ const std::vector<std::vector<_T> > _csv<_T>::select(int iLine_min, int iLine_ma
             vvRes.emplace_back(vvData[i][j]);
         
     return vvRes; 
-    
 }
 
 template<typename _T> 
@@ -389,9 +388,9 @@ bool _csv<_T>::set_column(const std::vector<_T>& vCol, int iCol) {
         return bStatus;
     }
     
-    int iSize=vCol.size();
-    int iSize_i=get_data_size_i();
-    int iSize_j=get_data_size_j();
+    size_t iSize=vCol.size();
+    size_t iSize_i=get_data_size_i();
+    size_t iSize_j=get_data_size_j();
     
     if (iCol>iSize_j) {
         error("set_column(): column number out of range");
@@ -421,9 +420,9 @@ bool _csv<_T>::set_row(const std::vector<_T>& vRow, int iRow) {
         return bStatus;
     }
     
-    int iSize=vRow.size();
-    int iSize_i=get_data_size_i();
-    int iSize_j=get_data_size_j();
+    size_t iSize=vRow.size();
+    size_t iSize_i=get_data_size_i();
+    size_t iSize_j=get_data_size_j();
     
     if (iRow>iSize_i+1) {
         error("set_row(): invalid row number");
@@ -537,17 +536,17 @@ const char _csv<_T>::get_separator() const {
 }
 
 template<typename _T>
-const int _csv<_T>::get_header_size() const {
+const size_t _csv<_T>::get_header_size() const {
     return vsHeader.size();
 }
 
 template<typename _T>
-const int _csv<_T>::get_data_size_i() const {
+const size_t _csv<_T>::get_data_size_i() const {
     return vvData.size();
 }
 
 template<typename _T>
-const int _csv<_T>::get_data_size_j() const {
+const size_t _csv<_T>::get_data_size_j() const {
     return vvData[0].size();
 }
 
@@ -578,7 +577,7 @@ bool _csv<_T>::check_dim() {
     
     if (!this->empty()) {
         bStatus=true;
-        int size=vvData.size()-2;
+        size_t size=vvData.size()-2;
         for (int i=0;i<size;i++) {
             bStatus &= vvData[i].size()==vvData[i+1].size();
         }
@@ -604,7 +603,7 @@ bool _csv<_T>::genrandspec(_T TMin, _T TMax, _T TStep) {
         std::normal_distribution<_T> ndNoise(0.995,0.005);
         std::normal_distribution<_T> ndFWHM(TStep,10*TStep);
 
-        int iPlimit=abs(TMax-TMin)/TStep;
+        size_t iPlimit=(TMax-TMin)/TStep;
         
         this->clear();
         vvData.resize(iPlimit);
@@ -717,7 +716,7 @@ template<typename _T>
 bool _csv<_T>::apply_max_threshold(_T TVal) {
     bStatus=true;
     
-    int iPrev_size=get_data_size_i();
+    size_t iPrev_size=get_data_size_i();
     
     vvData.erase(std::remove_if( vvData.begin(),vvData.end(),[&]( std::vector<_T> v){ 
         for(auto vv: v) 
@@ -726,7 +725,7 @@ bool _csv<_T>::apply_max_threshold(_T TVal) {
         return false;
     }),vvData.end());
     
-    debug(std::to_string(abs(get_data_size_i()-iPrev_size))+" line(s) erased");
+    debug(std::to_string(static_cast<size_t>(get_data_size_i()-iPrev_size))+" line(s) erased");
     
     return bStatus;
 }
@@ -735,7 +734,7 @@ template<typename _T>
 bool _csv<_T>::apply_min_threshold(_T TVal) {
     bStatus=true;
     
-    int iPrev_size=get_data_size_i();
+    size_t iPrev_size=get_data_size_i();
     
     vvData.erase(std::remove_if( vvData.begin(), vvData.end(),[&]( std::vector<_T> v){ 
         for(auto vv: v) 
@@ -744,7 +743,7 @@ bool _csv<_T>::apply_min_threshold(_T TVal) {
         return false;
     }),vvData.end());
     
-    debug(std::to_string(abs(get_data_size_i()-iPrev_size))+" line(s) erased");
+    debug(std::to_string(static_cast<size_t>(get_data_size_i()-iPrev_size))+" line(s) erased");
     
     return bStatus;
 }
@@ -759,8 +758,8 @@ bool _csv<_T>::apply_max_threshold(_T TVal, int iCol) {
         return bStatus;
     }
     
-    int iPrev_size=get_data_size_i();
-    int iH_size=get_data_size_j();
+    size_t iPrev_size=get_data_size_i();
+    size_t iH_size=get_data_size_j();
     
     vvData.erase(std::remove_if( vvData.begin(),vvData.end(),[&]( std::vector<_T> v){ 
         for(int i=0;i<iH_size;i++) {
@@ -772,7 +771,7 @@ bool _csv<_T>::apply_max_threshold(_T TVal, int iCol) {
     }),vvData.end());
     
     
-    debug(std::to_string(abs(get_data_size_i()-iPrev_size))+" line(s) erased");
+    debug(std::to_string(static_cast<size_t>(get_data_size_i()-iPrev_size))+" line(s) erased");
     
     return bStatus;
 }
@@ -787,8 +786,8 @@ bool _csv<_T>::apply_min_threshold(_T TVal, int iCol) {
         return bStatus;
     }
     
-    int iPrev_size=get_data_size_i();
-    int iH_size=get_data_size_j();
+    size_t iPrev_size=get_data_size_i();
+    size_t iH_size=get_data_size_j();
     
     vvData.erase(std::remove_if( vvData.begin(),vvData.end(),[&]( std::vector<_T> v){ 
         for(int i=0;i<iH_size;i++) {
@@ -799,7 +798,7 @@ bool _csv<_T>::apply_min_threshold(_T TVal, int iCol) {
         return false;
     }),vvData.end());
     
-    debug(std::to_string(abs(get_data_size_i()-iPrev_size))+" line(s) erased");
+    debug(std::to_string(static_cast<size_t>(get_data_size_i()-iPrev_size))+" line(s) erased");
     
     return bStatus;
 }
