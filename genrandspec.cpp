@@ -200,14 +200,13 @@ void run(const std::string& sOutput, char cSep, float fMinw, float fMaxw, float 
     msgM.msg(_msg::eMsg::MID, "create spectra in", sOutput);
 #endif
     
+    _csv<float> csv;
+    csv.set_verbose(_csv<float>::eVerbose::QUIET);
+    csv.set_separator(cSep);
+    
     for(int i=0; i< MaxFilepDir; i++) {
         std::string sFname=sOutput+"/"+std::to_string(i)+".dat";
-        
-        _csv<float> csv;
-        
-        csv.set_verbose(_csv<float>::eVerbose::QUIET);
-        
-        csv.set_separator(cSep);
+
         csv.set_filename_out(sFname);
         
         csv.genrandspec(fMinw,fMaxw,fStep);
