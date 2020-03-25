@@ -39,7 +39,7 @@ namespace fs = boost::filesystem;
 #include "csv.h"
 #include "msg.h"
 
-#define CLIGHT 299792458 // m/s
+#define CLIGHT 299792.458 // km/s
 
 
 // Prototype
@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
     description.add_options()
     ("help,h", "Display this help message")
     ("wavelength,w",  po::value<float>(),"Wavelength")
-    ("velocity,v",  po::value<float>(),"Radial velocity of the source (m/s)")
+    ("velocity,v",  po::value<float>(),"Radial velocity of the source (km/s)")
     ("filename,f",  po::value<std::string>(),"Shift a single file")
     ("input_folder,i",  po::value<std::string>(),"Name of the folder where original data are")
     ("output,o",  po::value<std::string>()->default_value("data_out"),"Set the directory or the file where store new data.")
