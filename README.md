@@ -67,39 +67,199 @@ gentoo - spec_tools/ % cmake .
 -- Found Boost: /usr/include (found suitable version "1.72.0", minimum required is "1.40") found components: program_options timer filesystem chrono 
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/gentoo/Prog/py/test/spec_tools
+-- Build files have been written to: /home/gentoo/cpp/spec_tools
 
 gentoo - spec_tools/ % make -j$(nproc)
+-- The C compiler identification is GNU 9.2.0
+-- The CXX compiler identification is GNU 9.2.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc - works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ - works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found Boost: /usr/include (found suitable version "1.72.0", minimum required is "1.40") found components: program_options timer filesystem chrono 
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/gentoo/Prog/py/test/spec_tools
+gentoo - /home/gentoo/Prog/py/test/spec_tools % make -j 8                                                                                                                                15:04:36 | 0 | pts/2 | gentoo_x64_omen
+make[1] : on entre dans le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/Prog/py/test/spec_tools »
 Scanning dependencies of target findncopy
 Scanning dependencies of target der_snr
-Scanning dependencies of target threshold
 Scanning dependencies of target trim
+Scanning dependencies of target threshold
 Scanning dependencies of target shift
+make[2] : on quitte le répertoire « /home/gentoo/Prog/py/test/spec_tools »
 Scanning dependencies of target genrandspec
-[  5%] Building CXX object CMakeFiles/findncopy.dir/findncopy.cpp.o
-[ 11%] Building CXX object CMakeFiles/der_snr.dir/der_snr.cpp.o
-[ 33%] Building CXX object CMakeFiles/threshold.dir/msg.cpp.o
-[ 33%] Building CXX object CMakeFiles/der_snr.dir/msg.cpp.o
-[ 33%] Building CXX object CMakeFiles/findncopy.dir/msg.cpp.o
-[ 33%] Building CXX object CMakeFiles/threshold.dir/threshold.cpp.o
+Scanning dependencies of target marker
+make[2] : on quitte le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+make[2] : on quitte le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+make[2] : on quitte le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+make[2] : on quitte le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+make[2] : on quitte le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+make[2] : on quitte le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+[  4%] Building CXX object CMakeFiles/findncopy.dir/findncopy.cpp.o
+[ 14%] Building CXX object CMakeFiles/trim.dir/trim.cpp.o
+[ 14%] Building CXX object CMakeFiles/findncopy.dir/msg.cpp.o
+[ 23%] Building CXX object CMakeFiles/der_snr.dir/der_snr.cpp.o
+[ 23%] Building CXX object CMakeFiles/threshold.dir/threshold.cpp.o
+[ 28%] Building CXX object CMakeFiles/marker.dir/marker.cpp.o
+[ 38%] Building CXX object CMakeFiles/genrandspec.dir/genrandspec.cpp.o
 [ 38%] Building CXX object CMakeFiles/shift.dir/shift.cpp.o
-[ 50%] Building CXX object CMakeFiles/trim.dir/msg.cpp.o
-[ 50%] Building CXX object CMakeFiles/trim.dir/trim.cpp.o
-[ 66%] Building CXX object CMakeFiles/genrandspec.dir/genrandspec.cpp.o
-[ 66%] Building CXX object CMakeFiles/genrandspec.dir/msg.cpp.o
-[ 66%] Building CXX object CMakeFiles/shift.dir/msg.cpp.o
-[ 72%] Linking CXX executable findncopy
-[ 72%] Built target findncopy
-[ 77%] Linking CXX executable genrandspec
-[ 77%] Built target genrandspec
-[ 83%] Linking CXX executable trim
-[ 88%] Linking CXX executable threshold
-[ 94%] Linking CXX executable shift
-[ 94%] Built target trim
-[ 94%] Built target threshold
-[ 94%] Built target shift
+[ 42%] Building CXX object CMakeFiles/der_snr.dir/msg.cpp.o
+[ 47%] Building CXX object CMakeFiles/threshold.dir/msg.cpp.o
+[ 52%] Building CXX object CMakeFiles/shift.dir/msg.cpp.o
+[ 57%] Building CXX object CMakeFiles/trim.dir/msg.cpp.o
+[ 61%] Building CXX object CMakeFiles/genrandspec.dir/msg.cpp.o
+[ 66%] Building CXX object CMakeFiles/marker.dir/msg.cpp.o
+[ 71%] Linking CXX executable findncopy
+[ 76%] Linking CXX executable marker
+make[2] : on quitte le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+[ 76%] Built target marker
+make[2] : on quitte le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+[ 76%] Built target findncopy
+[ 80%] Linking CXX executable genrandspec
+make[2] : on quitte le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+[ 80%] Built target genrandspec
+[ 85%] Linking CXX executable threshold
+[ 90%] Linking CXX executable trim
+make[2] : on quitte le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+[ 90%] Built target threshold
+make[2] : on quitte le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+[ 90%] Built target trim
+[ 95%] Linking CXX executable shift
 [100%] Linking CXX executable der_snr
+make[2] : on quitte le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+[100%] Built target shift
+make[2] : on quitte le répertoire « /home/gentoo/Prog/py/test/spec_tools »
 [100%] Built target der_snr
+make[1] : on quitte le répertoire « /home/gentoo/Prog/py/test/spec_tools »
+gentoo - /home/gentoo/Prog/py/test/spec_tools %                                                                                                                                          15:04:50 | 0 | pts/2 | gentoo_x64_omen
+gentoo - /home/gentoo/Prog/py/test/spec_tools %  cd /home/gentoo/Prog/py/test                                                                                                            15:06:11 | 0 | pts/2 | gentoo_x64_omen
+gentoo - /home/gentoo/Prog/py/test %                                                                                                                                                     15:06:11 | 0 | pts/2 | gentoo_x64_omen
+gentoo - /home/gentoo/Prog/py/test %  cd /home/gentoo/Prog/py                                                                                                                            15:06:12 | 0 | pts/2 | gentoo_x64_omen
+gentoo - /home/gentoo/Prog/py %                                                                                                                                                          15:06:12 | 0 | pts/2 | gentoo_x64_omen
+gentoo - /home/gentoo/Prog/py %  cd /home/gentoo/Prog                                                                                                                                    15:06:13 | 0 | pts/2 | gentoo_x64_omen
+gentoo - /home/gentoo/Prog %                                                                                                                                                             15:06:13 | 0 | pts/2 | gentoo_x64_omen
+gentoo - /home/gentoo/Prog %  cd /home/gentoo                                                                                                                                            15:06:15 | 0 | pts/2 | gentoo_x64_omen
+gentoo - /home/gentoo % mkdir cpp                                                                                                                                                        15:06:15 | 0 | pts/2 | gentoo_x64_omen
+gentoo - /home/gentoo % cd cpp                                                                                                                                                           15:06:19 | 0 | pts/2 | gentoo_x64_omen
+gentoo - /home/gentoo/cpp % git clone https://github.com/a-lemonnier/spec_tools                                                                                                          15:06:20 | 0 | pts/2 | gentoo_x64_omen
+Clonage dans 'spec_tools'...
+remote: Enumerating objects: 281, done.
+remote: Counting objects: 100% (281/281), done.
+remote: Compressing objects: 100% (199/199), done.
+remote: Total 281 (delta 166), reused 178 (delta 66), pack-reused 0
+Réception d'objets: 100% (281/281), 1.15 Mio | 2.50 Mio/s, fait.
+Résolution des deltas: 100% (166/166), fait.
+gentoo - /home/gentoo/cpp %                                                                                                                                                              15:06:27 | 0 | pts/2 | gentoo_x64_omen
+gentoo - /home/gentoo/cpp %  cd /home/gentoo/cpp/spec_tools                                                                                                                              15:06:28 | 0 | pts/2 | gentoo_x64_omen
+gentoo - /home/gentoo/cpp/spec_tools % cmake .                                                                                                                                           15:06:28 | 0 | pts/2 | gentoo_x64_omen
+-- The C compiler identification is GNU 9.2.0
+-- The CXX compiler identification is GNU 9.2.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc - works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ - works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found Boost: /usr/include (found suitable version "1.72.0", minimum required is "1.40") found components: program_options timer filesystem chrono 
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/gentoo/cpp/spec_tools
+gentoo - /home/gentoo/cpp/spec_tools %                                                                                                                                                   15:06:33 | 0 | pts/2 | gentoo_x64_omen
+gentoo - /home/gentoo/cpp/spec_tools % make -j8                                                                                                                                          15:06:43 | 0 | pts/2 | gentoo_x64_omen
+make[1] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
+Scanning dependencies of target threshold
+Scanning dependencies of target der_snr
+Scanning dependencies of target trim
+Scanning dependencies of target findncopy
+Scanning dependencies of target shift
+make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
+Scanning dependencies of target marker
+Scanning dependencies of target genrandspec
+make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
+make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
+make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
+make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
+make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
+make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
+make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
+[  9%] Building CXX object CMakeFiles/threshold.dir/msg.cpp.o
+[  9%] Building CXX object CMakeFiles/threshold.dir/threshold.cpp.o
+[ 14%] Building CXX object CMakeFiles/findncopy.dir/findncopy.cpp.o
+[ 19%] Building CXX object CMakeFiles/der_snr.dir/der_snr.cpp.o
+[ 23%] Building CXX object CMakeFiles/trim.dir/trim.cpp.o
+[ 28%] Building CXX object CMakeFiles/shift.dir/shift.cpp.o
+[ 38%] Building CXX object CMakeFiles/genrandspec.dir/genrandspec.cpp.o
+[ 33%] Building CXX object CMakeFiles/marker.dir/marker.cpp.o
+[ 42%] Building CXX object CMakeFiles/shift.dir/msg.cpp.o
+[ 47%] Building CXX object CMakeFiles/findncopy.dir/msg.cpp.o
+[ 52%] Building CXX object CMakeFiles/trim.dir/msg.cpp.o
+[ 57%] Building CXX object CMakeFiles/genrandspec.dir/msg.cpp.o
+[ 61%] Building CXX object CMakeFiles/der_snr.dir/msg.cpp.o
+[ 66%] Building CXX object CMakeFiles/marker.dir/msg.cpp.o
+[ 71%] Linking CXX executable marker
+[ 76%] Linking CXX executable findncopy
+make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
+[ 76%] Built target marker
+make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
+[ 76%] Built target findncopy
+[ 80%] Linking CXX executable genrandspec
+make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
+[ 80%] Built target genrandspec
+[ 85%] Linking CXX executable threshold
+[ 90%] Linking CXX executable der_snr
+make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
+[ 90%] Built target threshold
+[ 95%] Linking CXX executable shift
+make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
+[ 95%] Built target der_snr
+[100%] Linking CXX executable trim
+make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
+[100%] Built target shift
+make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
+[100%] Built target trim
+make[1] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
 
 ```
 
