@@ -9,7 +9,7 @@ A set of codes for csv and for spectrum manipulation:
  - **der_snr**.cpp: compute the Signal-to-Noise of a spectrum
  - **shift**.cpp: shift whole spectrum by a given wavelength
  - **gen_rand_spec**.cpp: generate a set of randomized-flux spectra between two wavelengths for test purposes
- - **marker**.cpp: Highlight lines on spectrum
+ - **marker**.cpp: highlight lines on spectrum
  
  TODO:
  - **marker**.cpp
