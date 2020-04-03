@@ -12,7 +12,7 @@ A set of codes for csv and for spectrum manipulation:
  - **marker**.cpp: highlight lines on spectrum
  
  TODO:
- - **marker**.cpp
+ - marker.cpp
  - Make classes
  - Clean header
  - Additionnal parameters and file verifications
@@ -70,35 +70,13 @@ gentoo - spec_tools/ % cmake .
 -- Build files have been written to: /home/gentoo/cpp/spec_tools
 
 gentoo - spec_tools/ % make -j$(nproc)
-make[1] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
-make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
-make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
-make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
-make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
-make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
-make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
-make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
 Scanning dependencies of target threshold
 Scanning dependencies of target der_snr
 Scanning dependencies of target trim
 Scanning dependencies of target findncopy
 Scanning dependencies of target shift
-make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
 Scanning dependencies of target marker
 Scanning dependencies of target genrandspec
-make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
-make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
-make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
-make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
-make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
-make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
-make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
-make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
-make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
-make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
-make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
-make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
-make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
 [  9%] Building CXX object CMakeFiles/threshold.dir/msg.cpp.o
 [  9%] Building CXX object CMakeFiles/threshold.dir/threshold.cpp.o
 [ 14%] Building CXX object CMakeFiles/findncopy.dir/findncopy.cpp.o
@@ -115,26 +93,18 @@ make[2] : on entre dans le répertoire « /home/gentoo/cpp/spec_tools »
 [ 66%] Building CXX object CMakeFiles/marker.dir/msg.cpp.o
 [ 71%] Linking CXX executable marker
 [ 76%] Linking CXX executable findncopy
-make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
 [ 76%] Built target marker
-make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
 [ 76%] Built target findncopy
 [ 80%] Linking CXX executable genrandspec
-make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
 [ 80%] Built target genrandspec
 [ 85%] Linking CXX executable threshold
 [ 90%] Linking CXX executable der_snr
-make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
 [ 90%] Built target threshold
 [ 95%] Linking CXX executable shift
-make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
 [ 95%] Built target der_snr
 [100%] Linking CXX executable trim
-make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
 [100%] Built target shift
-make[2] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
 [100%] Built target trim
-make[1] : on quitte le répertoire « /home/gentoo/cpp/spec_tools »
 
 ```
 
