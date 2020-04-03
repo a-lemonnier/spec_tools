@@ -294,7 +294,7 @@ public:
      * \fn [[deprecated]] bool genrandspec(_T TMin, _T TMax, _T TStep)
      * \brief Generate a normalized random spectrum with random gaussian absoption profiles. For TStep < 0.05, you may want to initialize with double.
      */
-    [[deprecated]] bool genrandspec(_T TMin, _T TMax, _T TStep);
+    bool genrandspec(_T TMin, _T TMax, _T TStep);
     
     /**
      * \fn bool transform_lin(_T TA, _T TB, int iCol)

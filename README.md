@@ -36,12 +36,12 @@ Dependencies:
 ```
 gentoo - /home/gentoo % git clone https://github.com/a-lemonnier/spec_tools.git 
 Clonage dans 'spec_tools'...
-remote: Enumerating objects: 271, done.
-remote: Counting objects: 100% (271/271), done.
-remote: Compressing objects: 100% (189/189), done.
-remote: Total 271 (delta 161), reused 173 (delta 66), pack-reused 0
-Réception d'objets: 100% (271/271), 1.14 Mio | 2.68 Mio/s, fait.
-Résolution des deltas: 100% (161/161), fait.
+remote: Enumerating objects: 277, done.
+remote: Counting objects: 100% (277/277), done.
+remote: Compressing objects: 100% (195/195), done.
+remote: Total 277 (delta 163), reused 177 (delta 66), pack-reused 0
+Réception d'objets: 100% (277/277), 1.15 Mio | 2.67 Mio/s, fait.
+Résolution des deltas: 100% (163/163), fait.
 
 gentoo - /home/gentoo % cd spec_tools
 ```
@@ -53,13 +53,13 @@ gentoo - spec_tools/ % cmake .
 -- The C compiler identification is GNU 9.2.0
 -- The CXX compiler identification is GNU 9.2.0
 -- Check for working C compiler: /usr/bin/cc
--- Check for working C compiler: /usr/bin/cc -- works
+-- Check for working C compiler: /usr/bin/cc - works
 -- Detecting C compiler ABI info
 -- Detecting C compiler ABI info - done
 -- Detecting C compile features
 -- Detecting C compile features - done
 -- Check for working CXX compiler: /usr/bin/c++
--- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Check for working CXX compiler: /usr/bin/c++ - works
 -- Detecting CXX compiler ABI info
 -- Detecting CXX compiler ABI info - done
 -- Detecting CXX compile features
@@ -67,8 +67,7 @@ gentoo - spec_tools/ % cmake .
 -- Found Boost: /usr/include (found suitable version "1.72.0", minimum required is "1.40") found components: program_options timer filesystem chrono 
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/gentoo/Prog/cpp/spec_tools
-
+-- Build files have been written to: /home/gentoo/Prog/py/test/spec_tools
 
 gentoo - spec_tools/ % make -j$(nproc)
 Scanning dependencies of target findncopy
