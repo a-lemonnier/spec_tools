@@ -36,12 +36,12 @@ Dependencies:
 ```
 gentoo - /home/gentoo % git clone https://github.com/a-lemonnier/spec_tools.git 
 Clonage dans 'spec_tools'...
-remote: Enumerating objects: 229, done.
-remote: Counting objects: 100% (229/229), done.
-remote: Compressing objects: 100% (167/167), done.
-remote: Total 229 (delta 133), reused 144 (delta 51), pack-reused 0
-Réception d'objets: 100% (229/229), 1005.07 Kio | 2.48 Mio/s, fait.
-Résolution des deltas: 100% (133/133), fait.
+remote: Enumerating objects: 271, done.
+remote: Counting objects: 100% (271/271), done.
+remote: Compressing objects: 100% (189/189), done.
+remote: Total 271 (delta 161), reused 173 (delta 66), pack-reused 0
+Réception d'objets: 100% (271/271), 1.14 Mio | 2.68 Mio/s, fait.
+Résolution des deltas: 100% (161/161), fait.
 
 gentoo - /home/gentoo % cd spec_tools
 ```
