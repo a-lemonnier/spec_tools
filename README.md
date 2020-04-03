@@ -18,7 +18,7 @@ A set of codes for csv and for spectrum manipulation:
  - Additionnal parameters and file verifications
  - Implement boost:: recursive directory copy
  - Clean preprocessor intructions
- - Add C++11 and C++14 compatibility
+ - Add C++11 and C++14 compatibilities
 
 ---
 Codes work on Gentoo x64 and Ubuntu x64: bionic and eoan.
