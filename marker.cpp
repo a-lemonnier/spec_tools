@@ -47,5 +47,7 @@ int main(int argc, char** argv) {
     
     Marker.set_verbose(true);
     
+    Marker.make();
+    
     return EXIT_SUCCESS;
 }

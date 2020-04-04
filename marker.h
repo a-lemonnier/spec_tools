@@ -45,16 +45,25 @@ public:
 
     void set_figsize(int iHeight, int iWidth);
     
-    void make() const;
-    void plot() const;
-    void save() const;
+    void set_scriptname(const std::string &sScriptname);
     
+    const std::string& get_scriptname() const;
+    const std::string& get_output() const;
+    
+    int* get_figsize() const;
+    int get_dpi() const;
+    
+    
+    void make();
+    void plot();
+    void save();
     
 protected:
     _msg msgM;
 
 private:
     std::string get_ext(const std::string& sS) const;
+    void add_cmd(const std::string &sCmd);
     
     bool bVerbose;
     
@@ -62,8 +71,11 @@ private:
     
     vlList vllSet;
     
+    std::string sExec;
+    
     std::string sFilename;
     std::string sExt;
+    std::string sScriptname;
     
     std::string sTitle;
     
@@ -74,12 +86,13 @@ private:
     _T TXmin, TXmax;
     _T TYmin, TYmax;
 
-    
     int iDpi;
     
     int iHeight, iWidth;
     
     bool bIsset_fig_size;
+    
+    
     
 };
 
