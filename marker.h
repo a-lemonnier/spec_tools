@@ -2,8 +2,14 @@
 #define _MARKER_H
 
 #include <iostream>
+#include <cstdlib>
+
+#include <fstream>
+
 #include <string>
 #include <sstream>
+
+#include <vector>
 #include <algorithm> 
 
 #include "msg.h"
@@ -47,27 +53,33 @@ public:
     
     void set_scriptname(const std::string &sScriptname);
     
+    void add_line(_T TWl, const std::string &sName);
+    void add_data(const std::vector<_T>& vTX, const std::vector<_T>& vTY);
+    
+    _T get_continuum() const;
+    
     const std::string& get_scriptname() const;
     const std::string& get_output() const;
     
     int* get_figsize() const;
     int get_dpi() const;
-    
-    
-    void make();
+
+    bool make();
     void plot();
-    void save();
     
 protected:
     _msg msgM;
 
 private:
     std::string get_ext(const std::string& sS) const;
+    std::string get_cmd() const;
     void add_cmd(const std::string &sCmd);
+    
     
     bool bVerbose;
     
     std::vector<_T> X, Y;
+    std::vector<std::vector<std::vector<_T> > > vvvAdddata;
     
     vlList vllSet;
     

@@ -39,15 +39,40 @@ namespace fs = boost::filesystem;
 
 #include "marker.h"
 #include "msg.h"
-
+#include "csv.h"
 
 int main(int argc, char** argv) {
     
-    _marker Marker;
+    std::vector<float> X,Y;
     
-    Marker.set_verbose(true);
+    _csv<float> csv;
     
-    Marker.make();
+    csv.set_verbose(_csv<float>::DEBUG);
+    
+    csv.set_filename("HD87240_p1.sub.obs.norm");
+    csv.set_separator('\t');
+    
+    if (csv.read()) {
+    
+        X=csv.select_column(0);
+        Y=csv.select_column(1);
+        
+        _marker Marker;
+        
+        Marker.set_verbose(true);
+        
+        Marker.set_output("plot.png", 300);
+        
+        Marker.set_data(X,Y);
+        
+        Marker.add_line(4861,"$H\\\\beta$");
+        
+        if (Marker.make()) {
+            Marker.plot();
+        }
+    }
+    else
+        return EXIT_FAILURE;
     
     return EXIT_SUCCESS;
 }
