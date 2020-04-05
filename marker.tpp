@@ -396,11 +396,10 @@ bool _marker<_T>::make() {
     
     add_cmd("ax0.plot(x,y,'-', color='black', linewidth=.15, zorder=10)\n");
 
-    for(int i=0; i< vsAddfilename.size(); i++) {
+    for(int i=0; i< vsAddfilename.size(); i++) 
         add_cmd("ax0.plot(x"+std::to_string(i)+",y"+
                              std::to_string(i)
                           +",'--', color='blue', linewidth=.15, zorder=15)\n");
-    }
     
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"add title and labels");

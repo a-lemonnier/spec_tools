@@ -48,8 +48,8 @@ int main(int argc, char** argv) {
     csv.set_verbose(_csv<float>::DEBUG);
     csv2.set_verbose(_csv<float>::DEBUG);
     
-    csv.set_filename("HD87240_p1.obs.norm");
-    csv2.set_filename("HD87240_p1.sub.obs.norm");
+    csv.set_filename("rand_spectra/0/0.dat");
+    csv2.set_filename("rand_spectra/0/1.dat");
     
     csv.set_separator('\t');
     csv2.set_separator('\t');
