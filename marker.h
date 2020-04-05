@@ -107,7 +107,7 @@ public:
      */
     void add_data(const std::vector<_T>& vTX, 
                   const std::vector<_T>& vTY, 
-                  const std::string &sTitle);
+                  const std::string &sLabel);
     
     _T get_continuum() const;
     /**

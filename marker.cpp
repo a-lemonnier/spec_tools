@@ -42,36 +42,115 @@ namespace fs = boost::filesystem;
 #include "csv.h"
 
 int main(int argc, char** argv) {
-       
-    _csv<float> csv, csv2, csv3;
     
-    csv.set_verbose(_csv<float>::DEBUG);
-    csv2.set_verbose(_csv<float>::DEBUG);
-    csv3.set_verbose(_csv<float>::DEBUG);
+    _msg msgM;
+    msgM.set_name("marker");
     
-    csv.set_filename("HD87240_p1.obs.norm");
-    csv2.set_filename("HD87240_p1.sub.obs.norm");
-    csv3.set_filename("HD87240_p1.synspec");
+    // Parse cmd line
+    // ----------------------------------------------------  
     
-    csv.set_separator('\t');
-    csv2.set_separator('\t');
-    csv3.set_separator(' ');
+    namespace po = boost::program_options;
+    po::options_description description("Usage");
     
-    if (csv.read() && csv2.read() && csv3.read()) {
+    description.add_options()
+    ("help,h", "Display this help message")
+    ("input,i",  po::value<std::vector<std::string> >()->multitoken(),"Set input files.")
+    ("title,t",  po::value<std::string>(), "Set title.")
+    ("label,l",  po::value<std::vector<std::string> >()->multitoken(),"Set labels.")
+    ("sep,s", po::value<std::vector<char> >()->multitoken(), "Set separators.")
+    ("verbose,v","Toggle verbosity.");
+    
+    po::variables_map vm;
+    po::store(po::command_line_parser(argc, argv).options(description).run(), vm);
+    po::notify(vm);
+    
+    if (vm.count("help") || !vm.count("input")  || vm.size()<1) {
+        std::cout << description;
+        return EXIT_SUCCESS;
+    }
+    
+    // ---------------------------------------------------- 
+        
+    msgM.msg(_msg::eMsg::START);
+    msgM.msg(_msg::eMsg::MID, "check command line");  
+    
+    std::string sTitle;
+    std::vector<std::string> vsLabels;
+    
+    if (vm.count("title"))
+        sTitle=vm["title"].as<std::string>();
+    
+    std::vector<std::string> vsFlist(vm["input"].as<std::vector<std::string> >());
+    std::vector<_csv<float> > vCsv;
+    
+    if (vm.count("label"))
+        vsLabels=vm["label"].as<std::vector<std::string> >();
+    
+     if (vm.count("sep")) {
+         if (vm["input"].as<std::vector<std::string> >().size()!=vm["sep"].as<std::vector<char> >().size() && vm["sep"].as<std::vector<char> >().size()<2) {
+             msgM.msg(_msg::eMsg::ERROR, "file numbers doe not match the separator numbers");
+             return EXIT_FAILURE;
+         }
+     }
+        
+    if (!vm.count("sep"))
+        for(auto sFile: vsFlist) {
+            _csv<float> tmp(sFile,'\t');
+            vCsv.push_back(tmp);
+        }
+    else {
+        if (vm["sep"].as<std::vector<char> >().size()==1) 
+            for(auto sFile: vsFlist) {
+                _csv<float> tmp(sFile,vm["sep"].as<std::vector<char> >()[0]);
+                vCsv.push_back(tmp);
+        }
+        else {
+            for(auto sFile: vsFlist) {
+                _csv<float> tmp;
+                vCsv.push_back(tmp);
+            }
+            int i=0;
+            for(auto &csv: vCsv) {
+                csv.set_filename(vm["input"].as<std::vector<std::string> >()[i]);
+                csv.set_separator(vm["sep"].as<std::vector<char> >()[i]);
+                i++;
+            }
+        }
+    }
+     
+    if (vm.count("verbose")) 
+        for(auto &csv: vCsv)
+            csv.set_verbose(_csv<float>::DEBUG);
+    
+    bool bRead=true;
+    for(auto &csv: vCsv)
+        bRead&=csv.read();
+        
+    if (bRead) {
     
         _marker Marker;
         
         Marker.set_verbose(true);
         
         Marker.set_output("plot.pdf", 300);
+
+        if (vm.count("title"))
+            Marker.set_title(sTitle);
+        else
+            Marker.set_title(" ");
         
-        Marker.set_data(csv.select_column(0), csv.select_column(1));
-        Marker.set_title("Plot");
-        Marker.set_label("Obs.");
-        
-        Marker.add_data(csv2.select_column(0), csv2.select_column(1), "Sub. Obs.");
-        Marker.add_data(csv3.select_column(0), csv3.select_column(1), "SynSpec");
-        
+        if (!vm.count("label"))
+            for(auto &csv: vCsv) 
+                Marker.add_data(csv.select_column(0), csv.select_column(1));
+        else {
+            int i=0;
+            for(auto &csv: vCsv) {
+                Marker.add_data(csv.select_column(0), csv.select_column(1), vsLabels[i]);
+                i++;
+            }
+        }
+            
+              
         Marker.set_supp(4820,4880);
         
         Marker.set_xlabel("$\\\\lambda$");

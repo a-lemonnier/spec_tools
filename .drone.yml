@@ -21,5 +21,5 @@ steps:
     - ./der_snr -d spectra -o selected_snr.csv
     - ./der_snr -f rand_spectra/0/0.dat
     - ./shift  -v 1.0e5 -i rand_spectra
-    - ./marker
+    - ./marker -v -i rand_spectra/0/0.dat -i rand_spectra/0/1.dat -t title_test -l 0.dat -l 1.dat 
 

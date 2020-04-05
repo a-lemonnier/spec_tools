@@ -68,29 +68,29 @@ _csv<_T>::_csv(const std::vector<std::string>& vsHeader,
     set_separator(cSep);    
 }
 
-template<typename _T> 
-_csv<_T>::_csv( _csv& other ) {
-    bStatus=true;
-    debug("copying");
-        if (other.sFilename.empty()) {
-            error("copy(): empty sFilename");
-            this->set_filename("error.csv");
-            bStatus=false;
-        }
-        else 
-            this->set_filename(other.get_filename());
-        
-        if (other.cSeparator=='\0') {
-            error("copy(): empty cSeparator");
-            this->set_separator('\t');
-            bStatus=false;
-        }
-        else
-            this->set_separator(other.get_separator());
-        
-        if (!other.empty())
-            this->set_data(other.data);
-}
+// template<typename _T> 
+// _csv<_T>::_csv( _csv& other ) {
+//     bStatus=true;
+//     debug("copying");
+//         if (other.sFilename.empty()) {
+//             error("copy(): empty sFilename");
+//             this->set_filename("error.csv");
+//             bStatus=false;
+//         }
+//         else 
+//             this->set_filename(other.get_filename());
+//         
+//         if (other.cSeparator=='\0') {
+//             error("copy(): empty cSeparator");
+//             this->set_separator('\t');
+//             bStatus=false;
+//         }
+//         else
+//             this->set_separator(other.get_separator());
+//         
+//         if (!other.empty())
+//             this->set_data(other.vvData);
+// }
 
 template<typename _T> 
 _csv<_T>::~_csv() {

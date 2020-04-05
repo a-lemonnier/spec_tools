@@ -67,6 +67,8 @@ void _marker<_T>::set_title(const std::string& sTitle) {
         msgM.msg(_msg::eMsg::MID,"reset title");
         this->sTitle="Plot";
     }
+    else
+        this->sTitle=sTitle;
 }
 
 template<typename _T>
@@ -233,10 +235,16 @@ void _marker<_T>::add_data(const std::vector<_T>& vTX,
     else {
         if (bVerbose)
             msgM.msg(_msg::eMsg::MID,"add data");
-        std::vector<std::vector<_T> > vData;
-        vData.emplace_back(vTX);
-        vData.emplace_back(vTY);
-        vvvAdddata.emplace_back(vData);
+        
+        if (X.empty() || Y.empty()) {
+            set_data(vTX, vTY);
+        }
+        else {
+            std::vector<std::vector<_T> > vData;
+            vData.emplace_back(vTX);
+            vData.emplace_back(vTY);
+            vvvAdddata.emplace_back(vData);
+        }
     }
 }
 
@@ -244,7 +252,13 @@ template<typename _T>
 void _marker<_T>::add_data(const std::vector<_T>& vTX, 
                            const std::vector<_T>& vTY, 
                            const std::string &sTitle) {
-    add_data(vTX, vTY);
+    if (X.empty() || Y.empty()) {
+        add_data(vTX, vTY);
+        set_label(sTitle);
+    }
+    else
+        add_data(vTX, vTY);
+    
     if (sTitle.empty())
         this->vsTitle.emplace_back(" ");
     else

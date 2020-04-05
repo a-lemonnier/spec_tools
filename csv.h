@@ -95,6 +95,8 @@ public:
      */
     explicit _csv(const std::vector<std::string>& vsHeader, const std::vector<std::vector<_T> > &vvData, const char &cSep);
     
+//     explicit _csv( _csv& other);
+    
     virtual ~_csv();
     
     /**
@@ -362,8 +364,6 @@ public:
      * \brief Delete data and header.
      */
     void clear();
-
-    _csv( _csv& other);
     
     _csv& operator=(const _csv& other) const; 
 
