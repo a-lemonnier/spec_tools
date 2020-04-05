@@ -42,34 +42,43 @@ namespace fs = boost::filesystem;
 #include "csv.h"
 
 int main(int argc, char** argv) {
-    
-    std::vector<float> X,Y;
-    
-    _csv<float> csv;
+       
+    _csv<float> csv, csv2;
     
     csv.set_verbose(_csv<float>::DEBUG);
+    csv2.set_verbose(_csv<float>::DEBUG);
     
-    csv.set_filename("HD87240_p1.sub.obs.norm");
+    csv.set_filename("HD87240_p1.obs.norm");
+    csv2.set_filename("HD87240_p1.sub.obs.norm");
+    
     csv.set_separator('\t');
+    csv2.set_separator('\t');
     
-    if (csv.read()) {
+    if (csv.read() && csv2.read()) {
     
-        X=csv.select_column(0);
-        Y=csv.select_column(1);
-        
         _marker Marker;
         
         Marker.set_verbose(true);
         
-        Marker.set_output("plot.png", 300);
+        Marker.set_output("plot.pdf", 300);
         
-        Marker.set_data(X,Y);
+        Marker.set_data(csv.select_column(0), csv.select_column(1));
+        Marker.add_data(csv2.select_column(0), csv2.select_column(1));
         
+        Marker.set_xlabel("$\\\\lambda$");
+        Marker.set_ylabel("Normalized flux");
+        
+        Marker.set_xunit("$\\\\AA$");
+        Marker.set_yunit("cgs");
+
+        Marker.add_line(4750,"Elem 1");
+        Marker.add_line(4800,"Elem 2");
+        Marker.add_line(4825,"Elem 3");
         Marker.add_line(4861,"$H\\\\beta$");
         
-        if (Marker.make()) {
+        if (Marker.make()) 
             Marker.plot();
-        }
+
     }
     else
         return EXIT_FAILURE;
