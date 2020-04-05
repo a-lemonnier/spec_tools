@@ -43,18 +43,21 @@ namespace fs = boost::filesystem;
 
 int main(int argc, char** argv) {
        
-    _csv<float> csv, csv2;
+    _csv<float> csv, csv2, csv3;
     
     csv.set_verbose(_csv<float>::DEBUG);
     csv2.set_verbose(_csv<float>::DEBUG);
+    csv3.set_verbose(_csv<float>::DEBUG);
     
-    csv.set_filename("rand_spectra/0/0.dat");
-    csv2.set_filename("rand_spectra/0/1.dat");
+    csv.set_filename("HD87240_p1.obs.norm");
+    csv2.set_filename("HD87240_p1.sub.obs.norm");
+    csv3.set_filename("HD87240_p1.synspec");
     
     csv.set_separator('\t');
     csv2.set_separator('\t');
+    csv3.set_separator(' ');
     
-    if (csv.read() && csv2.read()) {
+    if (csv.read() && csv2.read() && csv3.read()) {
     
         _marker Marker;
         
@@ -63,17 +66,22 @@ int main(int argc, char** argv) {
         Marker.set_output("plot.pdf", 300);
         
         Marker.set_data(csv.select_column(0), csv.select_column(1));
-        Marker.add_data(csv2.select_column(0), csv2.select_column(1));
+        Marker.set_title("Plot");
+        Marker.set_label("Obs.");
+        
+        Marker.add_data(csv2.select_column(0), csv2.select_column(1), "Sub. Obs.");
+        Marker.add_data(csv3.select_column(0), csv3.select_column(1), "SynSpec");
+        
+        Marker.set_supp(4820,4880);
         
         Marker.set_xlabel("$\\\\lambda$");
         Marker.set_ylabel("Normalized flux");
         
         Marker.set_xunit("$\\\\AA$");
-        Marker.set_yunit("cgs");
 
-        Marker.add_line(4750,"Elem 1");
-        Marker.add_line(4800,"Elem 2");
-        Marker.add_line(4825,"Elem 3");
+        Marker.add_line(4750,"Fe II");
+        Marker.add_line(4800,"Fe II");
+        Marker.add_line(4825,"Fe II");
         Marker.add_line(4861,"$H\\\\beta$");
         
         if (Marker.make()) 

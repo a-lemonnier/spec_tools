@@ -45,6 +45,7 @@ public:
     void set_data(const std::vector<_T>& vTX, const std::vector<_T>& vTY);
     
     void set_title(const std::string& sTitle);
+    void set_label(const std::string& sLabel);
     void set_xlabel(const std::string& sXlabel);
     void set_ylabel(const std::string& sYlabel);
     void set_xunit(const std::string& sXunit);
@@ -97,7 +98,16 @@ public:
      * \fn add_data(const std::vector<_T>& vTX, const std::vector<_T>& vTY)
      * \brief Add an additionnal spectrum which has to be plot
      */
-    void add_data(const std::vector<_T>& vTX, const std::vector<_T>& vTY);
+    void add_data(const std::vector<_T>& vTX, 
+                  const std::vector<_T>& vTY);
+    
+    /**
+     * \fn add_data(const std::vector<_T>& vTX, const std::vector<_T>& vTY, const std::string &sTitle)
+     * \brief Add an additionnal spectrum which has to be plot
+     */
+    void add_data(const std::vector<_T>& vTX, 
+                  const std::vector<_T>& vTY, 
+                  const std::string &sTitle);
     
     _T get_continuum() const;
     /**
@@ -111,6 +121,7 @@ public:
     const std::string& get_output() const;
     
     const std::string& get_title() const;
+    const std::string& get_label() const;
     const std::string& get_xlabel() const;
     const std::string& get_xunit() const;
     const std::string& get_ylabel() const;
@@ -150,6 +161,8 @@ private:
     std::vector<_T> X, Y;
     std::vector<std::vector<std::vector<_T> > > vvvAdddata; /**< Additionnal spectrum */
     
+    std::vector<std::string> vsTitle;
+    
     vlList vllSet; /**< Set of lines with name of lines */
     
     std::string sExec;
@@ -159,6 +172,7 @@ private:
     std::string sScriptname;
     
     std::string sTitle;
+    std::string sLabel;
     
     std::string sXlabel, sYlabel;
     std::string sXunit, sYunit;

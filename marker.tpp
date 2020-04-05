@@ -70,6 +70,11 @@ void _marker<_T>::set_title(const std::string& sTitle) {
 }
 
 template<typename _T>
+void _marker<_T>::set_label(const std::string& sLabel) {
+    this->sLabel=sLabel;
+}
+
+template<typename _T>
 void _marker<_T>::set_xlabel(const std::string& sXlabel) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set xlabel:", sXlabel);
@@ -219,18 +224,31 @@ void _marker<_T>::add_line(_T TWl, const std::string &sName) {
 }
 
 template<typename _T>
-void _marker<_T>::add_data(const std::vector<_T>& vTX, const std::vector<_T>& vTY) {
+void _marker<_T>::add_data(const std::vector<_T>& vTX, 
+                           const std::vector<_T>& vTY) {
     if (vTX.empty() || vTY.empty()) 
         msgM.msg(_msg::eMsg::ERROR,"empty data");
     else if (vTX.size()!=vTY.size())
         msgM.msg(_msg::eMsg::ERROR,"vector sizes mismatch");
     else {
+        if (bVerbose)
+            msgM.msg(_msg::eMsg::MID,"add data");
         std::vector<std::vector<_T> > vData;
         vData.emplace_back(vTX);
         vData.emplace_back(vTY);
         vvvAdddata.emplace_back(vData);
-//         std::cout << vvvAdddata.size() << " " << this->vvvAdddata[0].size() << " " << this->vvvAdddata[0][0].size() << "\n";
     }
+}
+
+template<typename _T>
+void _marker<_T>::add_data(const std::vector<_T>& vTX, 
+                           const std::vector<_T>& vTY, 
+                           const std::string &sTitle) {
+    add_data(vTX, vTY);
+    if (sTitle.empty())
+        this->vsTitle.emplace_back(" ");
+    else
+        this->vsTitle.emplace_back(sTitle);
 }
 
 template<typename _T>
@@ -267,6 +285,11 @@ const std::string& _marker<_T>::get_output() const {
 template<typename _T>
 const std::string& _marker<_T>::get_title() const {
     return this->sTitle;
+}
+
+template<typename _T>
+const std::string& _marker<_T>::get_label() const {
+    return this->sLabel;
 }
 
 template<typename _T>
@@ -340,7 +363,6 @@ bool _marker<_T>::make() {
         std::fstream sfFlux(vsAddfilename[iCount], std::ios::out);
         if (sfFlux) {
             int iSize=vvPlot[0].size();
-            std::cout << iSize << "\n";
             for(int i=0; i<iSize; i++) 
                 sfFlux << vvPlot[0][i] << " " << vvPlot[1][i] << "\n";
          
@@ -351,10 +373,10 @@ bool _marker<_T>::make() {
         iCount++;
     }
     
-    
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"make python script");
         
+    add_cmd("import matplotlib.colors as col");
     add_cmd("import matplotlib.pyplot as plt");
     add_cmd("import numpy as np");
     add_cmd("import csv\n");
@@ -394,12 +416,93 @@ bool _marker<_T>::make() {
     add_cmd("grid = fig.add_gridspec(nrows=1, ncols=1)");
     add_cmd("ax0=fig.add_subplot(grid[0,0])\n");
     
-    add_cmd("ax0.plot(x,y,'-', color='black', linewidth=.15, zorder=10)\n");
+    add_cmd("ax0.plot(x,y,'-', color='black', linewidth=0.30, zorder=10, label='"+get_label()+"')\n");
 
-    for(int i=0; i< vsAddfilename.size(); i++) 
-        add_cmd("ax0.plot(x"+std::to_string(i)+",y"+
-                             std::to_string(i)
-                          +",'--', color='blue', linewidth=.15, zorder=15)\n");
+    int iR=0x00;
+    int iG=0x00;
+    int iB=0xff;
+    int iCycle=0;
+    if (!this->vsTitle.empty())
+        for(int i=0; i< vsAddfilename.size(); i++) {
+                        
+            std::stringstream ssS;
+            ssS << "#" << std::hex 
+                << std::setw(2) << std::setfill('0') << iR  
+                << std::setw(2) << std::setfill('0') << iG
+                << std::setw(2) << std::setfill('0') << iB;
+                        
+            add_cmd("ax0.plot(x"+std::to_string(i)+
+                            ",y"+std::to_string(i)+
+                            ",'--'"+
+                            ", color=\""+ssS.str()+"\""+
+                            ", linewidth=0.30, zorder=15, label='"+
+                            this->vsTitle[i]+"')\n");
+            
+            if (iCycle==0)
+                iB+=(0xff-1)/2;
+
+            if (iB>=0xff) {
+                iCycle=1;
+                iR=0;
+                iB=0xff;
+                iG+=(0xff-1)/2;
+            }
+            
+            if (iG>=0xff) {
+                iCycle=2;
+                iG=0xff;
+                iB=0;
+                iR+=(0xff-1)/2;
+            }
+            
+            if (iR>=0xff) {
+                iCycle=0;
+                iR=0;
+                iG=0;
+                iB=(0xff-1)/2;
+            }
+        }
+    else {
+        int iCycle=0;
+        for(int i=0; i< vsAddfilename.size(); i++)  {
+            std::stringstream ssS;
+            ssS << "#" << std::hex 
+                << std::setw(2) << std::setfill('0') << iR  
+                << std::setw(2) << std::setfill('0') << iG 
+                << std::setw(2) << std::setfill('0') << iB;
+
+            add_cmd("ax0.plot(x"+std::to_string(i)+
+                            ",y"+std::to_string(i)+
+                            ",'--', color='"+ssS.str()+
+                            "', linewidth=0.30, zorder=15)\n");
+            
+            if (iCycle==0)
+                iB+=(0xff-1)/2;
+
+            if (iB>=0xff) {
+                iCycle=1;
+                iR=0;
+                iB=0xff;
+                iG+=(0xff-1)/2;
+            }
+            
+            if (iG>=0xff) {
+                iCycle=2;
+                iG=0xff;
+                iB=0;
+                iR+=(0xff-1)/2;
+            }
+            
+            if (iR>=0xff) {
+                iCycle=0;
+                iR=0;
+                iG=0;
+                iB=(0xff-1)/2;
+            }
+        }
+    }
+            
+    add_cmd("ax0.set_xlim("+std::to_string(get_supp()[0])+", "+std::to_string(get_supp()[1])+")");
     
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"add title and labels");
@@ -431,36 +534,38 @@ bool _marker<_T>::make() {
     std::to_string(get_supp()[1])+"],["+
     std::to_string(get_continuum())+","+
     std::to_string(get_continuum())+"],"+
-    "':', color='red', linewidth=0.15, zorder=1"+
+    "'-.', color='red', linewidth=0.6, zorder=1"+
     ")\n");
-
     
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"add markers");
     
-    iCount=0;
     for(auto line: vllSet) {
         add_cmd("ax0.plot(["+
         std::to_string(line.TWl) + ", " +
         std::to_string(line.TWl) + "], [0, " +
         std::to_string(get_continuum()) +
-        "],  color='red', linestyle='--', zorder=2, linewidth=0.15)");
+        "],  color='red', linestyle='--', zorder=2, linewidth=0.50)\n");
             
         std::stringstream ssS;
         ssS << std::setprecision(2) << std::fixed << line.TWl;
+
         add_cmd("ax0.annotate('"+
-                line.sElem+" "+
-                "$\\\\lambda "+ssS.str()+ "$', xytext=("+
-                std::to_string(get_supp()[0])+","+
-                std::to_string(iCount*0.03)+"), "+
+                line.sElem+"\\n"+
+                "$\\\\lambda "+ssS.str()+ 
+                "$', xytext=("+
+                std::to_string(line.TWl)+","+
+                std::to_string(iCount*0.05)+"), "+
                 "xy=("+std::to_string(line.TWl)+", "+
-                std::to_string(iCount*0.03)+"), "+
-                "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.15), size='6')");
+                std::to_string(iCount*0.05)+"), "+
+                "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.4', fc='white', ec='white', lw=2),size='6', ha='center')");
         
         iCount++;
     }
     
     add_cmd(" ");
+    
+    add_cmd("ax0.legend(loc='best', fontsize=6)\n");
     
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"write margins");
