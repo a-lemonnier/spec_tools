@@ -4,7 +4,10 @@ _marker<_T>::_marker():
     X(0), Y(0),
     vvvAdddata(0),
     vllSet(vlList(0)),
-    sExec("#!/usr/bin/env python3\n# -*- coding: utf-8 -*-\n#auto generated script\n\n"),
+    sExec("\
+#!/usr/bin/env python3\n\
+# -*- coding: utf-8 -*-\n\
+#auto generated script\n\n"),
     sScriptname(".plot.py"),
     sTitle("Plot"),
     sXlabel("x"), sYlabel("y"),
@@ -40,7 +43,6 @@ _marker<_T>::~_marker() {
     this->vvvAdddata.clear();
 }
 
-
 template<typename _T>
 void _marker<_T>::set_verbose(const bool bVerbose) {
     this->bVerbose=bVerbose;
@@ -48,7 +50,8 @@ void _marker<_T>::set_verbose(const bool bVerbose) {
 }
 
 template<typename _T>
-void _marker<_T>::set_data(const std::vector<_T>& vTX, const std::vector<_T>& vTY) {
+void _marker<_T>::set_data(const std::vector<_T>& vTX, 
+                           const std::vector<_T>& vTY) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_data()");
     if (vTX.empty() || vTY.empty()) 
@@ -128,7 +131,8 @@ void _marker<_T>::set_output(const std::string& sFilename) {
     
     if (sFilename.empty()) {
         this->sFilename="output.png";
-        msgM.msg(_msg::eMsg::MID,"set_output(): reset output to:", this->sFilename);
+        msgM.msg(_msg::eMsg::MID,"set_output(): reset output to:", 
+                                 this->sFilename);
     }
     else 
         this->sFilename=sFilename;
@@ -141,12 +145,14 @@ void _marker<_T>::set_output(const std::string& sFilename) {
         sExt!="pdf") ||
         sExt.empty()) {
         this->sExt="png";
-        msgM.msg(_msg::eMsg::ERROR,"set_output(): reset extension to:", this->sExt);
+        msgM.msg(_msg::eMsg::ERROR,"set_output(): reset extension to:", 
+                                    this->sExt);
         }
 }
 
 template<typename _T>
-void _marker<_T>::set_output(const std::string& sFilename, const int iDpi) {
+void _marker<_T>::set_output(const std::string& sFilename, 
+                             const int iDpi) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_output(", sFilename, ",", iDpi,")");
     if (iDpi<50) {
@@ -432,7 +438,8 @@ bool _marker<_T>::make() {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"make(): write data");
     
-    std::fstream sfFlux_d(".data.csv", std::ios::out | std::ios::trunc);
+    std::fstream sfFlux_d(".data.csv", std::ios::out | 
+                                       std::ios::trunc);
     
     if (sfFlux_d) {
         if (bVerbose)
@@ -462,7 +469,8 @@ bool _marker<_T>::make() {
             sfFlux.close();
         }
         else 
-            msgM.msg(_msg::eMsg::ERROR,"make(): cannot open:", vsAddfilename[iCount]);
+            msgM.msg(_msg::eMsg::ERROR,"make(): cannot open:", 
+                                        vsAddfilename[iCount]);
         iCount++;
     }
     
@@ -509,7 +517,9 @@ bool _marker<_T>::make() {
     add_cmd("grid = fig.add_gridspec(nrows=1, ncols=1)");
     add_cmd("ax0=fig.add_subplot(grid[0,0])\n");
     
-    add_cmd("ax0.plot(x,y,'-', color='"+sColorline+"', linewidth="+std::to_string(fLinewidth)+", zorder=10, label='"+get_label()+"')\n");
+    add_cmd("ax0.plot(x,y,'-', color='"+sColorline+
+            "', linewidth="+std::to_string(fLinewidth)+
+            ", zorder=10, label='"+get_label()+"')\n");
 
     int iR=0x00;
     int iG=0x00;
@@ -528,7 +538,8 @@ bool _marker<_T>::make() {
                             ",y"+std::to_string(i)+
                             ",'--'"+
                             ", color=\""+ssS.str()+"\""+
-                            ", linewidth="+std::to_string(fLinewidth)+", zorder=15, label='"+
+                            ", linewidth="+std::to_string(fLinewidth)+
+                            ", zorder=15, label='"+
                             this->vsTitle[i]+"')\n");
             
             if (iCycle==0)
@@ -567,7 +578,8 @@ bool _marker<_T>::make() {
             add_cmd("ax0.plot(x"+std::to_string(i)+
                             ",y"+std::to_string(i)+
                             ",'--', color='"+ssS.str()+
-                            "', linewidth="+std::to_string(fLinewidth)+", zorder=15)\n");
+                            "', linewidth="+std::to_string(fLinewidth)
+                            +", zorder=15)\n");
             
             if (iCycle==0)
                 iB+=(0xff-1)/2;
@@ -595,29 +607,37 @@ bool _marker<_T>::make() {
         }
     }
             
-    add_cmd("ax0.set_xlim("+std::to_string(get_supp()[0])+", "+std::to_string(get_supp()[1])+")");
+    add_cmd("ax0.set_xlim("+std::to_string(get_supp()[0])+
+            ", "+std::to_string(get_supp()[1])+")");
     
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"add title and labels");
     add_cmd("plt.title('"+
-            get_title()+ "', size="+std::to_string(iTitlesize)+")");
+            get_title()+ "', size="+
+            std::to_string(iTitlesize)+")");
     if (!this->sXunit.empty())
         add_cmd("ax0.set_xlabel('"+
                 get_xlabel()+" ("+
-                get_xunit()+")', size="+std::to_string(iLabelsize)+")");
+                get_xunit()+")', size="+
+                std::to_string(iLabelsize)+")");
     else
         add_cmd("ax0.set_xlabel('"+
-                get_xlabel()+"', size="+std::to_string(iLabelsize)+")");
+                get_xlabel()+"', size="+
+                std::to_string(iLabelsize)+")");
     
     if (!this->sYunit.empty())
         add_cmd("ax0.set_ylabel('"+
                 get_ylabel()+" ("+
-                get_yunit()+")', size="+std::to_string(iLabelsize)+")");
+                get_yunit()+")', size="+
+                std::to_string(iLabelsize)+")");
     else
         add_cmd("ax0.set_ylabel('"+
-                get_ylabel()+"', size="+std::to_string(iLabelsize)+")");
+                get_ylabel()+"', size="+
+                std::to_string(iLabelsize)+")");
     
-    add_cmd("ax0.tick_params(direction='out', labelsize="+std::to_string(iTicklabelsize)+", length=1, width=1, grid_alpha=0.5)");
+    add_cmd("ax0.tick_params(direction='out', labelsize="+
+             std::to_string(iTicklabelsize)+
+             ", length=1, width=1, grid_alpha=0.5)");
     
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"make(): add continuum");
@@ -627,8 +647,8 @@ bool _marker<_T>::make() {
     std::to_string(get_supp()[1])+"],["+
     std::to_string(get_continuum())+","+
     std::to_string(get_continuum())+"],"+
-    "'-.', color='red', linewidth="+std::to_string(fContinnumsize)+", zorder=1"+
-    ")\n");
+    "'-.', color='red', linewidth="+
+    std::to_string(fContinnumsize)+", zorder=1)\n");
     
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"make(): add markers");
@@ -651,7 +671,8 @@ bool _marker<_T>::make() {
                 std::to_string(iCount*0.05)+"), "+
                 "xy=("+std::to_string(line.TWl)+", "+
                 std::to_string(iCount*0.05)+"), "+
-                "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.4', fc='white', ec='white', lw=2),size='"+std::to_string(iAnnotatesize)+"', ha='center')");
+                "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.4', fc='white', ec='white', lw=2),size='"+
+                std::to_string(iAnnotatesize)+"', ha='center')");
         
         iCount++;
     }

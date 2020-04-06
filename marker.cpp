@@ -22,22 +22,6 @@
 #define HAS_BOOST_TIMER
 #endif
 
-#if __has_include (<filesystem>)
-#include <filesystem>
-#define FS_STD
-namespace fs = std::filesystem;
-#elif __has_include (<experimental/filesystem>) && !__has_include (<filesystem>)
-#include <experimental/filesystem>
-#define FS_STDEXP
-namespace fs = std::experimental::filesystem;
-#elif __has_include(<boost/filesystem.hpp>) && !__has_include (<filesystem>) && !__has_include (<experimental/filesystem>)
-#include <boost/filesystem.hpp>
-#define FS_BOOST
-namespace fs = boost::filesystem;
-#else
-#error "No filesystem header found"
-#endif
-
 #include "marker.h"
 #include "msg.h"
 #include "csv.h"
@@ -251,6 +235,8 @@ int main(int argc, char** argv) {
             Marker.set_xmin(fXmin);
         if (vm.count("xmax"))
             Marker.set_xmax(fXmax);
+        
+        Marker.set_colorline("green");
         
         Marker.set_linewidth(abs(vm["width"].as<float>()));
         Marker.set_continnumsize(abs(vm["contsize"].as<float>()));

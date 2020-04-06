@@ -1,6 +1,10 @@
 template<typename _T> 
-_csv<_T>::_csv(): 
+_csv<_T>::_csv():
       vvData(std::vector<std::vector<_T> >(0))
+    , vcSeplist({{" ", ' '}, {";",';' },
+                 {",", ','}, {":",':'},
+                 {"|",'|'},  {"!",'!'},
+                 {"\t",'\t'},{"\\t",'\t'}})
     , sFilename("out.csv")
     , cSeparator('\t')
     , evVerbose(QUIET)
@@ -13,6 +17,10 @@ _csv<_T>::_csv():
 template<typename _T> 
 _csv<_T>::_csv(const std::string &sFilename, const char &cSep):
      vvData(std::vector<std::vector<_T> >(0))
+    , vcSeplist({{" ", ' '}, {";",';' },
+                 {",", ','}, {":",':'},
+                 {"|",'|'},  {"!",'!'},
+                 {"\t",'\t'},{"\\t",'\t'}})
     , evVerbose(QUIET)
     , bStatus(true)
 {
@@ -26,6 +34,10 @@ _csv<_T>::_csv(const std::string &sFilename, const char &cSep):
 template<typename _T> 
 _csv<_T>::_csv(const std::string &sFilename, const std::string &sSep):
      vvData(std::vector<std::vector<_T> >(0))
+    , vcSeplist({{" ", ' '}, {";",';' },
+                 {",", ','}, {":",':'},
+                 {"|",'|'},  {"!",'!'},
+                 {"\t",'\t'},{"\\t",'\t'}})
     , evVerbose(QUIET)
     , bStatus(true)
 {
@@ -38,7 +50,11 @@ _csv<_T>::_csv(const std::string &sFilename, const std::string &sSep):
 
 template<typename _T> 
 _csv<_T>::_csv(const std::vector<std::vector<_T> > &vvData): 
-      sFilename("out.csv")
+    vcSeplist({{" ", ' '}, {";",';' },
+               {",", ','}, {":",':'},
+               {"|",'|'},  {"!",'!'},
+               {"\t",'\t'},{"\\t",'\t'}})
+    , sFilename("out.csv")
     , cSeparator('\t')
     , evVerbose(QUIET)
     , bStatus(true)
@@ -52,7 +68,11 @@ _csv<_T>::_csv(const std::vector<std::vector<_T> > &vvData):
 template<typename _T> 
 _csv<_T>::_csv(const std::vector<std::string>& vsHeader, 
                const std::vector<std::vector<_T> > &vvData): 
-      sFilename("out.csv")
+    vcSeplist({{" ", ' '}, {";",';' },
+               {",", ','}, {":",':'},
+               {"|",'|'},  {"!",'!'},
+               {"\t",'\t'},{"\\t",'\t'}})
+    , sFilename("out.csv")
     , cSeparator('\t')
     , evVerbose(DEBUG)
     , bStatus(true)
@@ -67,8 +87,12 @@ _csv<_T>::_csv(const std::vector<std::string>& vsHeader,
 template<typename _T> 
 _csv<_T>::_csv(const std::vector<std::string>& vsHeader, 
                const std::vector<std::vector<_T> > &vvData, 
-               const char &cSep): 
-      sFilename("out.csv")
+               const char &cSep):
+    vcSeplist({{" ", ' '}, {";",';' },
+               {",", ','}, {":",':'},
+               {"|",'|'},  {"!",'!'},
+               {"\t",'\t'},{"\\t",'\t'}})
+    , sFilename("out.csv")
     , cSeparator('\t')
     , evVerbose(DEBUG)
     , bStatus(true)
@@ -80,30 +104,6 @@ _csv<_T>::_csv(const std::vector<std::string>& vsHeader,
     set_header(vsHeader);
     set_separator(cSep);    
 }
-
-// template<typename _T> 
-// _csv<_T>::_csv( _csv& other ) {
-//     bStatus=true;
-//     debug("copying");
-//         if (other.sFilename.empty()) {
-//             error("copy(): empty sFilename");
-//             this->set_filename("error.csv");
-//             bStatus=false;
-//         }
-//         else 
-//             this->set_filename(other.get_filename());
-//         
-//         if (other.cSeparator=='\0') {
-//             error("copy(): empty cSeparator");
-//             this->set_separator('\t');
-//             bStatus=false;
-//         }
-//         else
-//             this->set_separator(other.get_separator());
-//         
-//         if (!other.empty())
-//             this->set_data(other.vvData);
-// }
 
 template<typename _T> 
 _csv<_T>::~_csv() {
@@ -191,7 +191,8 @@ bool _csv<_T>::read() {
          }
          if (!vsHeader.empty()) {
              if (vsHeader.size()!=vvData[iSkip_line].size()) {
-                 error("read("+get_filename()+"): header and data line mismatch");
+                 error("read("+get_filename()+
+                       "): header and data line mismatch");
                  bStatus=false;
              }
          }
@@ -356,8 +357,14 @@ const std::vector<_T> _csv<_T>::select_column(int col) const {
 }
 
 template<typename _T> 
-const std::vector<std::vector<_T> > _csv<_T>::select(int iLine_min, int iLine_max, int iCol_min, int iCol_max) const {
-    if (iLine_min<0 || iCol_min<0 || iLine_max>get_data_size_i() ||  iCol_max>get_data_size_j()) {
+const std::vector<std::vector<_T> > _csv<_T>::select(int iLine_min, 
+                                                     int iLine_max, 
+                                                     int iCol_min, 
+                                                     int iCol_max) const {
+    if (iLine_min<0 || 
+        iCol_min<0 || 
+        iLine_max>get_data_size_i() ||  
+        iCol_max>get_data_size_j()) {
         error("select(): invalid selection");
         std::vector<std::vector<_T> >(0);
     }
@@ -530,25 +537,19 @@ bool _csv<_T>::set_separator(const std::string &sSep) {
         debug("setting cSeparator: '"+sSep+"'");
         
         std::hash<std::string> shH; 
-
-        std::vector<std::tuple<std::string, char> > vcSep={ {" ", ' '}, 
-                                                            {";",';' },
-                                                            {",", ','},
-                                                            {":",':'},
-                                                            {"|",'|'},
-                                                            {"!",'!'},
-                                                            {"\t",'\t'},
-                                                            {"\\t",'\t'}};
                       
         auto get_c=[&](const std::string &sS) { 
-            for(auto cC: vcSep) {
+            for(auto cC: this->vcSeplist) {
                 if (sS.compare(std::get<0>(cC))==0)
                     return std::get<1>(cC);
             }
             return ' ';
         };
         
-        debug("hash: string->" + std::to_string(shH(sSep)) + " char->" + std::to_string(shH("\\t")) + "\n");
+        debug("hash: string->" + 
+              std::to_string(shH(sSep)) + 
+              " char->" + 
+              std::to_string(shH("\\t")) + "\n");
         
         set_separator(get_c(sSep));
     }
@@ -667,7 +668,6 @@ bool _csv<_T>::genrandspec(_T TMin, _T TMax, _T TStep) {
         
         debug("genrandspec(): "+std::to_string(vAtomicline.size())+" lines have been generated");
             
-        
         for(int i=0;i<iPlimit;i++) {
             _T TLambda=TMin+i*TStep;
             _T TFlux=ndNoise(mteEngine);
@@ -679,11 +679,8 @@ bool _csv<_T>::genrandspec(_T TMin, _T TMax, _T TStep) {
     
             this->vvData[i]={TLambda,TFlux};
         }
-
-        
         bStatus=true;
     }
-    
     return bStatus;
 }
 
@@ -714,7 +711,8 @@ bool _csv<_T>::shift(_T TVal) {
     bStatus=false;
     
     if (this->get_data_size_i()>0) {
-        debug("add "+std::to_string(TVal)+" to the first column");
+        debug("add "+std::to_string(TVal)+
+              " to the first column");
 
         std::vector<_T> vTmp(this->select_column(0));
         
@@ -722,7 +720,7 @@ bool _csv<_T>::shift(_T TVal) {
                        vTmp.begin(),
                        std::bind(std::plus<_T>(), std::placeholders::_1, TVal));
         
-         set_column(vTmp,0);
+        set_column(vTmp,0);
         
         bStatus=true;
     }
@@ -767,7 +765,8 @@ bool _csv<_T>::apply_max_threshold(_T TVal) {
     
     size_t iPrev_size=get_data_size_i();
     
-    vvData.erase(std::remove_if( vvData.begin(),vvData.end(),[&]( std::vector<_T> v){ 
+    vvData.erase(std::remove_if( vvData.begin(),vvData.end(),
+    [&]( std::vector<_T> v){ 
         for(auto vv: v) 
             if (vv>TVal) return true; 
                               
@@ -785,7 +784,8 @@ bool _csv<_T>::apply_min_threshold(_T TVal) {
     
     size_t iPrev_size=get_data_size_i();
     
-    vvData.erase(std::remove_if( vvData.begin(), vvData.end(),[&]( std::vector<_T> v){ 
+    vvData.erase(std::remove_if( vvData.begin(), vvData.end(),
+    [&]( std::vector<_T> v){ 
         for(auto vv: v) 
             if (vv<TVal) return true; 
                               
@@ -810,7 +810,8 @@ bool _csv<_T>::apply_max_threshold(_T TVal, int iCol) {
     size_t iPrev_size=get_data_size_i();
     size_t iH_size=get_data_size_j();
     
-    vvData.erase(std::remove_if( vvData.begin(),vvData.end(),[&]( std::vector<_T> v){ 
+    vvData.erase(std::remove_if( vvData.begin(),vvData.end(),
+    [&]( std::vector<_T> v){ 
         for(int i=0;i<iH_size;i++) {
             if (v[i]>TVal && i==iCol)
                 return true; 
@@ -838,7 +839,8 @@ bool _csv<_T>::apply_min_threshold(_T TVal, int iCol) {
     size_t iPrev_size=get_data_size_i();
     size_t iH_size=get_data_size_j();
     
-    vvData.erase(std::remove_if( vvData.begin(),vvData.end(),[&]( std::vector<_T> v){ 
+    vvData.erase(std::remove_if( vvData.begin(),vvData.end(),
+    [&]( std::vector<_T> v){ 
         for(int i=0;i<iH_size;i++) {
             if (v[i]<TVal && i==iCol)
                 return true; 
@@ -912,12 +914,14 @@ bool _csv<_T>::operator!=(const _csv& other) const {
 template<typename _T> 
 void _csv<_T>::debug(const std::string &msg) const { 
     if (evVerbose==DEBUG)
-        std::cout << "\033[3;32m\u2690\033[0m \033[1;30m_csv<>()\033[0m: " << msg << ".\n"; // 
+        std::cout << "\033[3;32m\u2690\033[0m \033[1;30m_csv<>()\033[0m: " 
+                  << msg << ".\n"; // 
 }
 
 template<typename _T> 
 void _csv<_T>::error(const std::string &msg) const { 
-    std::cerr << "\033[5;31m\u2639\033[0m \033[1;30m_csv<>()\033[0m: " << msg << ".\n";
+    std::cerr << "\033[5;31m\u2639\033[0m \033[1;30m_csv<>()\033[0m: " 
+              << msg << ".\n";
 }
 
 template<typename _T> 

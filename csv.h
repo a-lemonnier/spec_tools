@@ -92,9 +92,7 @@ public:
      * \param cSep char Separator char between column
      */
     explicit _csv(const std::vector<std::string>& vsHeader, const std::vector<std::vector<_T> > &vvData, const char &cSep);
-    
-//     explicit _csv( _csv& other);
-    
+        
     virtual ~_csv();
     
     /**
@@ -450,6 +448,8 @@ private:
     std::vector<std::vector<_T> > vvData; /**< Data contains the 2D-vector and is private */     
     std::vector<std::string> vsHeader; /**<  vsHeader is a vector of column std::string name */
 
+    std::vector<std::tuple<std::string, char> > vcSeplist; /**<  vcSeplist is a vector of allowed seperators */
+    
     std::string sFilename,sFilename_out; /**< Store the filename  */
     char cSeparator; /**< Store the csv separator  */          
    
