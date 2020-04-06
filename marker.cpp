@@ -56,8 +56,8 @@ int main(int argc, char** argv) {
     ("help,h", "Display this help message")
     ("input,i",  po::value<std::vector<std::string> >()->multitoken(),"Set input files.")
     ("title,t",  po::value<std::string>(), "Set title.")
-    ("label,l",  po::value<std::vector<std::string> >()->multitoken(),"Set labels.")
-    ("sep,s", po::value<std::vector<char> >()->multitoken(), "Set separators.")
+    ("label,l",  po::value<std::vector<std::string> >()->multitoken(),"Set labels. If more than one label is defined, the number of labels must be equal to the numbers of files")
+    ("sep,s", po::value<std::vector<char> >()->multitoken(), "Set separators. If more than one sep is defined, the number of sep must be equal to the numbers of files.")
     ("verbose,v","Toggle verbosity.");
     
     po::variables_map vm;
@@ -88,7 +88,7 @@ int main(int argc, char** argv) {
     
      if (vm.count("sep")) {
          if (vm["input"].as<std::vector<std::string> >().size()!=vm["sep"].as<std::vector<char> >().size() && vm["sep"].as<std::vector<char> >().size()<2) {
-             msgM.msg(_msg::eMsg::ERROR, "file numbers doe not match the separator numbers");
+             msgM.msg(_msg::eMsg::ERROR, "the number of files do not match the separator numbers");
              return EXIT_FAILURE;
          }
      }
@@ -130,7 +130,10 @@ int main(int argc, char** argv) {
     
         _marker Marker;
         
-        Marker.set_verbose(true);
+        if (vm.count("verbose"))
+            Marker.set_verbose(true);
+        else
+            Marker.set_verbose(false);
         
         Marker.set_output("plot.pdf", 300);
 
@@ -142,6 +145,11 @@ int main(int argc, char** argv) {
         if (!vm.count("label"))
             for(auto &csv: vCsv) 
                 Marker.add_data(csv.select_column(0), csv.select_column(1));
+        else if (vsLabels.size()==1) {
+            for(auto &csv: vCsv) 
+                Marker.add_data(csv.select_column(0), csv.select_column(1));
+            Marker.set_label(vsLabels[0]);
+        }
         else {
             int i=0;
             for(auto &csv: vCsv) {
@@ -149,7 +157,6 @@ int main(int argc, char** argv) {
                 i++;
             }
         }
-            
               
         Marker.set_supp(4820,4880);
         

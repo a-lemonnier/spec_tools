@@ -252,17 +252,24 @@ template<typename _T>
 void _marker<_T>::add_data(const std::vector<_T>& vTX, 
                            const std::vector<_T>& vTY, 
                            const std::string &sTitle) {
+    
+    if (bVerbose)
+            msgM.msg(_msg::eMsg::MID,"set label", sTitle);
+    
+    bool bFirstdef=false;
     if (X.empty() || Y.empty()) {
-        add_data(vTX, vTY);
+        set_data(vTX, vTY);
         set_label(sTitle);
+        bFirstdef=true;
     }
     else
         add_data(vTX, vTY);
-    
-    if (sTitle.empty())
-        this->vsTitle.emplace_back(" ");
-    else
-        this->vsTitle.emplace_back(sTitle);
+    if (!bFirstdef) {
+        if (sTitle.empty())
+            this->vsTitle.emplace_back(" ");
+        else
+            this->vsTitle.emplace_back(sTitle);
+    }
 }
 
 template<typename _T>
@@ -520,7 +527,7 @@ bool _marker<_T>::make() {
     
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"add title and labels");
-    add_cmd("ax0.set_title('"+
+    add_cmd("plt.title('"+
             get_title()+ "', size=6)");
     if (!this->sXunit.empty())
         add_cmd("ax0.set_xlabel('"+

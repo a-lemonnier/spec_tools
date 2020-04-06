@@ -116,7 +116,7 @@ public:
     /**
      * \fn bool show(int iLine_stop) const
      * \brief Show the header and data until "line_stop" line. Print all columns with terminal end-of-line. It uses boost::format in order to correct spacing of number and strings.
-     * \param iLine_stop The line number where stop the display
+     * \param iLine_stop The number of lines where stop the display
      * \return true if all seems OK
      */
     bool show(int iLine_stop) const;

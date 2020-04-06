@@ -313,7 +313,7 @@ bool _csv<_T>::write() {
 template<typename _T> 
 const std::vector<_T> _csv<_T>::select_line(int line) const {
     if (line<0 || line>get_data_size_i()) {
-        error("select_line(): invalid line number");
+        error("select_line(): invalid number of lines");
         return std::vector<_T>(0);
     }
     
@@ -329,7 +329,7 @@ const std::vector<_T> _csv<_T>::select_line(int line) const {
 template<typename _T> 
 const std::vector<_T> _csv<_T>::select_column(int col) const {
     if (col<0 || col>get_data_size_j()) {
-        error("select_column(): invalid column number");
+        error("select_column(): invalid the number of columns");
         return std::vector<_T>(0);
     }
     
@@ -393,7 +393,7 @@ bool _csv<_T>::set_column(const std::vector<_T>& vCol, int iCol) {
     size_t iSize_j=get_data_size_j();
     
     if (iCol>iSize_j) {
-        error("set_column(): column number out of range");
+        error("set_column(): the number of columns out of range");
         return bStatus;
     }
     
@@ -425,7 +425,7 @@ bool _csv<_T>::set_row(const std::vector<_T>& vRow, int iRow) {
     size_t iSize_j=get_data_size_j();
     
     if (iRow>iSize_i+1) {
-        error("set_row(): invalid row number");
+        error("set_row(): invalid number of rows");
         return bStatus;
     }   
     
