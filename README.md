@@ -38,12 +38,12 @@ Dependencies:
 ```
 gentoo - /home/gentoo % git clone https://github.com/a-lemonnier/spec_tools.git 
 Clonage dans 'spec_tools'...
-remote: Enumerating objects: 277, done.
-remote: Counting objects: 100% (277/277), done.
-remote: Compressing objects: 100% (195/195), done.
-remote: Total 277 (delta 163), reused 177 (delta 66), pack-reused 0
-Réception d'objets: 100% (277/277), 1.15 Mio | 2.67 Mio/s, fait.
-Résolution des deltas: 100% (163/163), fait.
+remote: Enumerating objects: 29, done.
+remote: Counting objects: 100% (29/29), done.
+remote: Compressing objects: 100% (17/17), done.
+remote: Total 384 (delta 10), reused 22 (delta 8), pack-reused 355
+Réception d'objets: 100% (384/384), 1.88 Mio | 3.68 Mio/s, fait.
+Résolution des deltas: 100% (226/226), fait.
 
 gentoo - /home/gentoo % cd spec_tools
 ```
@@ -69,44 +69,69 @@ gentoo - spec_tools/ % cmake .
 -- Found Boost: /usr/include (found suitable version "1.72.0", minimum required is "1.40") found components: program_options timer filesystem chrono 
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/gentoo/cpp/spec_tools
+
 
 gentoo - spec_tools/ % make -j$(nproc)
-Scanning dependencies of target threshold
-Scanning dependencies of target der_snr
-Scanning dependencies of target trim
+-- The C compiler identification is GNU 8.3.0
+-- The CXX compiler identification is GNU 8.3.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Boost version: 1.67.0
+-- Found the following Boost libraries:
+--   program_options
+--   timer
+--   filesystem
+--   chrono
+--   system
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /drone/src
++ make -j$(nproc)
 Scanning dependencies of target findncopy
+Scanning dependencies of target trim
+Scanning dependencies of target der_snr
+Scanning dependencies of target threshold
+Scanning dependencies of target genrandspec
 Scanning dependencies of target shift
 Scanning dependencies of target marker
-Scanning dependencies of target genrandspec
-[  9%] Building CXX object CMakeFiles/threshold.dir/msg.cpp.o
-[  9%] Building CXX object CMakeFiles/threshold.dir/threshold.cpp.o
-[ 14%] Building CXX object CMakeFiles/findncopy.dir/findncopy.cpp.o
-[ 19%] Building CXX object CMakeFiles/der_snr.dir/der_snr.cpp.o
-[ 23%] Building CXX object CMakeFiles/trim.dir/trim.cpp.o
-[ 28%] Building CXX object CMakeFiles/shift.dir/shift.cpp.o
-[ 38%] Building CXX object CMakeFiles/genrandspec.dir/genrandspec.cpp.o
-[ 33%] Building CXX object CMakeFiles/marker.dir/marker.cpp.o
-[ 42%] Building CXX object CMakeFiles/shift.dir/msg.cpp.o
-[ 47%] Building CXX object CMakeFiles/findncopy.dir/msg.cpp.o
+[ 52%] Building CXX object CMakeFiles/genrandspec.dir/genrandspec.cpp.o
+[ 52%] Building CXX object CMakeFiles/threshold.dir/threshold.cpp.o
+[ 52%] Building CXX object CMakeFiles/threshold.dir/msg.cpp.o
+[ 52%] Building CXX object CMakeFiles/der_snr.dir/msg.cpp.o
+[ 52%] Building CXX object CMakeFiles/shift.dir/shift.cpp.o
+[ 52%] Building CXX object CMakeFiles/shift.dir/msg.cpp.o
+[ 52%] Building CXX object CMakeFiles/findncopy.dir/msg.cpp.o
+[ 52%] Building CXX object CMakeFiles/findncopy.dir/findncopy.cpp.o
+[ 52%] Building CXX object CMakeFiles/trim.dir/trim.cpp.o
+[ 52%] Building CXX object CMakeFiles/der_snr.dir/der_snr.cpp.o
 [ 52%] Building CXX object CMakeFiles/trim.dir/msg.cpp.o
 [ 57%] Building CXX object CMakeFiles/genrandspec.dir/msg.cpp.o
-[ 61%] Building CXX object CMakeFiles/der_snr.dir/msg.cpp.o
+[ 61%] Building CXX object CMakeFiles/marker.dir/marker.cpp.o
 [ 66%] Building CXX object CMakeFiles/marker.dir/msg.cpp.o
-[ 71%] Linking CXX executable marker
-[ 76%] Linking CXX executable findncopy
-[ 76%] Built target marker
-[ 76%] Built target findncopy
-[ 80%] Linking CXX executable genrandspec
-[ 80%] Built target genrandspec
-[ 85%] Linking CXX executable threshold
-[ 90%] Linking CXX executable der_snr
-[ 90%] Built target threshold
-[ 95%] Linking CXX executable shift
-[ 95%] Built target der_snr
-[100%] Linking CXX executable trim
-[100%] Built target shift
+[ 71%] Linking CXX executable findncopy
+[ 71%] Built target findncopy
+[ 76%] Linking CXX executable genrandspec
+[ 76%] Built target genrandspec
+[ 80%] Linking CXX executable threshold
+[ 85%] Linking CXX executable shift
+[ 90%] Linking CXX executable marker
+[ 95%] Linking CXX executable trim
+[ 95%] Built target threshold
+[ 95%] Built target shift
+[ 95%] Built target marker
+[100%] Linking CXX executable der_snr
 [100%] Built target trim
+[100%] Built target der_snr
 
 ```
 
