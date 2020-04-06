@@ -97,40 +97,40 @@ gentoo - spec_tools/ % make -j$(nproc)
 -- Generating done
 -- Build files have been written to: /drone/src
 + make -j$(nproc)
-Scanning dependencies of target findncopy
-Scanning dependencies of target trim
+Scanning dependencies of target genrandspec
 Scanning dependencies of target der_snr
 Scanning dependencies of target threshold
-Scanning dependencies of target genrandspec
+Scanning dependencies of target trim
+Scanning dependencies of target findncopy
 Scanning dependencies of target shift
 Scanning dependencies of target marker
-[ 52%] Building CXX object CMakeFiles/genrandspec.dir/genrandspec.cpp.o
-[ 52%] Building CXX object CMakeFiles/threshold.dir/threshold.cpp.o
-[ 52%] Building CXX object CMakeFiles/threshold.dir/msg.cpp.o
-[ 52%] Building CXX object CMakeFiles/der_snr.dir/msg.cpp.o
-[ 52%] Building CXX object CMakeFiles/shift.dir/shift.cpp.o
-[ 52%] Building CXX object CMakeFiles/shift.dir/msg.cpp.o
-[ 52%] Building CXX object CMakeFiles/findncopy.dir/msg.cpp.o
-[ 52%] Building CXX object CMakeFiles/findncopy.dir/findncopy.cpp.o
-[ 52%] Building CXX object CMakeFiles/trim.dir/trim.cpp.o
-[ 52%] Building CXX object CMakeFiles/der_snr.dir/der_snr.cpp.o
+[ 14%] Building CXX object CMakeFiles/findncopy.dir/findncopy.cpp.o
+[ 14%] Building CXX object CMakeFiles/genrandspec.dir/msg.cpp.o
+[ 14%] Building CXX object CMakeFiles/genrandspec.dir/genrandspec.cpp.o
+[ 19%] Building CXX object CMakeFiles/der_snr.dir/der_snr.cpp.o
+[ 23%] Building CXX object CMakeFiles/trim.dir/trim.cpp.o
+[ 28%] Building CXX object CMakeFiles/threshold.dir/threshold.cpp.o
+[ 33%] Building CXX object CMakeFiles/shift.dir/shift.cpp.o
+[ 38%] Building CXX object CMakeFiles/marker.dir/marker.cpp.o
+[ 42%] Building CXX object CMakeFiles/shift.dir/msg.cpp.o
+[ 47%] Building CXX object CMakeFiles/threshold.dir/msg.cpp.o
 [ 52%] Building CXX object CMakeFiles/trim.dir/msg.cpp.o
-[ 57%] Building CXX object CMakeFiles/genrandspec.dir/msg.cpp.o
-[ 61%] Building CXX object CMakeFiles/marker.dir/marker.cpp.o
+[ 57%] Building CXX object CMakeFiles/findncopy.dir/msg.cpp.o
+[ 61%] Building CXX object CMakeFiles/der_snr.dir/msg.cpp.o
 [ 66%] Building CXX object CMakeFiles/marker.dir/msg.cpp.o
 [ 71%] Linking CXX executable findncopy
 [ 71%] Built target findncopy
 [ 76%] Linking CXX executable genrandspec
 [ 76%] Built target genrandspec
-[ 80%] Linking CXX executable threshold
-[ 85%] Linking CXX executable shift
+[ 80%] Linking CXX executable shift
+[ 80%] Built target shift
+[ 85%] Linking CXX executable trim
 [ 90%] Linking CXX executable marker
-[ 95%] Linking CXX executable trim
+[ 90%] Built target trim
+[ 90%] Built target marker
+[ 95%] Linking CXX executable threshold
 [ 95%] Built target threshold
-[ 95%] Built target shift
-[ 95%] Built target marker
 [100%] Linking CXX executable der_snr
-[100%] Built target trim
 [100%] Built target der_snr
 
 ```
