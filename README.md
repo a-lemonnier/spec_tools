@@ -12,7 +12,9 @@ A set of codes for csv and for spectrum manipulation:
  - **marker**.cpp: highlight lines on spectrum
  
  TODO:
- - fix **_csv( _csv& other)**
+ - **csv**.h: fix _csv( _csv& other)
+ - **marker**.cpp: NOR in cmd check
+ - **marker**.cpp: fix latex in cmd line
  - Make classes
  - Clean header
  - Additionnal parameters and file verifications
@@ -290,4 +292,22 @@ gentoo - spec_tools/ % ./genrandspec
 ⚡ run(3280013): create spectra in rand_spectra/7 
 ⚐ genrandspec:  10.694788s wall, 77.990000s user + 3.050000s system = 81.040000s CPU (757.8%)
 
+```
+
+---
+> marker
+```
+gentoo - spec_tools/ % ./marker -i rand_spectra/0/0.dat -i rand_spectra/0/0.dat  -t Spectra -l "Spectrum 1" -l "Spectrum 2" -w 4861 -e "\$H\\\\beta\$"
+▶ marker 
+⚐ marker check command line and fill class 
+⚐  init marker 
+⚐ marker set verbosity 
+⚐ marker set output plot.pdf with dpi: 300 
+⚐ marker set extension to: pdf 
+⚐ marker set title ' Spectra ' 
+⚐ marker set data and labels 
+⚐ marker set plot options 
+⚐ marker add markers 
+⚐ marker plot 
+⚐ marker  0.973758s wall, 0.910000s user + 0.040000s system = 0.950000s CPU (97.6%)
 ```

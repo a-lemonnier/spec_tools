@@ -11,6 +11,7 @@
 #include <cstdio>
 #include <fstream>
 #include <vector>
+#include <tuple>
 #include <string>
 #include <algorithm>
 
@@ -43,6 +44,10 @@ namespace fs = boost::filesystem;
 
 int main(int argc, char** argv) {
     
+#ifdef HAS_BOOST_TIMER    
+    boost::timer::cpu_timer btTimer;
+#endif
+    
     _msg msgM;
     msgM.set_name("marker");
     
@@ -58,6 +63,8 @@ int main(int argc, char** argv) {
     ("title,t",  po::value<std::string>(), "Set title.")
     ("label,l",  po::value<std::vector<std::string> >()->multitoken(),"Set labels. If more than one label is defined, the number of labels must be equal to the numbers of files")
     ("sep,s", po::value<std::vector<char> >()->multitoken(), "Set separators. If more than one sep is defined, the number of sep must be equal to the numbers of files.")
+    ("element,e",  po::value<std::vector<std::string> >()->multitoken(),"Set the name of an element. Ex: \\$H\\\\\\\\beta\\$")
+    ("wavelength,w",po::value<std::vector<float> >()->multitoken(),"Set the wavelength of the line.")
     ("verbose,v","Toggle verbosity.");
     
     po::variables_map vm;
@@ -72,10 +79,23 @@ int main(int argc, char** argv) {
     // ---------------------------------------------------- 
         
     msgM.msg(_msg::eMsg::START);
-    msgM.msg(_msg::eMsg::MID, "check command line");  
+    msgM.msg(_msg::eMsg::MID, "check command line and fill class");  
     
     std::string sTitle;
     std::vector<std::string> vsLabels;
+    std::vector<std::tuple<float, std::string> > vstLines;
+    
+    if (vm.count("wavelength") && vm.count("element")) {
+        if (vm["wavelength"].as<std::vector<float> >().size()==vm["element"].as<std::vector<std::string> >().size()) {
+            for(int i=0; i<vm["wavelength"].as<std::vector<float> >().size(); i++)
+                vstLines.emplace_back(
+                    std::make_tuple(vm["wavelength"].as<std::vector<float> >()[i],
+                                    vm["element"].as<std::vector<std::string> >()[i]));
+        }
+        else {
+            msgM.msg(_msg::eMsg::ERROR, "the number of elements do not match the number of wavelengths");
+        }        
+    }
     
     if (vm.count("title"))
         sTitle=vm["title"].as<std::string>();
@@ -88,7 +108,7 @@ int main(int argc, char** argv) {
     
      if (vm.count("sep")) {
          if (vm["input"].as<std::vector<std::string> >().size()!=vm["sep"].as<std::vector<char> >().size() && vm["sep"].as<std::vector<char> >().size()<2) {
-             msgM.msg(_msg::eMsg::ERROR, "the number of files do not match the separator numbers");
+             msgM.msg(_msg::eMsg::ERROR, "the number of files do not match the number of separators");
              return EXIT_FAILURE;
          }
      }
@@ -135,6 +155,7 @@ int main(int argc, char** argv) {
         else
             Marker.set_verbose(false);
         
+        msgM.msg(_msg::eMsg::MID, "set output","plot.pdf","with dpi:", 300 );
         Marker.set_output("plot.pdf", 300);
 
         if (vm.count("title"))
@@ -142,6 +163,9 @@ int main(int argc, char** argv) {
         else
             Marker.set_title(" ");
         
+        msgM.msg(_msg::eMsg::MID, "set title '", Marker.get_title(),"'" );
+        
+        msgM.msg(_msg::eMsg::MID, "set data and labels");
         if (!vm.count("label"))
             for(auto &csv: vCsv) 
                 Marker.add_data(csv.select_column(0), csv.select_column(1));
@@ -158,24 +182,28 @@ int main(int argc, char** argv) {
             }
         }
               
+        msgM.msg(_msg::eMsg::MID, "set plot options");
         Marker.set_supp(4820,4880);
         
         Marker.set_xlabel("$\\\\lambda$");
         Marker.set_ylabel("Normalized flux");
-        
         Marker.set_xunit("$\\\\AA$");
-
-        Marker.add_line(4750,"Fe II");
-        Marker.add_line(4800,"Fe II");
-        Marker.add_line(4825,"Fe II");
-        Marker.add_line(4861,"$H\\\\beta$");
         
+        msgM.msg(_msg::eMsg::MID, "add markers");
+        for(auto tLine: vstLines)
+            Marker.add_line(std::get<0>(tLine), std::get<1>(tLine));
+        
+        msgM.msg(_msg::eMsg::MID, "plot");
         if (Marker.make()) 
             Marker.plot();
 
     }
     else
         return EXIT_FAILURE;
+    
+#ifdef HAS_BOOST_TIMER
+     msgM.msg(_msg::eMsg::END, btTimer.format());
+#endif
     
     return EXIT_SUCCESS;
 }
