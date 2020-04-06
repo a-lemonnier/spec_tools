@@ -21,8 +21,6 @@ _marker<_T>::_marker():
     fContinnumsize(0.6),
     bIsset_fig_size(false)
 {
-    if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"init marker");
     msgM.set_name("marker()");    
 }
 
@@ -46,7 +44,7 @@ _marker<_T>::~_marker() {
 template<typename _T>
 void _marker<_T>::set_verbose(const bool bVerbose) {
     this->bVerbose=bVerbose;
-    msgM.msg(_msg::eMsg::MID,"set verbosity");
+    if (bVerbose) msgM.msg(_msg::eMsg::MID,"set verbosity");
 }
 
 template<typename _T>
@@ -80,6 +78,8 @@ void _marker<_T>::set_title(const std::string& sTitle) {
 
 template<typename _T>
 void _marker<_T>::set_label(const std::string& sLabel) {
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"set label:", sLabel);
     this->sLabel=sLabel;
 }
 
@@ -109,11 +109,15 @@ void _marker<_T>::set_ylabel(const std::string& sYlabel) {
 
 template<typename _T>
 void _marker<_T>::set_xunit(const std::string& sXunit) {
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"set xunit:", sXunit);
     this->sXunit=sXunit;
 }
 
 template<typename _T>
 void _marker<_T>::set_yunit(const std::string& sYunit) {
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"set yunit:", sYunit);
     this->sYunit=sYunit;
 }
 
@@ -139,8 +143,6 @@ void _marker<_T>::set_output(const std::string& sFilename) {
         this->sExt="png";
         msgM.msg(_msg::eMsg::ERROR,"reset extension to:", this->sExt);
         }
-        
-        msgM.msg(_msg::eMsg::MID,"set extension to:", this->sExt);
 }
 
 template<typename _T>
@@ -606,7 +608,7 @@ bool _marker<_T>::make() {
                 get_xunit()+")', size="+std::to_string(iLabelsize)+")");
     else
         add_cmd("ax0.set_xlabel('"+
-                get_xlabel()+"'), size="+std::to_string(iLabelsize)+")");
+                get_xlabel()+"', size="+std::to_string(iLabelsize)+")");
     
     if (!this->sYunit.empty())
         add_cmd("ax0.set_ylabel('"+

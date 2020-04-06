@@ -109,7 +109,7 @@ bool _csv<_T>::read() {
          char cSep=get_separator();
          std::string sSep(std::string(1,cSep));
 
-         debug("file opened");
+         debug("file "+get_filename()+" opened");
          
          clear();
          

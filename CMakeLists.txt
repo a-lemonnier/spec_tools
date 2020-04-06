@@ -2,6 +2,16 @@ cmake_minimum_required(VERSION 3.0)
 
 project(spec_tools)
 
+option(BUILD_DOC ON)
+find_package(Doxygen QUIET)
+if (DOXYGEN_FOUND) 
+set(DOXYGEN_GENERATE_LATEX YES)
+set(DOXYFILE_PDFLATEX YES)
+set(DOXYGEN_GENERATE_HTML NO)
+configure_file(Doxyfile doc @ONLY)
+add_custom_target( doc_doxygen ALL ${DOXYGEN_EXECUTABLE} Doxyfile WORKING_DIRECTORY ../)
+endif (DOXYGEN_FOUND)
+
 add_executable(threshold threshold.cpp msg.cpp)
 add_executable(findncopy findncopy.cpp msg.cpp)
 add_executable(trim trim.cpp msg.cpp)

@@ -298,16 +298,13 @@ gentoo - spec_tools/ % ./genrandspec
 > marker
 ```
 gentoo - spec_tools/ % ./marker -i rand_spectra/0/0.dat -i rand_spectra/0/0.dat  -t Spectra -l "Spectrum 1" -l "Spectrum 2" -w 4861 -e "\$H\\\\beta\$"
-▶ marker 
 ⚐ marker check command line and fill class 
-⚐  init marker 
-⚐ marker set verbosity 
-⚐ marker set output plot.pdf with dpi: 300 
-⚐ marker set extension to: pdf 
-⚐ marker set title ' Spectra ' 
-⚐ marker set data and labels 
+⚐ marker set input: rand_spectra/0/0.dat with sep:'      ' 
+⚐ marker set input: rand_spectra/0/1.dat with sep:'      ' 
+⚐ marker data read and stored 
+⚐ marker set data to plot 
 ⚐ marker set plot options 
-⚐ marker add markers 
-⚐ marker plot 
-⚐ marker  0.973758s wall, 0.910000s user + 0.040000s system = 0.950000s CPU (97.6%)
+⚐ marker write and run script 
+⚐ marker  3.052816s wall, 2.760000s user + 0.070000s system = 2.830000s CPU (92.7%)
+
 ```
