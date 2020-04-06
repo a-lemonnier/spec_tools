@@ -14,8 +14,6 @@
 #include <iostream>
 #include <fstream>
 
-// #include <execution> //Parallel STL disabled
-
 #include <chrono>
 
 #include <cmath>
@@ -37,8 +35,6 @@
 #include <boost/spirit/include/qi_numeric.hpp>
 
 #include <boost/tokenizer.hpp>
-
-#define PARALLEL_EXEC /**< If c++17 and TBB available */
 
 /**
  * \class _csv
@@ -70,6 +66,8 @@ public:
      * \param cSep char Separator char between column
      */
     explicit _csv(const std::string &sFilename, const char &cSep);
+    
+    explicit _csv(const std::string &sFilename, const std::string &sSep);
     
     /**
      * \fn _csv(const std::vector<std::vector<_T> > &vvData)
@@ -213,6 +211,15 @@ public:
      * \return true if all seems OK
      */
     bool set_separator(const char &cSep);
+    
+    /**
+     * \fn bool set_separator(const std::string &sSep)
+     * \brief Set the csv separator. Usually: '\\t', ' ', ',', ';' ... 
+     * \todo
+     * \param sSep The sep character: '\\t' for tabulation
+     * \return true if all seems OK
+     */
+    bool set_separator(const std::string &sSep);
     
     /**
      * \fn bool set_verbose(eVerbose evV)

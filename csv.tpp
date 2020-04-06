@@ -24,6 +24,19 @@ _csv<_T>::_csv(const std::string &sFilename, const char &cSep):
 }
 
 template<typename _T> 
+_csv<_T>::_csv(const std::string &sFilename, const std::string &sSep):
+     vvData(std::vector<std::vector<_T> >(0))
+    , evVerbose(QUIET)
+    , bStatus(true)
+{
+    debug("initing csv");
+    
+    set_filename(sFilename);
+    set_separator(sSep);
+
+}
+
+template<typename _T> 
 _csv<_T>::_csv(const std::vector<std::vector<_T> > &vvData): 
       sFilename("out.csv")
     , cSeparator('\t')
@@ -499,17 +512,53 @@ template<typename _T>
 bool _csv<_T>::set_separator(const char &sep) {
     bStatus=true;
     if (sep!='\0') {
-        debug("seting cSeparator: '"+std::string(1,sep)+"'");
+        debug("setting cSeparator: '"+std::string(1,sep)+"'");
         this->cSeparator=sep;
     }
     else {
         error("set_separator(): invalid cSeparator");
-        set_separator('\t');
+        this->cSeparator='\t';
         bStatus=false;        
     }
     return bStatus;
 }
 
+template<typename _T> 
+bool _csv<_T>::set_separator(const std::string &sSep) {
+    bStatus=true;
+    if (!sSep.empty() && sSep!="\0") {
+        debug("setting cSeparator: '"+sSep+"'");
+        
+        std::hash<std::string> shH; 
+
+        std::vector<std::tuple<std::string, char> > vcSep={ {" ", ' '}, 
+                                                            {";",';' },
+                                                            {",", ','},
+                                                            {":",':'},
+                                                            {"|",'|'},
+                                                            {"!",'!'},
+                                                            {"\t",'\t'},
+                                                            {"\\t",'\t'}};
+                      
+        auto get_c=[&](const std::string &sS) { 
+            for(auto cC: vcSep) {
+                if (sS.compare(std::get<0>(cC))==0)
+                    return std::get<1>(cC);
+            }
+            return ' ';
+        };
+        
+        debug("hash: string->" + std::to_string(shH(sSep)) + " char->" + std::to_string(shH("\\t")) + "\n");
+        
+        set_separator(get_c(sSep));
+    }
+    else {
+        error("set_separator(): invalid cSeparator");
+        this->cSeparator='\t';
+        bStatus=false;        
+    }
+    return bStatus;
+}
 
 template<typename _T> 
 void _csv<_T>::set_verbose(eVerbose evV) {
@@ -848,9 +897,7 @@ bool _csv<_T>::operator==(const _csv& other) const {
     
     vvRes &= this->get_data() == other.get_data();
     vvRes &= this->get_header() == other.get_header();
-
     vvRes &= this->get_separator()   == other.get_separator();
-    
     vvRes &= this->get_filename() == other.get_filename();
     vvRes &= this->get_filename_out() == other.get_filename_out();
     
@@ -967,7 +1014,7 @@ _csv<_T>& _csv<_T>::operator*(const _csv& other) const {
         return this;   
     }
     else {
-        
+
         std::vector<_T> vvRes;
         vvRes.vvReserve(this->get_data_size_i());
         

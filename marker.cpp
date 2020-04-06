@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
     ("dpi", po::value<unsigned int>()->default_value(300), "Set the dpi.")
     ("width", po::value<float>()->default_value(0.25), "Set the width of curves.")
     ("contsize", po::value<float>()->default_value(0.6), "Set the continnum width.")
-    ("sep,s", po::value<std::vector<char> >()->multitoken(), "Set separators. If more than one sep is defined, the number of sep must be equal to the numbers of files.")
+    ("sep,s", po::value<std::vector<std::string> >()->multitoken(), "Set separators. If more than one sep is defined, the number of sep must be equal to the numbers of files.")
     ("element,e",  po::value<std::vector<std::string> >()->multitoken(),"Set the name of an element. Ex: \\$H\\\\\\\\beta\\$.")
     ("wavelength,w",po::value<std::vector<float> >()->multitoken(),"Set the wavelength of the line.")
     ("verbose,v","Toggle verbosity.");
@@ -107,7 +107,6 @@ int main(int argc, char** argv) {
     std::vector<std::string> vsLabels;
     std::vector<std::tuple<float, std::string> > vstLines;
     float fXmin, fXmax;
-    int iDpi;
     
     if (vm.count("wavelength") && vm.count("element")) {
         if (vm["wavelength"].as<std::vector<float> >().size()==vm["element"].as<std::vector<std::string> >().size()) {
@@ -146,33 +145,39 @@ int main(int argc, char** argv) {
         vsLabels=vm["label"].as<std::vector<std::string> >();
     
      if (vm.count("sep")) {
-         if (vm["input"].as<std::vector<std::string> >().size()!=vm["sep"].as<std::vector<char> >().size() && vm["sep"].as<std::vector<char> >().size()<2) {
+         if (vm["input"].as<std::vector<std::string> >().size()!=vm["sep"].as<std::vector<std::string> >().size() && vm["sep"].as<std::vector<std::string> >().size()<2) {
              msgM.msg(_msg::eMsg::ERROR, "the number of files do not match the number of separators");
              return EXIT_FAILURE;
          }
      }
         
-    if (!vm.count("sep"))
+    if (!vm.count("sep")) {
         for(auto sFile: vsFlist) {
             msgM.msg(_msg::eMsg::MID, "set input:", sFile, "with sep:'",'\t',"'");
             vCsv.push_back(_csv<float>(sFile,'\t'));
         }
+    }
     else {
-        if (vm["sep"].as<std::vector<char> >().size()==1) 
+        if (vm["sep"].as<std::vector<std::string> >().size()==1) {
             for(auto sFile: vsFlist) {
-                msgM.msg(_msg::eMsg::MID, "set input:", sFile, "with sep:'",vm["sep"].as<std::vector<char> >()[0],"'");
-                vCsv.push_back(_csv<float>(sFile, vm["sep"].as<std::vector<char> >()[0]));
+                msgM.msg(_msg::eMsg::MID, 
+                         "set input:", sFile, 
+                         "with sep:'",vm["sep"].as<std::vector<std::string> >()[0],"'");
+                vCsv.push_back(_csv<float>(sFile, vm["sep"].as<std::vector<std::string> >()[0]));
+            }
         }
         else {
-            for(auto sFile: vsFlist) {
-                msgM.msg(_msg::eMsg::MID, "set input:", sFile);
+            for(auto sFile: vsFlist) 
                 vCsv.push_back(_csv<float>());
-            }
+
             int i=0;
             for(auto &csv: vCsv) {
-                msgM.msg(_msg::eMsg::MID, "set input:", vm["input"].as<std::vector<std::string> >()[i], "with sep:'",vm["sep"].as<std::vector<char> >()[i],"'");
+                msgM.msg(_msg::eMsg::MID,
+                         "set input:", 
+                         vm["input"].as<std::vector<std::string> >()[i], 
+                         "with sep:'",vm["sep"].as<std::vector<std::string> >()[i],"'");
                 csv.set_filename(vm["input"].as<std::vector<std::string> >()[i]);
-                csv.set_separator(vm["sep"].as<std::vector<char> >()[i]);
+                csv.set_separator(vm["sep"].as<std::vector<std::string> >()[i]);
                 i++;
             }
         }
@@ -182,6 +187,7 @@ int main(int argc, char** argv) {
         for(auto &csv: vCsv)
             csv.set_verbose(_csv<float>::DEBUG);
     
+    // Read all files
     bool bRead=true;
     for(auto &csv: vCsv)
         bRead&=csv.read();
@@ -211,9 +217,13 @@ int main(int argc, char** argv) {
         else {
             int i=0;
             for(auto &csv: vCsv) {
-                Marker.add_data(csv.select_column(0), 
-                                csv.select_column(1), 
-                                vsLabels[i]);
+                if (i==0)
+                    Marker.set_data(csv.select_column(0), 
+                                    csv.select_column(1));
+                else 
+                    Marker.add_data(csv.select_column(0), 
+                                    csv.select_column(1), 
+                                    vsLabels[i-1]);
                 i++;
             }
         }
@@ -240,19 +250,19 @@ int main(int argc, char** argv) {
         if (vm.count("xmin"))
             Marker.set_xmin(fXmin);
         if (vm.count("xmax"))
-            Marker.set_xmin(fXmax);
-        
+            Marker.set_xmax(fXmax);
         
         Marker.set_linewidth(abs(vm["width"].as<float>()));
         Marker.set_continnumsize(abs(vm["contsize"].as<float>()));
         
-        for(auto tLine: vstLines)
+        for(auto tLine: vstLines) {
+            msgM.msg(_msg::eMsg::MID, "add '", std::get<1>(tLine), "' at", std::get<0>(tLine));
             Marker.add_line(std::get<0>(tLine), std::get<1>(tLine));
+        }
         
         msgM.msg(_msg::eMsg::MID, "write and run script");
         if (Marker.make()) 
             Marker.plot();
-
     }
     else
         return EXIT_FAILURE;

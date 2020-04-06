@@ -70,7 +70,6 @@ gentoo - spec_tools/ % cmake .
 -- Configuring done
 -- Generating done
 
-
 gentoo - spec_tools/ % make -j$(nproc)
 -- The C compiler identification is GNU 8.3.0
 -- The CXX compiler identification is GNU 8.3.0
@@ -324,12 +323,14 @@ gentoo - spec_tools/ % ./genrandspec
 ```
 gentoo - spec_tools/ % ./marker -i rand_spectra/0/0.dat -i rand_spectra/0/0.dat  -t Spectra -l "Spectrum 1" -l "Spectrum 2" -w 4861 -e "\$H\\\\beta\$"
 ⚐ marker check command line and fill class 
-⚐ marker set input: rand_spectra/0/0.dat with sep:'      ' 
-⚐ marker set input: rand_spectra/0/1.dat with sep:'      ' 
+⚐ marker set input: rand_spectra/0/0.dat with sep: '   ' 
+⚐ marker set input: rand_spectra/0/1.dat with sep: '   ' 
 ⚐ marker data read and stored 
 ⚐ marker set data to plot 
 ⚐ marker set plot options 
+⚐ marker add ' $H\\beta$ ' at 4861 
 ⚐ marker write and run script 
-⚐ marker  3.052816s wall, 2.760000s user + 0.070000s system = 2.830000s CPU (92.7%)
+⚐ marker  1.084050s wall, 1.030000s user + 0.030000s system = 1.060000s CPU (97.8%)
+
 
 ```

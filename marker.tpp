@@ -44,17 +44,17 @@ _marker<_T>::~_marker() {
 template<typename _T>
 void _marker<_T>::set_verbose(const bool bVerbose) {
     this->bVerbose=bVerbose;
-    if (bVerbose) msgM.msg(_msg::eMsg::MID,"set verbosity");
+    if (bVerbose) msgM.msg(_msg::eMsg::MID,"set_verbose()");
 }
 
 template<typename _T>
 void _marker<_T>::set_data(const std::vector<_T>& vTX, const std::vector<_T>& vTY) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set data");
+        msgM.msg(_msg::eMsg::MID,"set_data()");
     if (vTX.empty() || vTY.empty()) 
-        msgM.msg(_msg::eMsg::ERROR,"empty vector");
+        msgM.msg(_msg::eMsg::ERROR,"set_data(): empty vector");
     else if (vTX.size()!=vTY.size())
-        msgM.msg(_msg::eMsg::ERROR,"dimension mismatches");
+        msgM.msg(_msg::eMsg::ERROR,"set_data(): dimension mismatches");
     else {
         this->X=vTX;
         this->Y=vTY;
@@ -67,9 +67,9 @@ void _marker<_T>::set_data(const std::vector<_T>& vTX, const std::vector<_T>& vT
 template<typename _T>
 void _marker<_T>::set_title(const std::string& sTitle) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set title:", sTitle);
+        msgM.msg(_msg::eMsg::MID,"set_title(", sTitle,")");
     if (sTitle.empty()) {
-        msgM.msg(_msg::eMsg::MID,"reset title");
+        msgM.msg(_msg::eMsg::MID,"set_title(): reset title");
         this->sTitle="Plot";
     }
     else
@@ -79,16 +79,16 @@ void _marker<_T>::set_title(const std::string& sTitle) {
 template<typename _T>
 void _marker<_T>::set_label(const std::string& sLabel) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set label:", sLabel);
+        msgM.msg(_msg::eMsg::MID,"set_label(", sLabel,")");
     this->sLabel=sLabel;
 }
 
 template<typename _T>
 void _marker<_T>::set_xlabel(const std::string& sXlabel) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set xlabel:", sXlabel);
+        msgM.msg(_msg::eMsg::MID,"set_xlabel(", sXlabel,")");
     if (sXlabel.empty()) {
-        msgM.msg(_msg::eMsg::MID,"reset xlabel");
+        msgM.msg(_msg::eMsg::MID,"set_xlabel(): reset xlabel");
         this->sXlabel=" ";
     }
     else
@@ -98,9 +98,9 @@ void _marker<_T>::set_xlabel(const std::string& sXlabel) {
 template<typename _T>
 void _marker<_T>::set_ylabel(const std::string& sYlabel) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set ylabel:", sYlabel);
+        msgM.msg(_msg::eMsg::MID,"set_ylabel(", sYlabel, ")");
     if (sYlabel.empty()) {
-        msgM.msg(_msg::eMsg::MID,"reset ylabel");
+        msgM.msg(_msg::eMsg::MID,"set_ylabel(): reset ylabel");
         this->sYlabel=" ";
     }
     else
@@ -110,25 +110,25 @@ void _marker<_T>::set_ylabel(const std::string& sYlabel) {
 template<typename _T>
 void _marker<_T>::set_xunit(const std::string& sXunit) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set xunit:", sXunit);
+        msgM.msg(_msg::eMsg::MID,"set_xunit(", sXunit, ")");
     this->sXunit=sXunit;
 }
 
 template<typename _T>
 void _marker<_T>::set_yunit(const std::string& sYunit) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set yunit:", sYunit);
+        msgM.msg(_msg::eMsg::MID,"set_yunit(", sYunit, ")");
     this->sYunit=sYunit;
 }
 
 template<typename _T>
 void _marker<_T>::set_output(const std::string& sFilename) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set output:", sFilename);
+        msgM.msg(_msg::eMsg::MID,"set_output(", sFilename,")");
     
     if (sFilename.empty()) {
         this->sFilename="output.png";
-        msgM.msg(_msg::eMsg::MID,"reset output to:", this->sFilename);
+        msgM.msg(_msg::eMsg::MID,"set_output(): reset output to:", this->sFilename);
     }
     else 
         this->sFilename=sFilename;
@@ -141,16 +141,16 @@ void _marker<_T>::set_output(const std::string& sFilename) {
         sExt!="pdf") ||
         sExt.empty()) {
         this->sExt="png";
-        msgM.msg(_msg::eMsg::ERROR,"reset extension to:", this->sExt);
+        msgM.msg(_msg::eMsg::ERROR,"set_output(): reset extension to:", this->sExt);
         }
 }
 
 template<typename _T>
 void _marker<_T>::set_output(const std::string& sFilename, const int iDpi) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set output:", sFilename, "and dpi:", iDpi);
+        msgM.msg(_msg::eMsg::MID,"set_output(", sFilename, ",", iDpi,")");
     if (iDpi<50) {
-        msgM.msg(_msg::eMsg::MID,"reset dpi to:", 50);
+        msgM.msg(_msg::eMsg::MID,"set_output(): reset dpi to:", 50);
         this->iDpi=50;
     }
     else
@@ -162,14 +162,14 @@ void _marker<_T>::set_output(const std::string& sFilename, const int iDpi) {
 template<typename _T>
 void _marker<_T>::set_continuum(const _T TContinuum) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set continnum:", TContinuum);
+        msgM.msg(_msg::eMsg::MID,"set_continuum(", TContinuum,")");
     this->TYcontinuum=TContinuum;
 }
 
 template<typename _T>
 void _marker<_T>::set_supp(const _T TXmin, const _T TXmax) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID, "set support: (", TXmin,",", TXmax,")");
+        msgM.msg(_msg::eMsg::MID, "set_supp(", TXmin,",", TXmax,")");
     this->TXmin=TXmin;
     this->TXmax=TXmax;
 }
@@ -177,48 +177,48 @@ void _marker<_T>::set_supp(const _T TXmin, const _T TXmax) {
 template<typename _T>
 void _marker<_T>::set_xmin(const _T TXmin) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set xmin:", TXmin);
+        msgM.msg(_msg::eMsg::MID,"set_xmin(", TXmin,")");
     this->TXmin=TXmin;
 }
 
 template<typename _T>
 void _marker<_T>::set_xmax(const _T TXmax) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set xmax:", TXmax);
+        msgM.msg(_msg::eMsg::MID,"set_xmax(", TXmax,")");
     this->TXmax=TXmax;
 }
 
 template<typename _T>
 void _marker<_T>::set_ymin(const _T TYmin) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set ymin:", TYmin);
+        msgM.msg(_msg::eMsg::MID,"set_ymin(", TYmin,")");
     this->TYmin=TYmin;
 }
 
 template<typename _T>
 void _marker<_T>::set_ymax(const _T TYmax) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set ymax:", TYmax);
+        msgM.msg(_msg::eMsg::MID,"set_ymax(", TYmax,")");
     this->TYmax=TYmax;
 }
 
 template<typename _T>
 void _marker<_T>::set_figsize(int iHeight, int iWidth) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set figsize:", "(", iHeight, ",", iWidth,")");
+        msgM.msg(_msg::eMsg::MID,"set_figsize(", iHeight, ",", iWidth,")");
     if (iHeight>0 && iWidth>0) {
         this->iHeight=iHeight;
         this->iWidth=iWidth;
         bIsset_fig_size=true;
     }
     else
-        msgM.msg(_msg::eMsg::ERROR,"invalid size");
+        msgM.msg(_msg::eMsg::ERROR,"set_figsize(): invalid size");
 }
 
 template<typename _T>
 void _marker<_T>::set_colorline(const std::string &sColor) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set color line:", sColor);
+        msgM.msg(_msg::eMsg::MID,"set_colorline(", sColor,")");
     if (!sColor.empty())
         this->sColorline=sColor;
 }
@@ -234,7 +234,7 @@ void _marker<_T>::set_linewidth(float fWidth) {
 template<typename _T>
 void _marker<_T>::set_titlesize(int iSize) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set title size:",iSize);
+        msgM.msg(_msg::eMsg::MID,"set_linewidth(",iSize,")");
     if (iSize>0)
         this->iTitlesize=iSize;    
 }
@@ -242,7 +242,7 @@ void _marker<_T>::set_titlesize(int iSize) {
 template<typename _T>
 void _marker<_T>::set_labelsize(int iSize) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set label size:",iSize);
+        msgM.msg(_msg::eMsg::MID,"set_labelsize(",iSize,")");
     if (iSize>0)
         this->iLabelsize=iSize;    
 }
@@ -250,7 +250,7 @@ void _marker<_T>::set_labelsize(int iSize) {
 template<typename _T>
 void _marker<_T>::set_ticklabelsize(int iSize) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set tick label size:",iSize);
+        msgM.msg(_msg::eMsg::MID,"set_ticklabelsize(",iSize,")");
     if (iSize>0)
         this->iTicklabelsize=iSize;    
 }
@@ -258,7 +258,7 @@ void _marker<_T>::set_ticklabelsize(int iSize) {
 template<typename _T>
 void _marker<_T>::set_annotatesize(int iSize) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set annotation size:",iSize);
+        msgM.msg(_msg::eMsg::MID,"set_annotatesize(",iSize,")");
     if (iSize>0)
         this->iAnnotatesize=iSize;    
 }
@@ -266,7 +266,7 @@ void _marker<_T>::set_annotatesize(int iSize) {
 template<typename _T>
 void _marker<_T>::set_legendsize(int iSize) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set legend size:",iSize);
+        msgM.msg(_msg::eMsg::MID,"set_legendsize(",iSize,")");
      if (iSize>0)
         this->iLegendsize=iSize;    
 }
@@ -274,26 +274,25 @@ void _marker<_T>::set_legendsize(int iSize) {
 template<typename _T>
 void _marker<_T>::set_continnumsize(float fWidth) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set continuum size:", fWidth);
+        msgM.msg(_msg::eMsg::MID,"set_continnumsize(", fWidth,")");
     if (fWidth>0)
         this->fContinnumsize=fWidth;    
 }
 
 template<typename _T>
 void _marker<_T>::set_scriptname(const std::string &sScriptname) {
-    if (sScriptname.empty()) 
-        msgM.msg(_msg::eMsg::MID,"reset script name to:", this->sScriptname);
-    else
+    if (!sScriptname.empty())
         this->sScriptname=sScriptname;
+    msgM.msg(_msg::eMsg::MID,"set_scriptname(:", this->sScriptname,")");
 }
 
 template<typename _T>
 void _marker<_T>::add_line(_T TWl, const std::string &sName) {
     if (TWl<0 || sName.empty())
-        msgM.msg(_msg::eMsg::ERROR,"invalid line");
+        msgM.msg(_msg::eMsg::ERROR,"add_line(): invalid line");
     else {
         if (bVerbose)
-            msgM.msg(_msg::eMsg::MID,"add",sName,"at",TWl);
+            msgM.msg(_msg::eMsg::MID,"add_line('",sName,"'", TWl);
         vllSet.push_back({TWl, sName});
     }
 }
@@ -302,12 +301,12 @@ template<typename _T>
 void _marker<_T>::add_data(const std::vector<_T>& vTX, 
                            const std::vector<_T>& vTY) {
     if (vTX.empty() || vTY.empty()) 
-        msgM.msg(_msg::eMsg::ERROR,"empty data");
+        msgM.msg(_msg::eMsg::ERROR,"add_data(): empty data");
     else if (vTX.size()!=vTY.size())
-        msgM.msg(_msg::eMsg::ERROR,"vector sizes mismatch");
+        msgM.msg(_msg::eMsg::ERROR,"add_data(): vector sizes mismatch");
     else {
         if (bVerbose)
-            msgM.msg(_msg::eMsg::MID,"add data");
+            msgM.msg(_msg::eMsg::MID,"add_data()");
         
         if (X.empty() || Y.empty()) {
             set_data(vTX, vTY);
@@ -327,7 +326,7 @@ void _marker<_T>::add_data(const std::vector<_T>& vTX,
                            const std::string &sTitle) {
     
     if (bVerbose)
-            msgM.msg(_msg::eMsg::MID,"set label", sTitle);
+            msgM.msg(_msg::eMsg::MID,"add_data(): set label", sTitle);
     
     bool bFirstdef=false;
     if (X.empty() || Y.empty()) {
@@ -353,7 +352,7 @@ _T _marker<_T>::get_continuum() const {
 template<typename _T>
 _T* _marker<_T>::get_supp() const {
     if (this->TXmin>this->TXmax) {
-        msgM.msg(_msg::eMsg::ERROR,"invalid support");
+        msgM.msg(_msg::eMsg::ERROR,"get_supp(): invalid support");
         return nullptr;
     }
         
@@ -365,14 +364,14 @@ _T* _marker<_T>::get_supp() const {
 template<typename _T>
 const std::string& _marker<_T>::get_scriptname() const {
     if (this->sScriptname.empty()) 
-        msgM.msg(_msg::eMsg::ERROR,"empty script name");
+        msgM.msg(_msg::eMsg::ERROR,"get_scriptname(): empty script name");
    return this->sScriptname;
 }
 
 template<typename _T>
 const std::string& _marker<_T>::get_output() const {
     if (this->sFilename.empty()) 
-            msgM.msg(_msg::eMsg::ERROR,"empty output name");
+            msgM.msg(_msg::eMsg::ERROR,"get_output(): empty output name");
     return this->sFilename;
 }
 
@@ -426,18 +425,18 @@ template<typename _T>
 bool _marker<_T>::make() {
     
     if (this->X.empty() || this->Y.empty()) {
-        msgM.msg(_msg::eMsg::ERROR,"make: empty data");
+        msgM.msg(_msg::eMsg::ERROR,"make(): empty data");
         return false;
     }
     
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"write data");
+        msgM.msg(_msg::eMsg::MID,"make(): write data");
     
     std::fstream sfFlux_d(".data.csv", std::ios::out | std::ios::trunc);
     
     if (sfFlux_d) {
         if (bVerbose)
-            msgM.msg(_msg::eMsg::MID,"write data");
+            msgM.msg(_msg::eMsg::MID,"make(): write data");
         
         int iSize=this->X.size();
         for(int i=0; i<iSize; i++) 
@@ -446,7 +445,7 @@ bool _marker<_T>::make() {
         sfFlux_d.close();
     }
     else {
-        msgM.msg(_msg::eMsg::ERROR,"cannot write data");
+        msgM.msg(_msg::eMsg::ERROR,"make(): cannot write data");
         return false;
     }
     
@@ -463,12 +462,12 @@ bool _marker<_T>::make() {
             sfFlux.close();
         }
         else 
-            msgM.msg(_msg::eMsg::ERROR,"cannot open:", vsAddfilename[iCount]);
+            msgM.msg(_msg::eMsg::ERROR,"make(): cannot open:", vsAddfilename[iCount]);
         iCount++;
     }
     
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"make python script");
+        msgM.msg(_msg::eMsg::MID,"make(): make python script");
         
     add_cmd("import matplotlib.colors as col");
     add_cmd("import matplotlib.pyplot as plt");
@@ -506,7 +505,7 @@ bool _marker<_T>::make() {
         add_cmd("fig=plt.figure()\n");
       
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"add plots");
+        msgM.msg(_msg::eMsg::MID,"make(): add plots");
     add_cmd("grid = fig.add_gridspec(nrows=1, ncols=1)");
     add_cmd("ax0=fig.add_subplot(grid[0,0])\n");
     
@@ -621,7 +620,7 @@ bool _marker<_T>::make() {
     add_cmd("ax0.tick_params(direction='out', labelsize="+std::to_string(iTicklabelsize)+", length=1, width=1, grid_alpha=0.5)");
     
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"add continuum");
+        msgM.msg(_msg::eMsg::MID,"make(): add continuum");
     
     add_cmd("ax0.plot(["+
     std::to_string(get_supp()[0])+","+
@@ -632,7 +631,7 @@ bool _marker<_T>::make() {
     ")\n");
     
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"add markers");
+        msgM.msg(_msg::eMsg::MID,"make(): add markers");
     
     for(auto line: vllSet) {
         add_cmd("ax0.plot(["+
@@ -662,11 +661,11 @@ bool _marker<_T>::make() {
     add_cmd("ax0.legend(loc='best', fontsize=6)\n");
     
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"write margins");
+        msgM.msg(_msg::eMsg::MID,"make(): write margins");
     add_cmd("fig.subplots_adjust(left=0.06, bottom=0.07, right=0.98, top=0.95, wspace=0.16)");
     
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"write savefig");
+        msgM.msg(_msg::eMsg::MID,"make(): write savefig");
     add_cmd("fig.savefig('"+
             get_output()+"',dpi="+
             std::to_string(get_dpi())+")\n");
@@ -675,20 +674,20 @@ bool _marker<_T>::make() {
     
     if (sfFlux) {
         if (bVerbose)
-            msgM.msg(_msg::eMsg::MID,"write script:",get_scriptname());
+            msgM.msg(_msg::eMsg::MID,"make(): write script:",get_scriptname());
         sfFlux << get_cmd();
         sfFlux.close();
         return true;
     }
     else
-        msgM.msg(_msg::eMsg::ERROR,"cannot open file:", get_scriptname());
+        msgM.msg(_msg::eMsg::ERROR,"make(): cannot open file:", get_scriptname());
     return false;
 }
 
 template<typename _T>
 void _marker<_T>::plot(){
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"run python script");
+        msgM.msg(_msg::eMsg::MID,"plot(): run python script");
     system(("chmod +x "+get_scriptname()+" > /dev/null 2>&1").c_str());
     system(("./"+get_scriptname()+" > /dev/null 2>&1").c_str());
 }
