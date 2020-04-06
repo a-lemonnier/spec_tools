@@ -8,15 +8,22 @@ _marker<_T>::_marker():
     sScriptname(".plot.py"),
     sTitle("Plot"),
     sXlabel("x"), sYlabel("y"),
-//     sXunit(" "), sYunit(" "),
     TYcontinuum(1),
     TYmin(0), TYmax(1),
     iDpi(150),
+    sColorline("black"),
+    fLinewidth(0.3),
+    iTitlesize(6),
+    iLabelsize(6),
+    iTicklabelsize(6),
+    iAnnotatesize(6),
+    iLegendsize(6),
+    fContinnumsize(0.6),
     bIsset_fig_size(false)
 {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"init marker");
-    msgM.set_name("marker");    
+    msgM.set_name("marker()");    
 }
 
 template<typename _T>
@@ -204,6 +211,70 @@ void _marker<_T>::set_figsize(int iHeight, int iWidth) {
     }
     else
         msgM.msg(_msg::eMsg::ERROR,"invalid size");
+}
+
+template<typename _T>
+void _marker<_T>::set_colorline(const std::string &sColor) {
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"set color line:", sColor);
+    if (!sColor.empty())
+        this->sColorline=sColor;
+}
+
+template<typename _T>
+void _marker<_T>::set_linewidth(float fWidth) {
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"set line width:",fWidth);
+    if (fWidth>0)
+        this->fLinewidth=fWidth;
+}
+
+template<typename _T>
+void _marker<_T>::set_titlesize(int iSize) {
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"set title size:",iSize);
+    if (iSize>0)
+        this->iTitlesize=iSize;    
+}
+
+template<typename _T>
+void _marker<_T>::set_labelsize(int iSize) {
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"set label size:",iSize);
+    if (iSize>0)
+        this->iLabelsize=iSize;    
+}
+
+template<typename _T>
+void _marker<_T>::set_ticklabelsize(int iSize) {
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"set tick label size:",iSize);
+    if (iSize>0)
+        this->iTicklabelsize=iSize;    
+}
+
+template<typename _T>
+void _marker<_T>::set_annotatesize(int iSize) {
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"set annotation size:",iSize);
+    if (iSize>0)
+        this->iAnnotatesize=iSize;    
+}
+
+template<typename _T>
+void _marker<_T>::set_legendsize(int iSize) {
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"set legend size:",iSize);
+     if (iSize>0)
+        this->iLegendsize=iSize;    
+}
+
+template<typename _T>
+void _marker<_T>::set_continnumsize(float fWidth) {
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"set continuum size:", fWidth);
+    if (fWidth>0)
+        this->fContinnumsize=fWidth;    
 }
 
 template<typename _T>
@@ -437,7 +508,7 @@ bool _marker<_T>::make() {
     add_cmd("grid = fig.add_gridspec(nrows=1, ncols=1)");
     add_cmd("ax0=fig.add_subplot(grid[0,0])\n");
     
-    add_cmd("ax0.plot(x,y,'-', color='black', linewidth=0.30, zorder=10, label='"+get_label()+"')\n");
+    add_cmd("ax0.plot(x,y,'-', color='"+sColorline+"', linewidth="+std::to_string(fLinewidth)+", zorder=10, label='"+get_label()+"')\n");
 
     int iR=0x00;
     int iG=0x00;
@@ -456,7 +527,7 @@ bool _marker<_T>::make() {
                             ",y"+std::to_string(i)+
                             ",'--'"+
                             ", color=\""+ssS.str()+"\""+
-                            ", linewidth=0.30, zorder=15, label='"+
+                            ", linewidth="+std::to_string(fLinewidth)+", zorder=15, label='"+
                             this->vsTitle[i]+"')\n");
             
             if (iCycle==0)
@@ -495,7 +566,7 @@ bool _marker<_T>::make() {
             add_cmd("ax0.plot(x"+std::to_string(i)+
                             ",y"+std::to_string(i)+
                             ",'--', color='"+ssS.str()+
-                            "', linewidth=0.30, zorder=15)\n");
+                            "', linewidth="+std::to_string(fLinewidth)+", zorder=15)\n");
             
             if (iCycle==0)
                 iB+=(0xff-1)/2;
@@ -528,24 +599,24 @@ bool _marker<_T>::make() {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"add title and labels");
     add_cmd("plt.title('"+
-            get_title()+ "', size=6)");
+            get_title()+ "', size="+std::to_string(iTitlesize)+")");
     if (!this->sXunit.empty())
         add_cmd("ax0.set_xlabel('"+
                 get_xlabel()+" ("+
-                get_xunit()+")', size=6)");
+                get_xunit()+")', size="+std::to_string(iLabelsize)+")");
     else
         add_cmd("ax0.set_xlabel('"+
-                get_xlabel()+"'), size=6");
+                get_xlabel()+"'), size="+std::to_string(iLabelsize)+")");
     
     if (!this->sYunit.empty())
         add_cmd("ax0.set_ylabel('"+
                 get_ylabel()+" ("+
-                get_yunit()+")', size=6)");
+                get_yunit()+")', size="+std::to_string(iLabelsize)+")");
     else
         add_cmd("ax0.set_ylabel('"+
-                get_ylabel()+"', size=6)");
+                get_ylabel()+"', size="+std::to_string(iLabelsize)+")");
     
-    add_cmd("ax0.tick_params(direction='out', labelsize=6, length=1, width=1, grid_alpha=0.5)");
+    add_cmd("ax0.tick_params(direction='out', labelsize="+std::to_string(iTicklabelsize)+", length=1, width=1, grid_alpha=0.5)");
     
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"add continuum");
@@ -555,7 +626,7 @@ bool _marker<_T>::make() {
     std::to_string(get_supp()[1])+"],["+
     std::to_string(get_continuum())+","+
     std::to_string(get_continuum())+"],"+
-    "'-.', color='red', linewidth=0.6, zorder=1"+
+    "'-.', color='red', linewidth="+std::to_string(fContinnumsize)+", zorder=1"+
     ")\n");
     
     if (bVerbose)
@@ -579,7 +650,7 @@ bool _marker<_T>::make() {
                 std::to_string(iCount*0.05)+"), "+
                 "xy=("+std::to_string(line.TWl)+", "+
                 std::to_string(iCount*0.05)+"), "+
-                "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.4', fc='white', ec='white', lw=2),size='6', ha='center')");
+                "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.4', fc='white', ec='white', lw=2),size='"+std::to_string(iAnnotatesize)+"', ha='center')");
         
         iCount++;
     }

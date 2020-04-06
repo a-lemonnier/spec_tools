@@ -83,6 +83,20 @@ public:
     void set_figsize(int iHeight, int iWidth);
     
     /**
+     * \fn void set_colorline(const std::string &sColor)
+     * \brief Set the color of the first curve.
+     * \param sColor A string like "red", "green", "blue" or and a rgba hex string like "#rrggbbaa"
+     */
+    void set_colorline(const std::string &sColor);
+    void set_linewidth(float fWidth);
+    void set_titlesize(int iSize);
+    void set_labelsize(int iSize);
+    void set_ticklabelsize(int iSize);
+    void set_annotatesize(int iSize);
+    void set_legendsize(int iSize);
+    void set_continnumsize(float fWidth);
+    
+    /**
      * \fn void set_scriptname(const std::string &sScriptname)
      * \brief Set the name of the py script. Default: .plot.py
      */
@@ -184,6 +198,15 @@ private:
     int iDpi;
     
     int iHeight, iWidth;
+    
+    std::string sColorline;
+    float fLinewidth;
+    int iTitlesize;
+    int iLabelsize;
+    int iTicklabelsize;
+    int iAnnotatesize;
+    int iLegendsize;
+    float fContinnumsize;
     
     bool bIsset_fig_size; /**< Indicate whether the figsize is defined or not */
     

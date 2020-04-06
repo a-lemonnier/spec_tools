@@ -189,6 +189,9 @@ int main(int argc, char** argv) {
         Marker.set_ylabel("Normalized flux");
         Marker.set_xunit("$\\\\AA$");
         
+        Marker.set_linewidth(0.4);
+        Marker.set_continnumsize(0.6);
+        
         msgM.msg(_msg::eMsg::MID, "add markers");
         for(auto tLine: vstLines)
             Marker.add_line(std::get<0>(tLine), std::get<1>(tLine));
