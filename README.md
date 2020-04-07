@@ -14,7 +14,6 @@ A set of codes for csv and for spectrum manipulation:
  TODO:
  - **csv**.h: fix _csv( _csv& other)
  - **marker**.cpp: NOR in cmd check
- - **marker**.cpp: fix latex in cmd line
  - Make classes
  - Clean header
  - Additionnal parameters and file verifications
@@ -147,7 +146,7 @@ Usage:
   -e [ --exclude ] arg              Exclude files matching the string
 
 Example:
-# ls
+% ls
 data findncopy star_list.txt
 # cat tar_list.txt
 HD87205
@@ -155,7 +154,7 @@ HD87309
 HD304836
 CPD-591662
 ...
-# ./findncopy -n star_list.txt -i data -o spectra -e sky
+% ./findncopy -n star_list.txt -i data -o spectra -e sky
 ▶ findncopy
 ⚐ parsing file: 36 lines
 ⚐ searching file: 240 files found
@@ -180,7 +179,7 @@ Usage:
                                         Set the directory where store new data.
 
 Example:
-./trim -l 4700 -u 4800 -i data -o spectra_trimmed
+% ./trim -l 4700 -u 4800 -i data -o spectra_trimmed
 ▶ trim
 ⚐ trim: starting 8 async threads
 ⚡ trim(2416052): 521 files parsed.
@@ -210,7 +209,7 @@ Usage:
                                         f<=threshold will be deleted.
 
 Example:
-./threshold -i data -o spectra -t 0
+% ./threshold -i data -o spectra -t 0
 ▶ threshold
 ⚐ threshold: starting 8 async threads
 ⚡ trim(2470785): 521 files parsed.
@@ -239,10 +238,10 @@ Usage:
   -e [ --exclude ] arg              Exclude a string in filenames
   
 Examples:
-./der_snr -f CPD-591792.obs
+% ./der_snr -f CPD-591792.obs
 - CPD-591792.obs: S/N = 95.68
 
-./der_snr -d data -o snr.csv
+% ./der_snr -d data -o snr.csv
 ▶ der_snr 
 ⚐ der_snr check command line 
 ⚐ der_snr starting 8  async threads 
@@ -288,7 +287,7 @@ Usage:
                                   for \tab.
 
 Example:
-./shift -w -1.0 -f CD-592728.obs
+% ./shift -w -1.0 -f CD-592728.obs
 ▶ shift 
 ⚐ shift: check command line 
 ⚐ shift: shift the spectrum by -1 
@@ -321,16 +320,51 @@ gentoo - spec_tools/ % ./genrandspec
 ---
 > marker
 ```
-gentoo - spec_tools/ % ./marker -i rand_spectra/0/0.dat -i rand_spectra/0/0.dat  -t Spectra -l "Spectrum 1" -l "Spectrum 2" -w 4861 -e "\$H\\\\beta\$"
+gentoo - spec_tools/ % ./marker -h
+Usage:
+  -h [ --help ]                 Display this help message
+  -i [ --input ] arg            Set input files.
+  -o [ --output ] arg           Set the output.
+  -t [ --title ] arg            Set the title.
+  -l [ --label ] arg            Set labels. If more than one label is defined, 
+                                the number of labels must be equal to the 
+                                numbers of files.
+  --xmin arg                    Set the min range.
+  --xmax arg                    Set the max range.
+  --xlabel arg                  Set xlabel.
+  --ylabel arg                  Set ylabel.
+  --xunit arg                   Set xunit.
+  --yunit arg                   Set yunit.
+  --dpi arg (=300)              Set the dpi.
+  --width arg (=0.25)           Set the width of curves.
+  --contsize arg (=0.600000024) Set the continnum width.
+  -s [ --sep ] arg              Set separators. If more than one sep is 
+                                defined, the number of sep must be equal to the
+                                numbers of files.
+  -e [ --element ] arg          Set the name of an element. Ex: \$H\\\\beta\$.
+  --elemlist arg                Set the line list: 
+                                'Element 1', wavelength_1
+                                'Element 2', wavelength_2
+                                'Element 3', wavelength_3
+                                ...
+  -w [ --wavelength ] arg       Set the wavelength of the line.
+  --shiftfirst arg              Shift the first spectrum
+  --shift arg                   Shift spectra (except the first)
+  -g [ --grid ]                 Show the grid.
+  -v [ --verbose ]              Toggle verbosity.
+
+Example:
+% ./marker -i rand_spectra/0/0.dat -i rand_spectra/0/1.dat -l 0.dat -l 1.dat  -t Spectra -l 'Spectrum 1' -l 'Spectrum 2' -w 4861 -e \$H\\beta\$
+▶ marker 
 ⚐ marker check command line and fill class 
-⚐ marker set input: rand_spectra/0/0.dat with sep: '   ' 
-⚐ marker set input: rand_spectra/0/1.dat with sep: '   ' 
+⚐ marker set input: rand_spectra/0/0.dat with sep:'     ' 
+⚐ marker set input: rand_spectra/0/1.dat with sep:'     ' 
 ⚐ marker data read and stored 
 ⚐ marker set data to plot 
 ⚐ marker set plot options 
-⚐ marker add ' $H\\beta$ ' at 4861 
 ⚐ marker write and run script 
-⚐ marker  1.084050s wall, 1.030000s user + 0.030000s system = 1.060000s CPU (97.8%)
+⚐ marker  3.052816s wall, 2.760000s user + 0.070000s system = 2.830000s CPU (92.7%)
+
 
 
 ```
