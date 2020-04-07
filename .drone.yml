@@ -10,8 +10,7 @@ steps:
   image: ubuntu:19.04
   commands:
     - apt-get update -y
-    - apt-get install -y make gcc g++ cmake perl libboost-all-dev
-    - apt-get install -y python3-matplotlib python3-numpy
+    - apt-get install -y make gcc g++ cmake perl libboost-all-dev python3-matplotlib python3-numpy
     - cmake .
     - make -j$(nproc)
     - ./genrandspec

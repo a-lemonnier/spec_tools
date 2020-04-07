@@ -1,8 +1,8 @@
 /**
- * \file der_snr
- * \brief Delete a wavelength outside a wavelength range for a file or a folder. This code is multi-threaded or not if not available.
+ * \file der_snr.cpp
+ * \brief Remove value under a threshold in a folder or in a file. This code is multi-threaded or not if not available.
  * \author Audric Lemonnier
- * \version 0.2
+ * \version 0.1
  * \date 16/03/2020
  */
 
@@ -18,11 +18,6 @@
 #if __has_include (<boost/timer/timer.hpp>)
 #include <boost/timer/timer.hpp>
 #define HAS_BOOST_TIMER
-#endif
-
-#if __has_include (<sys/syscall.h>)
-#include <sys/syscall.h>
-#define HAS_SYSCALL
 #endif
 
 #if __has_include (<filesystem>)
@@ -41,46 +36,57 @@ namespace fs = boost::filesystem;
 #error "No filesystem header found"
 #endif
 
-#include "include/csv.h"
-#include "include/msg.h"
+#include "csv.h"
+#include "msg.h"
 
 // Prototype
 // ----------------------------------------------------
-void trim(const std::vector<std::string> &list, float min, float max);
+/**
+ * \fn void trim(const std::vector<std::string> &list, double threshold)
+ * \brief Remove zero and negative values of the csv files in the std string vector.
+ * \param list String list of files 
+ * \param threshold The threshold
+ */
+void trim(const std::vector<std::string> &list, double threshold);
 
 // ----------------------------------------------------
 
-int main(int argc, char** argv) {
+/**
+ * \fn int main(int argc, char **argv)
+ * \brief This code removes zeros and negative values in csv located in "./data". The maximum of thread has been used to accelerate code.
+ * \todo Parsing command line to get folder name and csv separator, for example.
+ */
+
+int main(int argc, char **argv) {
     
 #ifdef HAS_BOOST_TIMER    
     boost::timer::cpu_timer btTimer;
 #endif
-
-    _msg msgM;
-    msgM.set_name("trim");
     
-// Parse cmd line
-// ----------------------------------------------------  
+    _msg msgM;
+    msgM.set_name("threshold");
+    
+    // Parse cmd line
+    // ----------------------------------------------------  
     
     namespace po = boost::program_options;
     po::options_description description("Usage");
     
     description.add_options()
     ("help,h", "Display this help message")
-    ("min,l",  po::value<float>(),"Minimum wavelength")
-    ("max,u",  po::value<float>(),"Maximumw avelength")
-    ("input_folder,i",  po::value<std::string>(),"Name of the folder where original data are")
-    ("output_folder,o",  po::value<std::string>()->default_value("data_out"),"Set the directory where store new data.");
+    ("input_folder,i",  po::value<std::string>(),"Set the input directory.")
+    ("output_folder,o",  po::value<std::string>()->default_value("data_out"),"Set the directory where set the threshold.")
+    ("threshold,t",  po::value<double>(),"Apply a threshold in all 2D spectrum data.\nf<=threshold will be deleted.");
     
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(description).run(), vm);
     po::notify(vm);
     
-    if (vm.count("help") || !vm.count("min") || !vm.count("max") || !vm.count("input_folder")  || vm.size()<2) {
+    if (vm.count("help") || !vm.count("threshold") || !vm.count("input_folder")  || vm.size()<2) {
         msgM.set_threadname("trim");
         std::cout << description;
         std::cout << "\nExample:\n";
-        std::cout << "./trim -l 4700 -u 4800 -i data -o spectra_trimmed\n";
+        std::cout << "./threshold -i data -o spectra -t 0\n";
         msgM.msg(_msg::eMsg::START);
         msgM.msg(_msg::eMsg::MID, "check command line");
         msgM.msg(_msg::eMsg::MID, "starting 8 async threads");
@@ -92,32 +98,21 @@ int main(int argc, char** argv) {
         msgM.msg(_msg::eMsg::THREADS, "521 files parsed");
         msgM.msg(_msg::eMsg::THREADS, "521 files parsed");
         msgM.msg(_msg::eMsg::THREADS, "524 files parsed");
-        msgM.msg(_msg::eMsg::END, " 52.909230s wall, 296.410000s user + 0.710000s system = 297.120000s CPU (561.6%)\n");
+        msgM.msg(_msg::eMsg::END, " 57.269018s wall, 331.160000s user + 1.350000s system = 332.510000s CPU (580.6%)\n");
 
         return EXIT_SUCCESS;
-    }   
-    
-    float fMax, fMin;
-    
-    if (vm["max"].as<float>()<vm["min"].as<float>()) {
-        fMax=vm["min"].as<float>();
-        fMin=vm["max"].as<float>();
     }
-    else {
-        fMax=vm["max"].as<float>();
-        fMin=vm["min"].as<float>();
-    }
-   
+    
     fs::path path(vm["output_folder"].as<std::string>());
     fs::path path_out(vm["input_folder"].as<std::string>());
-     
-// ----------------------------------------------------  
-
+    
+    // ---------------------------------------------------- 
+        
     msgM.msg(_msg::eMsg::START);
-    msgM.msg(_msg::eMsg::MID, "check command line");
+    msgM.msg(_msg::eMsg::MID, "check command line");    
     
     if (!fs::exists(path_out)) {
-        msgM.msg(_msg::eMsg::ERROR, "error directory", path_out.string(), " does not exist");
+        msgM.msg(_msg::eMsg::ERROR, "error directory", path_out.string(), "does not exist");
         return EXIT_FAILURE;
     }
     
@@ -136,11 +131,11 @@ int main(int argc, char** argv) {
 #endif
     }
     else { 
-        msgM.msg(_msg::eMsg::ERROR, "error directory", path.string(), "exists");
+        msgM.msg(_msg::eMsg::ERROR, "error directory", path.string(), " exists");
         return EXIT_FAILURE;
     }
-        
-     if (fs::is_directory(path)) {
+    
+    if (fs::is_directory(path)) {
         
         fs::recursive_directory_iterator step0(path);
         std::vector<std::string> list;
@@ -179,51 +174,52 @@ int main(int argc, char** argv) {
             std::vector<std::future<void> > thread;
             
             for(auto t_list: list_divided)
-                thread.emplace_back(std::async(flag,trim,t_list,fMin,fMax));
+                thread.emplace_back(std::async(flag,trim,t_list,vm["threshold"].as<double>()));
             
             std::for_each(thread.begin(), thread.end(), [](std::future<void> &th) { th.get(); });
         }  
         else {
             msgM.msg(_msg::eMsg::MID, "multi-threading disabled");
-            trim(list, fMin, fMax);
+            trim(list, vm["threshold"].as<double>());
         }
     }
-#ifdef HAS_BOOST_TIMER
-    msgM.msg(_msg::eMsg::END, btTimer.format());
-#endif
     
+#ifdef HAS_BOOST_TIMER
+     msgM.msg(_msg::eMsg::END, btTimer.format());
+#endif
+     
     return EXIT_SUCCESS;
 }
 
-// ----------------------------------------------------
-// ----------------------------------------------------
 
-void trim(const std::vector<std::string> &list, float min, float max) {
+void trim(const std::vector<std::string> &list, double threshold) {
     
     _msg msgM;
-    msgM.set_threadname("trim");
-    msgM.set_name("trim()");
+    msgM.set_name("compute()");
+    msgM.set_threadname("compute");
     
     for(auto file: list ) {
         
-        _csv<float> csv; 
+        _csv<> csv; 
         
         csv.set_filename(file);
         csv.set_separator('\t');
         
         if (csv.read()) {
             
-            csv.set_verbose(_csv<float>::eVerbose::QUIET);
+            csv.set_verbose(_csv<>::eVerbose::QUIET);
             
-            csv.apply_min_threshold(min,0);
-            csv.apply_max_threshold(max,0);
+            csv.apply_min_threshold(threshold,1);
             
             csv.write();
         }
-    }
+    } 
+    
 #ifdef HAS_SYSCALL
-   msgM.msg(_msg::eMsg::THREADS, list.size(), "files parsed");
+    msgM.msg(_msg::eMsg::THREADS, list.size(), "files parsed");
 #else
-    msgM.msg(_msg::eMsg::MID, list.size(), " files parsed.");
+    msgM.msg(_msg::eMsg::MID, list.size(), " files parsed");
 #endif
+    
 }
+

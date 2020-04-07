@@ -44,8 +44,8 @@ namespace fs = boost::filesystem;
 #error "No filesystem header found"
 #endif
 
-#include "include/csv.h"
-#include "include/msg.h"
+#include "csv.h"
+#include "msg.h"
 
 // Reference
 // ----------------------------------------------------

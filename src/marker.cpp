@@ -42,9 +42,9 @@ namespace fs = boost::filesystem;
 #include <boost/spirit/include/qi_parse.hpp>
 #include <boost/spirit/include/qi_numeric.hpp>
 
-#include "include/marker.h"
-#include "include/msg.h"
-#include "include/csv.h"
+#include "marker.h"
+#include "msg.h"
+#include "csv.h"
 
 int main(int argc, char** argv) {
     
