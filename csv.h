@@ -3,8 +3,8 @@
  * \brief A basic class for csv manipulation
  * 
  * \author Audric Lemonnier
- * \version 0.8
- * \date 17/03/2020
+ * \version 0.9
+ * \date 07/04/2020
  * 
  */
 
@@ -444,7 +444,6 @@ private:
      */
     bool is_float(const std::string &sVal) const;
     
-
     std::vector<std::vector<_T> > vvData; /**< Data contains the 2D-vector and is private */     
     std::vector<std::string> vsHeader; /**<  vsHeader is a vector of column std::string name */
 

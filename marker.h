@@ -10,6 +10,7 @@
 #include <sstream>
 #include <iomanip>
 
+#include <iterator>
 #include <vector>
 #include <algorithm> 
 
@@ -170,6 +171,14 @@ private:
     std::string get_ext(const std::string& sS) const;
     std::string get_cmd() const;
     void add_cmd(const std::string &sCmd);
+    
+    /**
+     * \fn bool is_float(const std::string &val) const
+     * \brief Check if a string is a float and does not contain non digit characters. It uses boost::qi.
+     * \param TVal The string  
+     * \return true if float
+     */
+    bool is_float(const std::string &sVal) const;
     
     bool bVerbose;
     

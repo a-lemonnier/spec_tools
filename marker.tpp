@@ -755,3 +755,9 @@ template<typename _T>
 void _marker<_T>::add_cmd(const std::string &sCmd) {
     this->sExec+=sCmd+"\n";
 }
+
+template<typename _T> 
+bool _marker<_T>::is_float(const std::string &val) const {
+   std::string::const_iterator first(val.begin()), last(val.end());
+   return boost::spirit::qi::parse(first, last, boost::spirit::double_) && first == last;
+}

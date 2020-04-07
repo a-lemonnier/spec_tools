@@ -2,8 +2,8 @@
  * \file marker.cpp
  * \brief Highlight lines on spectrum 
  * \author Audric Lemonnier
- * \version 0.1
- * \date 03/04/2020
+ * \version 0.2
+ * \date 07/04/2020
  */
 
 #include <iostream>
@@ -14,6 +14,7 @@
 #include <tuple>
 #include <string>
 #include <algorithm>
+#include <iterator>
 
 #include <boost/program_options.hpp>
 
@@ -21,6 +22,25 @@
 #include <boost/timer/timer.hpp>
 #define HAS_BOOST_TIMER
 #endif
+
+#if __has_include (<filesystem>)
+#include <filesystem>
+#define FS_STD
+namespace fs = std::filesystem;
+#elif __has_include (<experimental/filesystem>) && !__has_include (<filesystem>)
+#include <experimental/filesystem>
+#define FS_STDEXP
+namespace fs = std::experimental::filesystem;
+#elif __has_include(<boost/filesystem.hpp>) && !__has_include (<filesystem>) && !__has_include (<experimental/filesystem>)
+#include <boost/filesystem.hpp>
+#define FS_BOOST
+namespace fs = boost::filesystem;
+#else
+#error "No filesystem header found"
+#endif
+
+#include <boost/spirit/include/qi_parse.hpp>
+#include <boost/spirit/include/qi_numeric.hpp>
 
 #include "marker.h"
 #include "msg.h"
@@ -44,6 +64,7 @@ int main(int argc, char** argv) {
     description.add_options()
     ("help,h", "Display this help message")
     ("input,i", po::value<std::vector<std::string> >()->multitoken(),"Set input files.")
+    ("output,o", po::value<std::string>(),"Set the output.")
     ("title,t", po::value<std::string>(), "Set the title.")
     ("label,l", po::value<std::vector<std::string> >()->multitoken(),"Set labels. If more than one label is defined, the number of labels must be equal to the numbers of files.")
     ("xmin", po::value<float>(), "Set the min range.")
@@ -52,13 +73,14 @@ int main(int argc, char** argv) {
     ("ylabel", po::value<std::string>(), "Set ylabel.")
     ("xunit", po::value<std::string>(), "Set xunit.")
     ("yunit", po::value<std::string>(), "Set yunit.")
-    ("grid,g","Show the grid.")
     ("dpi", po::value<unsigned int>()->default_value(300), "Set the dpi.")
     ("width", po::value<float>()->default_value(0.25), "Set the width of curves.")
     ("contsize", po::value<float>()->default_value(0.6), "Set the continnum width.")
     ("sep,s", po::value<std::vector<std::string> >()->multitoken(), "Set separators. If more than one sep is defined, the number of sep must be equal to the numbers of files.")
     ("element,e",  po::value<std::vector<std::string> >()->multitoken(),"Set the name of an element. Ex: \\$H\\\\\\\\beta\\$.")
+    ("elemlist",po::value<std::string>(),"Set the line list: \n'Element 1', wavelength_1\n'Element 2', wavelength_2\n'Element 3', wavelength_3\n...")
     ("wavelength,w",po::value<std::vector<float> >()->multitoken(),"Set the wavelength of the line.")
+    ("grid,g","Show the grid.")
     ("verbose,v","Toggle verbosity.");
     
     po::variables_map vm;
@@ -93,16 +115,76 @@ int main(int argc, char** argv) {
     std::vector<std::tuple<float, std::string> > vstLines;
     float fXmin, fXmax;
     
+    // Add lines from cmd line
     if (vm.count("wavelength") && vm.count("element")) {
         if (vm["wavelength"].as<std::vector<float> >().size()==vm["element"].as<std::vector<std::string> >().size()) {
             for(int i=0; i<vm["wavelength"].as<std::vector<float> >().size(); i++)
                 vstLines.emplace_back(
                     std::make_tuple(vm["wavelength"].as<std::vector<float> >()[i],
                                     vm["element"].as<std::vector<std::string> >()[i]));
+            std::sort(vstLines.begin(), vstLines.end());
         }
         else {
             msgM.msg(_msg::eMsg::ERROR, "the number of elements do not match the number of wavelengths");
         }        
+    }
+    
+    // Add lines from file
+    if (vm.count("elemlist")) {
+        fs::path pElemlist(vm["elemlist"].as<std::string>());
+        
+        if (fs::exists(pElemlist)) {
+            std::fstream fFlux(vm["elemlist"].as<std::string>(), std::ios::in);
+            
+            if (fFlux) {
+                std::string sLine;
+                
+                auto is_float=[](const std::string &sVal) {
+                    std::string::const_iterator first(sVal.begin()), last(sVal.end());
+                    return boost::spirit::qi::parse(first, last, boost::spirit::double_) && 
+                           first == last;
+                };
+                
+                while(std::getline(fFlux, sLine)) {
+                    std::string sName;
+                    std::string sWl;
+                    
+                    sName=sLine.substr(0, sLine.find_first_of(","));
+                    sWl=sLine.substr(sLine.find_first_of(",")+1, sLine.size());
+                    
+                    // remove useless char
+                    sName.erase(std::remove(sName.begin(), sName.end(), '"'), sName.end());
+                    sName.erase(std::remove(sName.begin(), sName.end(), '\''), sName.end());
+                    sWl.erase(std::remove(sWl.begin(), sWl.end(), ' '), sWl.end());
+                    sWl.erase(std::remove(sWl.begin(), sWl.end(), '\n'), sWl.end());
+                    sWl.erase(std::remove(sWl.begin(), sWl.end(), '\0'), sWl.end());
+                    
+                    // check if wl is NaN
+                    if (!is_float(sWl)) {
+                        msgM.msg(_msg::eMsg::ERROR, "NaN in line list");
+                        break;
+                    }
+                    
+                    // check duplicates
+                    bool bExists=false;
+                    for(auto stLine: vstLines) {
+                        std::stringstream ssS;
+                        ssS << std::fixed << std::setw(2) << std::setprecision(2) << std::get<0>(stLine);
+                        if (ssS.str()==sWl)
+                            bExists=true;
+                    }
+                        
+                    if (!bExists) 
+                        vstLines.emplace_back(std::make_tuple(std::stof(sWl), sName));
+                }
+                std::sort(vstLines.begin(), vstLines.end());
+                fFlux.close();
+            }
+            else
+                msgM.msg(_msg::eMsg::ERROR, "error while opening", vm["elemlist"].as<std::string>()); 
+        }
+        else 
+            msgM.msg(_msg::eMsg::ERROR, vm["elemlist"].as<std::string>(), "does not exist");
     }
             
     if (vm.count("xlabel"))
@@ -129,7 +211,7 @@ int main(int argc, char** argv) {
     if (vm.count("label"))
         vsLabels=vm["label"].as<std::vector<std::string> >();
     
-     if (vm.count("sep")) {
+    if (vm.count("sep")) {
          if (vm["input"].as<std::vector<std::string> >().size()!=vm["sep"].as<std::vector<std::string> >().size() && vm["sep"].as<std::vector<std::string> >().size()<2) {
              msgM.msg(_msg::eMsg::ERROR, "the number of files do not match the number of separators");
              return EXIT_FAILURE;
@@ -138,7 +220,7 @@ int main(int argc, char** argv) {
         
     if (!vm.count("sep")) {
         for(auto sFile: vsFlist) {
-            msgM.msg(_msg::eMsg::MID, "set input:", sFile, "with sep:'",'\t',"'");
+            msgM.msg(_msg::eMsg::MID, "set input:", sFile, "with sep: '",'\t',"'");
             vCsv.push_back(_csv<float>(sFile,'\t'));
         }
     }
@@ -147,7 +229,7 @@ int main(int argc, char** argv) {
             for(auto sFile: vsFlist) {
                 msgM.msg(_msg::eMsg::MID, 
                          "set input:", sFile, 
-                         "with sep:'",vm["sep"].as<std::vector<std::string> >()[0],"'");
+                         "with sep: '",vm["sep"].as<std::vector<std::string> >()[0],"'");
                 vCsv.push_back(_csv<float>(sFile, vm["sep"].as<std::vector<std::string> >()[0]));
             }
         }
@@ -160,7 +242,7 @@ int main(int argc, char** argv) {
                 msgM.msg(_msg::eMsg::MID,
                          "set input:", 
                          vm["input"].as<std::vector<std::string> >()[i], 
-                         "with sep:'",vm["sep"].as<std::vector<std::string> >()[i],"'");
+                         "with sep: '",vm["sep"].as<std::vector<std::string> >()[i],"'");
                 csv.set_filename(vm["input"].as<std::vector<std::string> >()[i]);
                 csv.set_separator(vm["sep"].as<std::vector<std::string> >()[i]);
                 i++;
@@ -215,7 +297,13 @@ int main(int argc, char** argv) {
         
         msgM.msg(_msg::eMsg::MID, "set plot options");
         
-        Marker.set_output("plot.pdf", static_cast<int>(vm["dpi"].as<unsigned int>()));
+        if (vm.count("output"))
+            Marker.set_output(vm["output"].as<std::string>(), 
+                              static_cast<int>(vm["dpi"].as<unsigned int>()));
+        else
+            Marker.set_output("plot.pdf", static_cast<int>(vm["dpi"].as<unsigned int>()));
+        
+        msgM.msg(_msg::eMsg::MID, "output:", Marker.get_output());
 
         if (vm.count("title"))
             Marker.set_title(sTitle);
@@ -249,7 +337,8 @@ int main(int argc, char** argv) {
         for(auto tLine: vstLines) {
             if (std::get<0>(tLine)>Marker.get_supp()[0] && 
                 std::get<0>(tLine)<Marker.get_supp()[1]) {
-            msgM.msg(_msg::eMsg::MID, "add '", std::get<1>(tLine), "' at", std::get<0>(tLine));
+            msgM.msg(_msg::eMsg::MID, "add '", std::get<1>(tLine), 
+                                      "' at", std::get<0>(tLine));
             Marker.add_line(std::get<0>(tLine), std::get<1>(tLine));
             }
         }

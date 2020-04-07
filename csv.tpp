@@ -160,7 +160,7 @@ bool _csv<_T>::read() {
          if (cSep=='\t') regex_test=std::regex(" ");
          
          int iCount=0;
-         while(getline(sFlux_in,sLine)) {
+         while(std::getline(sFlux_in,sLine)) {
              
              // try to correct errors with \t or ' '
              sLine=std::regex_replace(sLine, regex_test, sSep);    
