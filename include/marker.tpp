@@ -9,7 +9,6 @@ _marker<_T>::_marker():
 # -*- coding: utf-8 -*-\n\
 #auto generated script\n\n"),
     sScriptname(".plot.py"),
-    sTitle("Plot"),
     sXlabel("x"), sYlabel("y"),
     TYcontinuum(1),
     TYmin(0), TYmax(1),
@@ -308,7 +307,7 @@ void _marker<_T>::add_line(_T TWl, const std::string &sName) {
         msgM.msg(_msg::eMsg::ERROR,"add_line(): invalid line");
     else {
         if (bVerbose)
-            msgM.msg(_msg::eMsg::MID,"add_line('",sName,"'", TWl);
+            msgM.msg(_msg::eMsg::MID,"add_line('",sName,"'", TWl,")");
         vllSet.push_back({TWl, sName});
     }
 }
@@ -627,9 +626,11 @@ bool _marker<_T>::make() {
     
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"add title and labels");
-    add_cmd("plt.title('"+
+    if (!this->sTitle.empty())
+        add_cmd("plt.title('"+
             get_title()+ "', size="+
             std::to_string(iTitlesize)+")");
+        
     if (!this->sXunit.empty())
         add_cmd("ax0.set_xlabel('"+
                 get_xlabel()+" ("+
@@ -652,8 +653,8 @@ bool _marker<_T>::make() {
 // Grid and ticks -----------------------------------------------    
     add_cmd("ax0.tick_params(direction='out', labelsize="+
              std::to_string(iTicklabelsize)+
-             ", length=1, width=1, grid_alpha=0.5)");
-    add_cmd("ax0.tick_params(which='minor', length=2, color='grey')");
+             ", length=2, width=1, grid_alpha=0.5)");
+    add_cmd("ax0.tick_params(which='minor', length=3, color='grey')");
     add_cmd("ax0.xaxis.set_minor_locator(AutoMinorLocator())");
 
     if (this->bShowgrid) {
@@ -684,7 +685,7 @@ bool _marker<_T>::make() {
         std::to_string(line.TWl) + ", " +
         std::to_string(line.TWl) + "], [0, " +
         std::to_string(get_continuum()) +
-        "],  color='grey', linestyle='--', zorder=2, linewidth=0.50)\n");
+        "],  color='grey', linestyle='--', zorder=2, linewidth="+std::to_string(fLinewidth)+")\n");
             
         std::stringstream ssS;
         ssS << std::setprecision(2) << std::fixed << line.TWl;
@@ -706,11 +707,11 @@ bool _marker<_T>::make() {
     add_cmd(" ");
  
 // End of Script ------------------------------------------------
-    add_cmd("ax0.legend(loc='best', fontsize=6)\n");
+    add_cmd("ax0.legend(loc='best', fontsize="+std::to_string(iLegendsize)+").get_frame().set_linewidth(0.0)\n");
     
-    if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"make(): write margins");
-    add_cmd("fig.subplots_adjust(left=0.06, bottom=0.07, right=0.97, top=0.95, wspace=0.16)");
+//     if (bVerbose)
+//         msgM.msg(_msg::eMsg::MID,"make(): write margins");
+//     add_cmd("fig.subplots_adjust(left=0.08, bottom=0.08, right=0.96, top=0.94, wspace=0.16)");
     
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"make(): write savefig");
@@ -733,11 +734,13 @@ bool _marker<_T>::make() {
 }
 
 template<typename _T>
-void _marker<_T>::plot(){
+int _marker<_T>::plot(){
+    int iRes;
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"plot(): run python script");
-    system(("chmod +x "+get_scriptname()+" > /dev/null 2>&1").c_str());
-    system(("./"+get_scriptname()+" > /dev/null 2>&1").c_str());
+    iRes=system(("chmod +x "+get_scriptname()+" > /dev/null 2>&1").c_str());
+    iRes*=system(("./"+get_scriptname()+" > /dev/null 2>&1").c_str());
+    return iRes;
 }
 
 

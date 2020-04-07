@@ -159,10 +159,10 @@ public:
     bool make();
     
     /**
-     * \fn void plot()
+     * \fn int plot()
      * \brief Run the py script
      */
-    void plot();
+    int plot();
     
 protected:
     _msg msgM; /**< Interface to print message to std output */

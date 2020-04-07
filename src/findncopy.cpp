@@ -37,7 +37,7 @@ namespace fs = boost::filesystem;
 #error "No filesystem header found"
 #endif
 
-#include "msg.h"
+#include <msg.h>
 
 // Prototype
 // ----------------------------------------------------

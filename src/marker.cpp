@@ -42,9 +42,9 @@ namespace fs = boost::filesystem;
 #include <boost/spirit/include/qi_parse.hpp>
 #include <boost/spirit/include/qi_numeric.hpp>
 
-#include "marker.h"
-#include "msg.h"
-#include "csv.h"
+#include <marker.h>
+#include <msg.h>
+#include <csv.h>
 
 int main(int argc, char** argv) {
     
@@ -80,8 +80,9 @@ int main(int argc, char** argv) {
     ("element,e",  po::value<std::vector<std::string> >()->multitoken(),"Set the name of an element. Ex: \\$H\\\\\\\\beta\\$.")
     ("elemlist",po::value<std::string>(),"Set the line list: \n'Element 1', wavelength_1\n'Element 2', wavelength_2\n'Element 3', wavelength_3\n...")
     ("wavelength,w",po::value<std::vector<float> >()->multitoken(),"Set the wavelength of the line.")
-    ("shiftfirst", po::value<float>(), "Shift the first spectrum")
-    ("shift", po::value<float>(), "Shift spectra (except the first)")
+    ("fontsize", po::value<int>(), "Set the font size.")
+    ("shiftfirst", po::value<float>(), "Shift the first spectrum.")
+    ("shift", po::value<float>(), "Shift spectra (except the first).")
     ("grid,g","Show the grid.")
     ("verbose,v","Toggle verbosity.");
     
@@ -319,8 +320,6 @@ int main(int argc, char** argv) {
 
         if (vm.count("title"))
             Marker.set_title(sTitle);
-        else
-            Marker.set_title(" ");
         
         if (vm.count("xlabel"))
             Marker.set_xlabel(sXlabel);
@@ -342,9 +341,21 @@ int main(int argc, char** argv) {
         if (vm.count("grid"))
             Marker.set_showgrid(true);
         
-        Marker.set_linewidth(abs(vm["width"].as<float>()));
-        Marker.set_continnumsize(abs(vm["contsize"].as<float>()));
-        Marker.set_annotatesize(5);
+        if (vm.count("width"))
+            Marker.set_linewidth(abs(vm["width"].as<float>()));
+        
+        if (vm.count("contsize"))
+            Marker.set_continnumsize(abs(vm["contsize"].as<float>()));
+        else if (vm.count("width"))
+            Marker.set_continnumsize(abs(vm["width"].as<float>()));
+        
+        if (vm.count("fontsize")) {
+            Marker.set_titlesize(vm["fontsize"].as<int>());
+            Marker.set_labelsize(vm["fontsize"].as<int>());
+            Marker.set_ticklabelsize(abs(vm["fontsize"].as<int>()-2));
+            Marker.set_legendsize(abs(vm["fontsize"].as<int>()-2));
+            Marker.set_annotatesize(vm["fontsize"].as<int>());
+        }
         
         for(auto tLine: vstLines) {
             if (std::get<0>(tLine)>Marker.get_supp()[0] && 
