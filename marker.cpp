@@ -80,6 +80,8 @@ int main(int argc, char** argv) {
     ("element,e",  po::value<std::vector<std::string> >()->multitoken(),"Set the name of an element. Ex: \\$H\\\\\\\\beta\\$.")
     ("elemlist",po::value<std::string>(),"Set the line list: \n'Element 1', wavelength_1\n'Element 2', wavelength_2\n'Element 3', wavelength_3\n...")
     ("wavelength,w",po::value<std::vector<float> >()->multitoken(),"Set the wavelength of the line.")
+    ("shiftfirst", po::value<float>(), "Shift the first spectrum")
+    ("shift", po::value<float>(), "Shift spectra (except the first)")
     ("grid,g","Show the grid.")
     ("verbose,v","Toggle verbosity.");
     
@@ -263,6 +265,16 @@ int main(int argc, char** argv) {
     
         msgM.msg(_msg::eMsg::MID, "data read and stored");
         
+        if (vm.count("shiftfirst")) {
+            msgM.msg(_msg::eMsg::MID, "shift first spectrum by:", vm["shift"].as<float>());
+            vCsv[0].shift(vm["shift"].as<float>());
+        }
+        if (vm.count("shift")) {
+            msgM.msg(_msg::eMsg::MID, "shift spectra by:", vm["shift"].as<float>());
+            for(int i=1; i<vCsv.size(); i++)
+                vCsv[i].shift(vm["shift"].as<float>());
+        }
+            
         _marker Marker;
         
         if (vm.count("verbose"))
