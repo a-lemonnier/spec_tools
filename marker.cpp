@@ -236,14 +236,18 @@ int main(int argc, char** argv) {
         if (vm.count("xmax"))
             Marker.set_xmax(fXmax);
         
-        Marker.set_colorline("green");
+        Marker.set_colorline("red");
         
         Marker.set_linewidth(abs(vm["width"].as<float>()));
         Marker.set_continnumsize(abs(vm["contsize"].as<float>()));
+        Marker.set_annotatesize(5);
         
         for(auto tLine: vstLines) {
+            if (std::get<0>(tLine)>Marker.get_supp()[0] && 
+                std::get<0>(tLine)<Marker.get_supp()[1]) {
             msgM.msg(_msg::eMsg::MID, "add '", std::get<1>(tLine), "' at", std::get<0>(tLine));
             Marker.add_line(std::get<0>(tLine), std::get<1>(tLine));
+            }
         }
         
         msgM.msg(_msg::eMsg::MID, "write and run script");

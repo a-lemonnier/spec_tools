@@ -285,6 +285,7 @@ void _marker<_T>::set_continnumsize(float fWidth) {
         this->fContinnumsize=fWidth;    
 }
 
+
 template<typename _T>
 void _marker<_T>::set_scriptname(const std::string &sScriptname) {
     if (!sScriptname.empty())
@@ -516,11 +517,13 @@ bool _marker<_T>::make() {
         msgM.msg(_msg::eMsg::MID,"make(): add plots");
     add_cmd("grid = fig.add_gridspec(nrows=1, ncols=1)");
     add_cmd("ax0=fig.add_subplot(grid[0,0])\n");
-    
+
+// First curve --------------------------------------------------
     add_cmd("ax0.plot(x,y,'-', color='"+sColorline+
             "', linewidth="+std::to_string(fLinewidth)+
             ", zorder=10, label='"+get_label()+"')\n");
 
+// Curve color --------------------------------------------------
     int iR=0x00;
     int iG=0x00;
     int iB=0xff;
@@ -606,7 +609,8 @@ bool _marker<_T>::make() {
             }
         }
     }
-            
+
+// Axis ---------------------------------------------------------
     add_cmd("ax0.set_xlim("+std::to_string(get_supp()[0])+
             ", "+std::to_string(get_supp()[1])+")");
     
@@ -638,7 +642,8 @@ bool _marker<_T>::make() {
     add_cmd("ax0.tick_params(direction='out', labelsize="+
              std::to_string(iTicklabelsize)+
              ", length=1, width=1, grid_alpha=0.5)");
-    
+
+// Continuum ----------------------------------------------------    
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"make(): add continuum");
     
@@ -647,9 +652,10 @@ bool _marker<_T>::make() {
     std::to_string(get_supp()[1])+"],["+
     std::to_string(get_continuum())+","+
     std::to_string(get_continuum())+"],"+
-    "'-.', color='red', linewidth="+
+    "':', color='grey', linewidth="+
     std::to_string(fContinnumsize)+", zorder=1)\n");
-    
+
+// Markers ------------------------------------------------------
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"make(): add markers");
     
@@ -658,7 +664,7 @@ bool _marker<_T>::make() {
         std::to_string(line.TWl) + ", " +
         std::to_string(line.TWl) + "], [0, " +
         std::to_string(get_continuum()) +
-        "],  color='red', linestyle='--', zorder=2, linewidth=0.50)\n");
+        "],  color='grey', linestyle='--', zorder=2, linewidth=0.50)\n");
             
         std::stringstream ssS;
         ssS << std::setprecision(2) << std::fixed << line.TWl;
@@ -678,7 +684,8 @@ bool _marker<_T>::make() {
     }
     
     add_cmd(" ");
-    
+ 
+// End of Script ------------------------------------------------
     add_cmd("ax0.legend(loc='best', fontsize=6)\n");
     
     if (bVerbose)
