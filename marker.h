@@ -95,6 +95,7 @@ public:
     void set_annotatesize(int iSize);
     void set_legendsize(int iSize);
     void set_continnumsize(float fWidth);
+    void set_showgrid(bool bShowgrid);
     
     /**
      * \fn void set_scriptname(const std::string &sScriptname)
@@ -207,6 +208,7 @@ private:
     int iAnnotatesize;
     int iLegendsize;
     float fContinnumsize;
+    bool bShowgrid;
     
     bool bIsset_fig_size; /**< Indicate whether the figsize is defined or not */
     

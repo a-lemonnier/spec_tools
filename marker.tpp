@@ -22,6 +22,7 @@ _marker<_T>::_marker():
     iAnnotatesize(6),
     iLegendsize(6),
     fContinnumsize(0.6),
+    bShowgrid(false),
     bIsset_fig_size(false)
 {
     msgM.set_name("marker()");    
@@ -285,6 +286,14 @@ void _marker<_T>::set_continnumsize(float fWidth) {
         this->fContinnumsize=fWidth;    
 }
 
+template<typename _T>
+void _marker<_T>::set_showgrid(bool bShowgrid) {
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"set_showgrid(",bShowgrid,")");
+
+    this->bShowgrid=bShowgrid;    
+}
+
 
 template<typename _T>
 void _marker<_T>::set_scriptname(const std::string &sScriptname) {
@@ -480,6 +489,8 @@ bool _marker<_T>::make() {
         
     add_cmd("import matplotlib.colors as col");
     add_cmd("import matplotlib.pyplot as plt");
+    add_cmd("from matplotlib.ticker import \
+(MultipleLocator, FormatStrFormatter, AutoMinorLocator)");
     add_cmd("import numpy as np");
     add_cmd("import csv\n");
     
@@ -638,11 +649,20 @@ bool _marker<_T>::make() {
         add_cmd("ax0.set_ylabel('"+
                 get_ylabel()+"', size="+
                 std::to_string(iLabelsize)+")");
-    
+// Grid and ticks -----------------------------------------------    
     add_cmd("ax0.tick_params(direction='out', labelsize="+
              std::to_string(iTicklabelsize)+
              ", length=1, width=1, grid_alpha=0.5)");
+    add_cmd("ax0.tick_params(which='minor', length=2, color='grey')");
+    add_cmd("ax0.xaxis.set_minor_locator(AutoMinorLocator())");
 
+    if (this->bShowgrid) {
+        add_cmd("ax0.minorticks_on()");
+        add_cmd("ax0.set_axisbelow(True)");
+        add_cmd("ax0.grid(b=True, axis='both', which='major', linewidth=0.25)");
+        add_cmd("ax0.grid(b=True, linestyle=':', axis='x', which='minor', linewidth=0.01)");
+    }
+    
 // Continuum ----------------------------------------------------    
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"make(): add continuum");
@@ -690,7 +710,7 @@ bool _marker<_T>::make() {
     
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"make(): write margins");
-    add_cmd("fig.subplots_adjust(left=0.06, bottom=0.07, right=0.98, top=0.95, wspace=0.16)");
+    add_cmd("fig.subplots_adjust(left=0.06, bottom=0.07, right=0.97, top=0.95, wspace=0.16)");
     
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"make(): write savefig");

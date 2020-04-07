@@ -52,6 +52,7 @@ int main(int argc, char** argv) {
     ("ylabel", po::value<std::string>(), "Set ylabel.")
     ("xunit", po::value<std::string>(), "Set xunit.")
     ("yunit", po::value<std::string>(), "Set yunit.")
+    ("grid,g","Show the grid.")
     ("dpi", po::value<unsigned int>()->default_value(300), "Set the dpi.")
     ("width", po::value<float>()->default_value(0.25), "Set the width of curves.")
     ("contsize", po::value<float>()->default_value(0.6), "Set the continnum width.")
@@ -237,6 +238,9 @@ int main(int argc, char** argv) {
             Marker.set_xmax(fXmax);
         
         Marker.set_colorline("red");
+        
+        if (vm.count("grid"))
+            Marker.set_showgrid(true);
         
         Marker.set_linewidth(abs(vm["width"].as<float>()));
         Marker.set_continnumsize(abs(vm["contsize"].as<float>()));
