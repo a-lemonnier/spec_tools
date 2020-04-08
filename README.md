@@ -20,7 +20,7 @@ A set of codes for csv and for spectrum manipulation with a py wrapper or not:
  - Add C++11 and C++14 compatibilities
 
 ---
-Codes work on Gentoo x64 and Ubuntu x64: bionic and eoan.
+This repo. works on Gentoo 17.0 x64 and Ubuntu x64: bionic and eoan.
 
 Dependencies:
 - gcc > 7 
