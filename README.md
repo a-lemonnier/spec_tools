@@ -12,7 +12,7 @@ A set of codes for csv and for spectrum manipulation:
  - **marker**.cpp: highlight lines on spectrum
  
  TODO:
- - **csv**.h: fix _csv( _csv& other)
+ - bugged copy constructors
  - **marker**.cpp: NOR in cmd check
  - Make classes
  - Clean header

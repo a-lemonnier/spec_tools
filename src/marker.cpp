@@ -358,8 +358,8 @@ int main(int argc, char** argv) {
         }
         
         for(auto tLine: vstLines) {
-            if (std::get<0>(tLine)>Marker.get_supp()[0] && 
-                std::get<0>(tLine)<Marker.get_supp()[1]) {
+            if (std::get<0>(tLine) > Marker.get_supp().first && 
+                std::get<0>(tLine) < Marker.get_supp().second) {
             msgM.msg(_msg::eMsg::MID, "add '", std::get<1>(tLine), 
                                       "' at", std::get<0>(tLine));
             Marker.add_line(std::get<0>(tLine), std::get<1>(tLine));

@@ -12,6 +12,7 @@
 
 #include <iterator>
 #include <vector>
+#include <utility>
 #include <algorithm> 
 
 #include "msg.h"
@@ -37,7 +38,8 @@ public:
     typedef std::vector<Line> vlList;
     
     explicit _marker();
-    explicit _marker(const _marker<_T>& other);
+    
+//     exlicit _marker(const _marker<_T>& other);
 
     virtual ~_marker();
 
@@ -127,11 +129,11 @@ public:
     
     _T get_continuum() const;
     /**
-     * \fn _T* get_supp() const
+     * \fn const std::pair<_T,_T> get_supp() const
      * \brief Get the support of the first spectrum
-     * \return Array of 2 _T: [\f$x_{min}\,x_{max}\f$]
+     * \return std::pair of 2 _T: [\f$x_{min}\,x_{max}\f$]
      */
-    _T* get_supp() const;
+    const std::pair<_T,_T> get_supp() const;
     
     const std::string& get_scriptname() const;
     const std::string& get_output() const;
@@ -144,11 +146,11 @@ public:
     const std::string& get_yunit() const;
     
     /**
-     * \fn int* get_figsize() const
-     * \brief Get the defined figsize, if defined
-     * \return Array of 2 int
+     * \fn const std::pair<int, int> get_figsize() const
+     * \brief Get the defined figsize, if defined. First: Height and Second: Width.
+     * \return std::pair of 2 int
      */
-    int* get_figsize() const;
+    const std::pair<int, int> get_figsize() const;
     
     int get_dpi() const;
 

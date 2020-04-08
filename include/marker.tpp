@@ -27,10 +27,8 @@ _marker<_T>::_marker():
     msgM.set_name("marker()");    
 }
 
-template<typename _T>
-_marker<_T>::_marker(const _marker<_T>& other) {
-    
-}
+// template<typename _T>
+// _marker<_T>::_marker(const _marker<_T>& other) { }
 
 template<typename _T>
 _marker<_T>::~_marker() {
@@ -365,15 +363,12 @@ _T _marker<_T>::get_continuum() const {
 }
 
 template<typename _T>
-_T* _marker<_T>::get_supp() const {
-    if (this->TXmin>this->TXmax) {
+const std::pair<_T,_T> _marker<_T>::get_supp() const {
+    if (this->TXmin > this->TXmax) {
         msgM.msg(_msg::eMsg::ERROR,"get_supp(): invalid support");
-        return nullptr;
+        return {0,0};
     }
-        
-    static _T TSupp[2]={this->TXmin,this->TXmax};
-
-    return TSupp;
+    return {this->TXmin,this->TXmax};
 }
 
 template<typename _T>
@@ -421,11 +416,8 @@ const std::string& _marker<_T>::get_yunit() const {
 }
 
 template<typename _T>
-int* _marker<_T>::get_figsize() const {
-    static int iSize[2];
-    iSize[0]=this->iHeight;
-    iSize[1]=this->iWidth;
-    return iSize;
+const std::pair<int, int> _marker<_T>::get_figsize() const {
+    return {this->iHeight, this->iWidth};
 }
 
 template<typename _T>
@@ -518,8 +510,8 @@ bool _marker<_T>::make() {
     
     if (bIsset_fig_size)
         add_cmd("fig=plt.figure(figsize=("+
-                std::to_string(get_figsize()[0])+","+
-                std::to_string(get_figsize()[1])+")\n");
+                std::to_string(get_figsize().first)+","+
+                std::to_string(get_figsize().second)+")\n");
     else
         add_cmd("fig=plt.figure()\n");
       
@@ -621,8 +613,8 @@ bool _marker<_T>::make() {
     }
 
 // Axis ---------------------------------------------------------
-    add_cmd("ax0.set_xlim("+std::to_string(get_supp()[0])+
-            ", "+std::to_string(get_supp()[1])+")");
+    add_cmd("ax0.set_xlim("+std::to_string(get_supp().first)+
+            ", "+std::to_string(get_supp().second)+")");
     
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"add title and labels");
@@ -669,8 +661,8 @@ bool _marker<_T>::make() {
         msgM.msg(_msg::eMsg::MID,"make(): add continuum");
     
     add_cmd("ax0.plot(["+
-    std::to_string(get_supp()[0])+","+
-    std::to_string(get_supp()[1])+"],["+
+    std::to_string(get_supp().first)+","+
+    std::to_string(get_supp().second)+"],["+
     std::to_string(get_continuum())+","+
     std::to_string(get_continuum())+"],"+
     "':', color='grey', linewidth="+
