@@ -1,7 +1,7 @@
 # spec_tools [![Build Status](https://cloud.drone.io/api/badges/a-lemonnier/spec_tools/status.svg)](https://cloud.drone.io/a-lemonnier/spec_tools)
 
 
-A set of codes for csv and for spectrum manipulation:
+A set of codes for csv and for spectrum manipulation with a py wrapper or not:
 
  - **threshold**.cpp: remove lines below a wavelength threshold (multi-threaded)
  - **trim**.cpp: cut a spectrum or more between two wavelengths (multi-threaded)
@@ -23,7 +23,7 @@ A set of codes for csv and for spectrum manipulation:
 Codes work on Gentoo x64 and Ubuntu x64: bionic and eoan.
 
 Dependencies:
-- g++ > 7
+- gcc > 7 
 - CMake
 - Boost >1.40
 - Boost::program_options
