@@ -15,7 +15,7 @@ A set of codes for csv and for spectrum manipulation:
  - fix copy constructors
  - **marker**.cpp: NOR in cmd check
  - Make classes in order to clean .cpp
- - Additionnal parameters and file verifications
+ - Additionnal input parameters and file verifications
  - Implement boost:: recursive directory copy
  - Add C++11 and C++14 compatibilities
 
