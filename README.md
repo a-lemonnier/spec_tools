@@ -3,29 +3,28 @@
 
 A set of codes for csv and for spectrum manipulation:
 
- - **threshold**.cpp: remove lines below a wavelength threshold
- - **trim**.cpp: cut spectrum between two wavelengths
+ - **threshold**.cpp: remove lines below a wavelength threshold (multi-threaded)
+ - **trim**.cpp: cut a spectrum or more between two wavelengths (multi-threaded)
  - **findncopy**.cpp: find and copy files from a file list
- - **der_snr**.cpp: compute the Signal-to-Noise of a spectrum
- - **shift**.cpp: shift whole spectrum by a given wavelength
- - **gen_rand_spec**.cpp: generate a set of randomized-flux spectra between two wavelengths for test purposes
- - **marker**.cpp: highlight lines on spectrum
+ - **der_snr**.cpp: compute the Signal-to-Noise of a spectrum or from a folder containing spectra (multi-threaded)
+ - **shift**.cpp: shift whole spectrum by a given wavelength (multi-threaded)
+ - **gen_rand_spec**.cpp: generate a set of randomized-flux spectra between two wavelengths for test purposes (multi-threaded)
+ - **marker**.cpp: highlight lines on spectrum and plot it in matplotlib plots
  
  TODO:
- - bugged copy constructors
+ - fix copy constructors
  - **marker**.cpp: NOR in cmd check
- - Make classes
- - Clean header
+ - Make classes in order to clean .cpp
  - Additionnal parameters and file verifications
  - Implement boost:: recursive directory copy
- - Clean preprocessor intructions
  - Add C++11 and C++14 compatibilities
 
 ---
 Codes work on Gentoo x64 and Ubuntu x64: bionic and eoan.
 
 Dependencies:
-- g++: C++ =>17 mandatory (atm)
+- g++ > 7
+- CMake
 - Boost >1.40
 - Boost::program_options
 - Boost::spirit
