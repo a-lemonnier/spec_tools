@@ -687,10 +687,10 @@ bool _marker<_T>::make() {
                 "$\\\\lambda "+ssS.str()+ 
                 "$', xytext=("+
                 std::to_string(line.TWl)+","+
-                std::to_string(iCount*0.05)+"), "+
+                std::to_string(iCount*0.077)+"), "+
                 "xy=("+std::to_string(line.TWl)+", "+
-                std::to_string(iCount*0.05)+"), "+
-                "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.4', fc='white', ec='white', lw=2),size='"+
+                std::to_string(iCount*0.077)+"), "+
+                "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.01', fc='white', ec='white', lw=2),size='"+
                 std::to_string(iAnnotatesize)+"', ha='center')");
         
         iCount++;
