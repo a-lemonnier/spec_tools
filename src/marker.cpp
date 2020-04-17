@@ -137,6 +137,8 @@ int main(int argc, char** argv) {
         }
         ssS << "\n";
     
+        sfFlux << ssS.str();
+        
         sfFlux.close();
     }
     else

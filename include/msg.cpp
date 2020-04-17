@@ -90,10 +90,9 @@ void _msg::msg(eMsg emType, const std::string& sMsg) {
                       << sMsg
                       << "\n";
             break;
-        
-        std::cout << ssS.str();
-        write(ssS.str());
     }
+    std::cout << ssS.str();
+    write(ssS.str());
 }
 
 void _msg::error(const std::string& sMsg) {
@@ -110,6 +109,7 @@ void _msg::error(const std::string& sMsg) {
 }
 
 void _msg::set_name(const std::string sName) {
+
     if (!sName.empty())
         this->sName=sName;
     else {
