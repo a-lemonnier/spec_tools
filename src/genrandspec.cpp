@@ -2,8 +2,8 @@
  * \file genrandspec.cpp
  * \brief Generate a set of randomized-flux spectra between two wavelengths for test purposes
  * \author Audric Lemonnier
- * \version 0.3
- * \date 17/03/2020
+ * \version 0.4
+ * \date 18/04/2020
  */
 
 #include <iostream>
@@ -44,6 +44,8 @@ namespace fs = boost::filesystem;
 
 #include <csv.h>
 #include <msg.h>
+
+#define HISTFILE ".history"
 
 /**
  * \define MaxFilepDir
@@ -97,6 +99,35 @@ int main(int argc, char** argv) {
     char cSep=vm["separator"].as<char>();
 
     fs::path pOutput(vm["output"].as<std::string>());
+    
+    // ----------------------------------------------------
+    
+            // Write history
+    // ----------------------------------------------------  
+    
+    std::fstream sfFlux(HISTFILE, std::ios::app);
+    if (sfFlux) {
+        
+        std::stringstream ssS;
+        ssS << argv[0];
+        for(const auto &arg: vm) {
+            if (arg.second.value().type()==typeid(std::string))
+                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<std::string>();
+            if (arg.second.value().type()==typeid(int))
+                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<int>();
+            if (arg.second.value().type()==typeid(unsigned int))
+                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<unsigned int>();
+            if (arg.second.value().type()==typeid(float))
+                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<float>();
+            if (arg.second.value().type()==typeid(char))
+                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<char>();
+        }
+        ssS << "\n";
+    
+        sfFlux.close();
+    }
+    else
+        msgM.msg(_msg::eMsg::ERROR, "cannot open history");
     
     // ----------------------------------------------------
     

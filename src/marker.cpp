@@ -2,8 +2,8 @@
  * \file marker.cpp
  * \brief Highlight lines on spectrum 
  * \author Audric Lemonnier
- * \version 0.2
- * \date 07/04/2020
+ * \version 0.3
+ * \date 18/04/2020
  */
 
 #include <iostream>
@@ -46,6 +46,9 @@ namespace fs = boost::filesystem;
 #include <msg.h>
 #include <csv.h>
 
+#define LOGFILE ".marker.log"
+#define HISTFILE ".history"
+
 int main(int argc, char** argv) {
     
 #ifdef HAS_BOOST_TIMER    
@@ -54,6 +57,8 @@ int main(int argc, char** argv) {
     
     _msg msgM;
     msgM.set_name("marker");
+    msgM.set_log(LOGFILE);
+    
     
     // Parse cmd line
     // ----------------------------------------------------  
@@ -84,16 +89,17 @@ int main(int argc, char** argv) {
     ("shiftfirst", po::value<float>(), "Shift the first spectrum.")
     ("shift", po::value<float>(), "Shift spectra (except the first).")
     ("grid,g","Show the grid.")
+    ("nolog","Toggle off log.")
     ("verbose,v","Toggle verbosity.");
     
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(description).run(), vm);
     po::notify(vm);
-    
+       
     if (vm.count("help") || !vm.count("input")  || vm.size()<1) {
         std::cout << description;
         std::cout << "\nExample:\n";
-        std::cout << "-i rand_spectra/0/0.dat -i rand_spectra/0/1.dat -l 0.dat -l 1.dat  -t Spectra -l 'Spectrum 1' -l 'Spectrum 2' -w 4861 -e \\$H\\\\beta\\$\n";
+        std::cout << "-i rand_spectra/0/0.dat -i rand_spectra/0/1.dat -l 0.dat -l 1.dat  -t Spectra -l 'Spectrum 1' -l 'Spectrum 2' -w 4861 -e \\$H\\\\beta\\$\n --nolog";
         msgM.msg(_msg::eMsg::START);
         msgM.msg(_msg::eMsg::MID, "check command line and fill class");
         msgM.msg(_msg::eMsg::MID, "set input: rand_spectra/0/0.dat with sep:'\t'");
@@ -107,7 +113,37 @@ int main(int argc, char** argv) {
     }
     
     // ---------------------------------------------------- 
+
         
+    // Write history
+    // ----------------------------------------------------  
+    
+    std::fstream sfFlux(HISTFILE, std::ios::app);
+    if (sfFlux) {
+        
+        std::stringstream ssS;
+        ssS << argv[0];
+        for(const auto &arg: vm) {
+            if (arg.second.value().type()==typeid(std::string))
+                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<std::string>();
+            if (arg.second.value().type()==typeid(int))
+                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<int>();
+            if (arg.second.value().type()==typeid(unsigned int))
+                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<unsigned int>();
+            if (arg.second.value().type()==typeid(float))
+                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<float>();
+            if (arg.second.value().type()==typeid(char))
+                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<char>();
+        }
+        ssS << "\n";
+    
+        sfFlux.close();
+    }
+    else
+        msgM.msg(_msg::eMsg::ERROR, "cannot open history");
+    
+    // ----------------------------------------------------
+    
     msgM.msg(_msg::eMsg::START);
     msgM.msg(_msg::eMsg::MID, "check command line and fill class");  
     
@@ -282,6 +318,11 @@ int main(int argc, char** argv) {
             Marker.set_verbose(true);
         else
             Marker.set_verbose(false);
+        
+        if (vm.count("nolog"))
+            Marker.set_log(LOGFILE);
+        else 
+            Marker.set_log(LOGFILE);
         
         msgM.msg(_msg::eMsg::MID, "set data to plot");
         if (!vm.count("label"))

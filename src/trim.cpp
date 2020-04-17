@@ -2,8 +2,8 @@
  * \file der_snr
  * \brief Delete a wavelength outside a wavelength range for a file or a folder. This code is multi-threaded or not if not available.
  * \author Audric Lemonnier
- * \version 0.2
- * \date 16/03/2020
+ * \version 0.3
+ * \date 18/04/2020
  */
 
 #include <iostream>
@@ -44,6 +44,8 @@ namespace fs = boost::filesystem;
 
 #include <csv.h>
 #include <msg.h>
+
+#define HISTFILE ".history"
 
 // Prototype
 // ----------------------------------------------------
@@ -112,8 +114,37 @@ int main(int argc, char** argv) {
     fs::path path(vm["output_folder"].as<std::string>());
     fs::path path_out(vm["input_folder"].as<std::string>());
      
-// ----------------------------------------------------  
+    // ----------------------------------------------------  
 
+        // Write history
+    // ----------------------------------------------------  
+    
+    std::fstream sfFlux(HISTFILE, std::ios::app);
+    if (sfFlux) {
+        
+        std::stringstream ssS;
+        ssS << argv[0];
+        for(const auto &arg: vm) {
+            if (arg.second.value().type()==typeid(std::string))
+                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<std::string>();
+            if (arg.second.value().type()==typeid(int))
+                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<int>();
+            if (arg.second.value().type()==typeid(unsigned int))
+                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<unsigned int>();
+            if (arg.second.value().type()==typeid(float))
+                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<float>();
+            if (arg.second.value().type()==typeid(char))
+                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<char>();
+        }
+        ssS << "\n";
+    
+        sfFlux.close();
+    }
+    else
+        msgM.msg(_msg::eMsg::ERROR, "cannot open history");
+    
+    // ----------------------------------------------------
+    
     msgM.msg(_msg::eMsg::START);
     msgM.msg(_msg::eMsg::MID, "check command line");
     

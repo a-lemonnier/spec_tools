@@ -7,7 +7,8 @@ _msg::_msg(): sSuf("\033[0m"),
               sThd_pre("\033[3;95m\u26A1\033[0m \033[1;30m"),
               sThd_suf("\033[1;95m"),
               
-              sErr_pre("\033[5;31m\u2639\033[0m \033[1;30m")
+              sErr_pre("\033[5;31m\u2639\033[0m \033[1;30m"),
+              bLog(false)
 {
 
 }
@@ -15,6 +16,7 @@ _msg::_msg(): sSuf("\033[0m"),
 _msg::_msg(const _msg& other) {
     this->sName=other.sName;
     this->sThreadname=other.sThreadname;
+    
 }
 
 _msg::~_msg() {
@@ -28,37 +30,49 @@ _msg::~_msg() {
     sErr_pre.clear();
     sThd_pre.clear();
     sThd_suf.clear();
+    
+    if (sfFlux.is_open())
+        sfFlux.close();
 }
 
-void _msg::msg(const std::string& sMsg) const {
-     std::cout << sMid_pre << sName << sSuf
+void _msg::msg(const std::string& sMsg) {
+    
+    std::stringstream ssS;
+    
+     ssS << sMid_pre << sName << sSuf
                << ":"
                << sMsg
-               << "\n";    
+               << "\n";
+    
+    std::cout << ssS.str();
+    write(ssS.str());
 }
 
-void _msg::msg(eMsg emType, const std::string& sMsg) const {
+void _msg::msg(eMsg emType, const std::string& sMsg) {
+    
+    std::stringstream ssS;
+    
     switch(emType) {
         case eMsg::START:
-            std::cout << sSta_pre << sName << sSuf
+           ssS << sSta_pre << sName << sSuf
                       << " "
                       << sMsg
                       << "\n";  
             break;
         case eMsg::MID:
-            std::cout << sMid_pre << sName << sSuf
+            ssS << sMid_pre << sName << sSuf
                       << " "
                       << sMsg
                       << "\n";  
             break;
         case eMsg::END:
-            std::cout << sEnd_pre << sName << sSuf
+            ssS << sEnd_pre << sName << sSuf
                       << " "
                       << sMsg
                       << "\n";  
             break;
         case eMsg::THREADS:
-            std::cout << sThd_pre << sThreadname 
+            ssS << sThd_pre << sThreadname 
                       << "("
                       << sSuf
                       << sThd_suf
@@ -71,34 +85,72 @@ void _msg::msg(eMsg emType, const std::string& sMsg) const {
                       << "\n";  
             break;
         case eMsg::ERROR:
-            std::cout << sErr_pre << sName << sSuf
+            ssS << sErr_pre << sName << sSuf
                       << " "
                       << sMsg
                       << "\n";
             break;
+        
+        std::cout << ssS.str();
+        write(ssS.str());
     }
 }
 
-void _msg::error(const std::string& sMsg) const {
+void _msg::error(const std::string& sMsg) {
+    
+    std::stringstream ssS;
+    
      std::cout << sErr_pre << sName << sSuf
                << " "
                << sMsg
                << "\n";
+               
+    std::cout << ssS.str();
+    write(ssS.str());
 }
 
 void _msg::set_name(const std::string sName) {
     if (!sName.empty())
         this->sName=sName;
-    else
+    else {
         std::cerr << "set_name(): empty string\n";
+        if (sfFlux)
+            sfFlux << "set_name(): empty string\n";
+    }
 }
 
 void _msg::set_threadname(const std::string sName) {
     if (!sName.empty())
         this->sThreadname=sName;
-    else
+    else {
         std::cerr << "set_threadname(): empty string\n";
+        if (sfFlux)
+            sfFlux << "set_threadname(): empty string\n";
+    }
 }
 
+void _msg::set_log(const std::string sLog) {
+    if (sLog.empty()) {
+        std::cerr << "set_log(): empty string\n";
+        if (sfFlux)
+            sfFlux << "set_log(): empty string\n";
+    }
+    else {
+        this->sLog=sLog;
+        this->bLog=true;
     
-    
+        sfFlux=std::fstream(sLog, std::ios::app);
+
+        if(!sfFlux)
+            std::cerr << "set_log(): cannot open "<< sLog << "\n";
+        
+    }
+}
+
+void _msg::write(const std::string& sS) {
+    if (sfFlux)
+        sfFlux << sS;
+    else
+        std::cerr << "write(): flux not available\n";
+}
+

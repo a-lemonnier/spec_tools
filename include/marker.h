@@ -15,6 +15,8 @@
 #include <utility>
 #include <algorithm> 
 
+#include <boost/program_options.hpp>
+
 #include "msg.h"
 
 /**
@@ -54,8 +56,8 @@ public:
     void set_xunit(const std::string& sXunit);
     void set_yunit(const std::string& sYunit);
     
-    
     void set_output(const std::string& sFilename);
+    
     /**
      * \fn void set_output(const std::string& sFilename, const int iDpi)
      * \brief Set the picture filename with the extension (png, pdf, jpeg...) and the density (iDpi>50)
@@ -107,6 +109,12 @@ public:
     void set_scriptname(const std::string &sScriptname);
     
     /**
+     * \fn void set_log(const std::string& sLog)
+     * \brief Enable or disable log file
+     */
+    void set_log(const std::string& sLog);
+    
+    /**
      * \fn void add_line(_T TWl, const std::string &sName)
      * \brief Add a marker with a name on the figure
      */
@@ -129,14 +137,14 @@ public:
     
     _T get_continuum() const;
     /**
-     * \fn const std::pair<_T,_T> get_supp() const
+     * \fn const std::pair<_T,_T> get_supp()
      * \brief Get the support of the first spectrum
      * \return std::pair of 2 _T: [\f$x_{min}\,x_{max}\f$]
      */
-    const std::pair<_T,_T> get_supp() const;
+    const std::pair<_T,_T> get_supp();
     
-    const std::string& get_scriptname() const;
-    const std::string& get_output() const;
+    const std::string& get_scriptname();
+    const std::string& get_output();
     
     const std::string& get_title() const;
     const std::string& get_label() const;
@@ -222,6 +230,9 @@ private:
     bool bShowgrid;
     
     bool bIsset_fig_size; /**< Indicate whether the figsize is defined or not */
+    
+    std::string sLog;
+    bool bLog;
     
 };
 

@@ -22,7 +22,9 @@ _marker<_T>::_marker():
     iLegendsize(6),
     fContinnumsize(0.6),
     bShowgrid(false),
-    bIsset_fig_size(false)
+    bIsset_fig_size(false),
+    sLog(".marker.log"),
+    bLog(true)
 {
     msgM.set_name("marker()");    
 }
@@ -291,12 +293,19 @@ void _marker<_T>::set_showgrid(bool bShowgrid) {
     this->bShowgrid=bShowgrid;    
 }
 
-
 template<typename _T>
 void _marker<_T>::set_scriptname(const std::string &sScriptname) {
     if (!sScriptname.empty())
         this->sScriptname=sScriptname;
     msgM.msg(_msg::eMsg::MID,"set_scriptname(:", this->sScriptname,")");
+}
+
+template<typename _T>
+void _marker<_T>::set_log(const std::string& sLog) {
+     if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"set_log(", sLog,")");
+     this->sLog=sLog;
+     this->bLog=true;    
 }
 
 template<typename _T>
@@ -363,7 +372,7 @@ _T _marker<_T>::get_continuum() const {
 }
 
 template<typename _T>
-const std::pair<_T,_T> _marker<_T>::get_supp() const {
+const std::pair<_T,_T> _marker<_T>::get_supp() {
     if (this->TXmin > this->TXmax) {
         msgM.msg(_msg::eMsg::ERROR,"get_supp(): invalid support");
         return {0,0};
@@ -372,14 +381,14 @@ const std::pair<_T,_T> _marker<_T>::get_supp() const {
 }
 
 template<typename _T>
-const std::string& _marker<_T>::get_scriptname() const {
+const std::string& _marker<_T>::get_scriptname() {
     if (this->sScriptname.empty()) 
         msgM.msg(_msg::eMsg::ERROR,"get_scriptname(): empty script name");
    return this->sScriptname;
 }
 
 template<typename _T>
-const std::string& _marker<_T>::get_output() const {
+const std::string& _marker<_T>::get_output() {
     if (this->sFilename.empty()) 
             msgM.msg(_msg::eMsg::ERROR,"get_output(): empty output name");
     return this->sFilename;
