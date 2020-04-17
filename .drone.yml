@@ -7,7 +7,7 @@ platform:
 
 steps:
 - name: Build and Test
-  image: ubuntu:19.06
+  image: ubuntu:19.10
   commands:
     - apt update -y
     - export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
