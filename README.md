@@ -1,8 +1,9 @@
 # spec_tools [![Build Status](https://cloud.drone.io/api/badges/a-lemonnier/spec_tools/status.svg)](https://cloud.drone.io/a-lemonnier/spec_tools)
 
 
-A set of codes for csv and for spectrum manipulation with a py wrapper or not:
+:eight_pointed_black_star: A set of codes for csv and for spectrum manipulation with a py wrapper or not:
 
+:gear:
  - **threshold**.cpp: remove lines below a wavelength threshold (multi-threaded)
  - **trim**.cpp: cut a spectrum or more between two wavelengths (multi-threaded)
  - **findncopy**.cpp: find and copy files from a file list
@@ -11,7 +12,7 @@ A set of codes for csv and for spectrum manipulation with a py wrapper or not:
  - **gen_rand_spec**.cpp: generate a set of randomized-flux spectra between two wavelengths for test purposes (multi-threaded)
  - **marker**.cpp: highlight lines on spectrum and plot it in matplotlib plots
  
- TODO: 
+:wrench:
  - Fix _msg::_msg(const _msg&)
  - Fix copy constructors
  - **marker**.cpp: NOR in cmd check
@@ -22,7 +23,7 @@ A set of codes for csv and for spectrum manipulation with a py wrapper or not:
 ---
 This repo. works on Gentoo 17.0 x64 and Ubuntu x64: bionic and eoan.
 
-Dependencies:
+:grey_exclamation: Dependencies:
 - gcc > 7 
 - CMake
 - Boost >1.40
@@ -306,22 +307,34 @@ Example:
 ---
 > genrandspec
 ```
-gentoo - spec_tools/ % ./genrandspec 
+gentoo - spec_tools/ % ./genrandspec -h                                                                                                                       
+Usage:
+  -h [ --help ]                       Display this help message
+  -l [ --minw ] arg (=4000)           Lower wavelength bound
+  -u [ --maxw ] arg (=8000)           Upper wavelength bound
+  -s [ --step ] arg (=0.0500000007)   Difference between two neighbored 
+                                      wavelengths
+  -o [ --output ] arg (=rand_spectra) Filename of folder results
+  -s [ --separator ] arg (=     )         The column separator. Do not set this 
+                                      option for \tab.
+
+Example:
+./shift -w -1.0 -f CD-592728.obs
 ▶ genrandspec 
 ⚐ genrandspec write history 
 ⚐ genrandspec remove duplicates in history 
 ⚐ genrandspec check command line 
 ⚐ genrandspec create 8 async threads 
 ⚐ genrandspec start 8 async threads 
-⚡ run(3280006): create spectra in rand_spectra/0 
-⚡ run(3280007): create spectra in rand_spectra/1 
-⚡ run(3280008): create spectra in rand_spectra/2 
-⚡ run(3280009): create spectra in rand_spectra/3 
-⚡ run(3280010): create spectra in rand_spectra/4 
-⚡ run(3280011): create spectra in rand_spectra/5 
-⚡ run(3280012): create spectra in rand_spectra/6 
-⚡ run(3280013): create spectra in rand_spectra/7 
-⚐ genrandspec:  10.694788s wall, 77.990000s user + 3.050000s system = 81.040000s CPU (757.8%)
+⚡ run(470440): create spectra in rand_spectra/0  
+⚡ run(470440): create spectra in rand_spectra/1  
+⚡ run(470440): create spectra in rand_spectra/2  
+⚡ run(470440): create spectra in rand_spectra/3  
+⚡ run(470440): create spectra in rand_spectra/4  
+⚡ run(470440): create spectra in rand_spectra/5  
+⚡ run(470440): create spectra in rand_spectra/6  
+⚡ run(470440): create spectra in rand_spectra/7  
+⚐ genrandspec  10.694788s wall, 77.990000s user + 3.050000s system = 81.040000s CPU (757.8%) 
 
 ```
 
@@ -375,6 +388,5 @@ Example:
 ⚐ marker write and run script 
 ⚐ marker  3.052816s wall, 2.760000s user + 0.070000s system = 2.830000s CPU (92.7%)
 
-
-
 ```
+![Plot](doc/plot_4518-4526_vsini17.7_A15.2.png)
