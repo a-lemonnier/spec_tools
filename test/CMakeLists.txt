@@ -1,18 +1,23 @@
 cmake_minimum_required(VERSION 2.6)
-project(spec_tools)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ".")
+set(PROJECT_UNIT_TESTS_NAME ${PROJECT_NAME_STR}_unit_tests)
+
 
 set(TEST_FILES ./test/test_marker.cpp)
+set(SRC_FILES ./src)
+set(INC_FILES ./include)
 
-find_package( Boost 1.40 COMPONENTS program_options 
-                         REQUIRED timer filesystem unit_test_framework)
+find_package(Boost COMPONENTS filesystem system unit_test_framework REQUIRED)
 
-include_directories(./src ./include ${Boost_INCLUDE_DIRS})
+
+include_directories(../src ../include ${Boost_INCLUDE_DIRS})
                          
 add_definitions (-DBOOST_TEST_DYN_LINK)
 
-add_executable(test_all ${TEST_FILES})
+add_executable(${PROJECT_UNIT_TESTS_NAME} ${SRC_FILES} ${INC_FILES} ${TEST_FILES} ${Boost_INCLUDE_DIRS})
 
-set_property(TARGET test_all PROPERTY CXX_STANDARD 17)
-set_property(TARGET test_all PROPERTY CXX_STANDARD_REQUIRED ON)
+target_link_libraries(${PROJECT_UNIT_TESTS_NAME} ${TEST_FILES} ${Boost_LIBRARIES})
 
-target_link_libraries(test_all ${Boost_LIBRARIES})
+enable_testing()
+add_test(Tests COMMAND ${PROJECT_UNIT_TESTS_NAME})

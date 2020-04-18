@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.0)
 
 project(spec_tools)
 
+enable_testing()
+
 include_directories(./src ./include ${Boost_INCLUDE_DIRS} ./test)
 
 add_executable(threshold src/threshold.cpp include/msg.cpp)
@@ -51,6 +53,3 @@ install(TARGETS der_snr RUNTIME DESTINATION bin)
 install(TARGETS shift RUNTIME DESTINATION bin)
 install(TARGETS genrandspec RUNTIME DESTINATION bin)
 install(TARGETS marker RUNTIME DESTINATION bin)
-
-enable_testing()
-add_test(NAME Tests COMMAND test_all)
