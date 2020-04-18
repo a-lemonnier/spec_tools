@@ -28,7 +28,7 @@ steps:
     - ./marker -v -i rand_spectra/0/0.dat -i rand_spectra/0/1.dat -l 0.dat -l 1.dat  -t Spectra -l "Spectrum 1" -l "Spectrum 2" --elemlist data/line.list --shift 0.1 
     - BOOST_TEST_LOG_LEVEL="all"  ./test_marker
 
-- name: Build, run and test
+- name: Unit tests
   image: cache
   commands:
     - BOOST_TEST_LOG_LEVEL="all"  ./test_marker
