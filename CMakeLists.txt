@@ -51,8 +51,6 @@ target_link_libraries(shift LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 target_link_libraries(genrandspec LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 target_link_libraries(marker LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 
-install(TARGETS msg RUNTIME DESTINATION lib)
-
 install(TARGETS threshold RUNTIME DESTINATION bin)
 install(TARGETS findncopy RUNTIME DESTINATION bin)
 install(TARGETS trim RUNTIME DESTINATION bin)
