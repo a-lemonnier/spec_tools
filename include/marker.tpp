@@ -71,26 +71,31 @@ bool _marker<_T>::set_data(const std::vector<_T>& vTX,
 }
 
 template<typename _T>
-void _marker<_T>::set_title(const std::string& sTitle) {
+bool _marker<_T>::set_title(const std::string& sTitle) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_title(", sTitle,")");
     if (sTitle.empty()) {
         msgM.msg(_msg::eMsg::MID,"set_title(): reset title");
         this->sTitle="Plot";
     }
-    else
-        this->sTitle=sTitle;
+    this->sTitle=sTitle;
+    return true;
 }
 
 template<typename _T>
-void _marker<_T>::set_label(const std::string& sLabel) {
+bool _marker<_T>::set_label(const std::string& sLabel) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_label(", sLabel,")");
+    if (sLabel.empty()) {
+        msgM.msg(_msg::eMsg::MID,"set_label(): empty label");
+        return false;
+    }
     this->sLabel=sLabel;
+    return true;
 }
 
 template<typename _T>
-void _marker<_T>::set_xlabel(const std::string& sXlabel) {
+bool _marker<_T>::set_xlabel(const std::string& sXlabel) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_xlabel(", sXlabel,")");
     if (sXlabel.empty()) {
@@ -99,10 +104,11 @@ void _marker<_T>::set_xlabel(const std::string& sXlabel) {
     }
     else
         this->sXlabel=sXlabel;
+    return true;
 }
 
 template<typename _T>
-void _marker<_T>::set_ylabel(const std::string& sYlabel) {
+bool _marker<_T>::set_ylabel(const std::string& sYlabel) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_ylabel(", sYlabel, ")");
     if (sYlabel.empty()) {
@@ -111,20 +117,31 @@ void _marker<_T>::set_ylabel(const std::string& sYlabel) {
     }
     else
         this->sYlabel=sYlabel;
+    return true;
 }
 
 template<typename _T>
-void _marker<_T>::set_xunit(const std::string& sXunit) {
+bool _marker<_T>::set_xunit(const std::string& sXunit) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_xunit(", sXunit, ")");
+    if (sXunit.empty()) {
+        msgM.msg(_msg::eMsg::ERROR,"set_xunit(): empty xunit");
+        return false;
+    }
     this->sXunit=sXunit;
+    return true;
 }
 
 template<typename _T>
-void _marker<_T>::set_yunit(const std::string& sYunit) {
+bool _marker<_T>::set_yunit(const std::string& sYunit) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_yunit(", sYunit, ")");
+    if (sYunit.empty()) {
+        msgM.msg(_msg::eMsg::ERROR,"set_yunit(): empty yunit");
+        return false;
+    }
     this->sYunit=sYunit;
+    return true;
 }
 
 template<typename _T>

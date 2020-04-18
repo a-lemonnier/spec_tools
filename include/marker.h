@@ -53,12 +53,12 @@ public:
     
     bool set_data(const std::vector<_T>& vTX, const std::vector<_T>& vTY);
     
-    void set_title(const std::string& sTitle);
-    void set_label(const std::string& sLabel);
-    void set_xlabel(const std::string& sXlabel);
-    void set_ylabel(const std::string& sYlabel);
-    void set_xunit(const std::string& sXunit);
-    void set_yunit(const std::string& sYunit);
+    bool set_title(const std::string& sTitle);
+    bool set_label(const std::string& sLabel);
+    bool set_xlabel(const std::string& sXlabel);
+    bool set_ylabel(const std::string& sYlabel);
+    bool set_xunit(const std::string& sXunit);
+    bool set_yunit(const std::string& sYunit);
     
     void set_output(const std::string& sFilename);
     
