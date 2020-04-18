@@ -2,9 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 project(spec_tools)
 
-add_subdirectory(./src)
-# add_subdirectory(./include)
-include_directories(./include)
+include_directories(./src ./include ${Boost_INCLUDE_DIRS} ./test)
 
 add_executable(threshold src/threshold.cpp include/msg.cpp)
 add_executable(findncopy src/findncopy.cpp include/msg.cpp)
@@ -35,8 +33,8 @@ set_property(TARGET genrandspec PROPERTY CXX_STANDARD_REQUIRED ON)
 set_property(TARGET marker PROPERTY CXX_STANDARD 17)
 set_property(TARGET marker PROPERTY CXX_STANDARD_REQUIRED ON)
 
-find_package( Boost 1.40 COMPONENTS program_options REQUIRED timer filesystem)
-include_directories( ${Boost_INCLUDE_DIR})
+find_package( Boost 1.40 COMPONENTS program_options 
+                         REQUIRED timer filesystem unit_test_framework)
 
 target_link_libraries(threshold LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 target_link_libraries(findncopy LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
@@ -53,3 +51,6 @@ install(TARGETS der_snr RUNTIME DESTINATION bin)
 install(TARGETS shift RUNTIME DESTINATION bin)
 install(TARGETS genrandspec RUNTIME DESTINATION bin)
 install(TARGETS marker RUNTIME DESTINATION bin)
+
+enable_testing()
+add_test(NAME Tests COMMAND test_all)

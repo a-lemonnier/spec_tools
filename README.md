@@ -13,6 +13,7 @@
  - **marker**.cpp: highlight lines on spectrum and plot it in matplotlib plots
  
 :wrench: TODO:
+ - Unit tests
  - Fix _msg::_msg(const _msg&)
  - Fix copy constructors
  - **marker**.cpp: NOR in cmd check
@@ -30,9 +31,10 @@ This repo. works on Gentoo 17.0 x64 and Ubuntu x64: bionic and eoan.
 - Boost::program_options
 - Boost::spirit
 - Boost::tokenizer
+- Boost::unit_test_framework
 
 ---
-> :floppy_disk: Get it:
+:floppy_disk: Get it:
 
 ```
 gentoo - /home/gentoo % git clone https://github.com/a-lemonnier/spec_tools.git 
@@ -51,8 +53,8 @@ gentoo - /home/gentoo % cd spec_tools
 > Compiling:
 ```
 gentoo - spec_tools/ % cmake .
--- The C compiler identification is GNU 9.2.0
--- The CXX compiler identification is GNU 9.2.0
+-- The C compiler identification is GNU 9.3.0
+-- The CXX compiler identification is GNU 9.3.0
 -- Check for working C compiler: /usr/bin/cc
 -- Check for working C compiler: /usr/bin/cc - works
 -- Detecting C compiler ABI info
@@ -70,8 +72,8 @@ gentoo - spec_tools/ % cmake .
 -- Generating done
 
 gentoo - spec_tools/ % make -j$(nproc)
--- The C compiler identification is GNU 8.3.0
--- The CXX compiler identification is GNU 8.3.0
+-- The C compiler identification is GNU 9.3.0
+-- The CXX compiler identification is GNU 9.3.0
 -- Check for working C compiler: /usr/bin/cc
 -- Check for working C compiler: /usr/bin/cc -- works
 -- Detecting C compiler ABI info
@@ -84,7 +86,7 @@ gentoo - spec_tools/ % make -j$(nproc)
 -- Detecting CXX compiler ABI info - done
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
--- Boost version: 1.67.0
+-- Boost version: 1.72.0
 -- Found the following Boost libraries:
 --   program_options
 --   timer
@@ -95,40 +97,40 @@ gentoo - spec_tools/ % make -j$(nproc)
 -- Generating done
 -- Build files have been written to: /drone/src
 + make -j$(nproc)
-Scanning dependencies of target genrandspec
-Scanning dependencies of target der_snr
-Scanning dependencies of target threshold
-Scanning dependencies of target trim
 Scanning dependencies of target findncopy
+Scanning dependencies of target der_snr
+Scanning dependencies of target trim
+Scanning dependencies of target threshold
 Scanning dependencies of target shift
 Scanning dependencies of target marker
-[ 14%] Building CXX object CMakeFiles/findncopy.dir/findncopy.cpp.o
-[ 14%] Building CXX object CMakeFiles/genrandspec.dir/msg.cpp.o
-[ 14%] Building CXX object CMakeFiles/genrandspec.dir/genrandspec.cpp.o
-[ 19%] Building CXX object CMakeFiles/der_snr.dir/der_snr.cpp.o
-[ 23%] Building CXX object CMakeFiles/trim.dir/trim.cpp.o
-[ 28%] Building CXX object CMakeFiles/threshold.dir/threshold.cpp.o
-[ 33%] Building CXX object CMakeFiles/shift.dir/shift.cpp.o
-[ 38%] Building CXX object CMakeFiles/marker.dir/marker.cpp.o
-[ 42%] Building CXX object CMakeFiles/shift.dir/msg.cpp.o
-[ 47%] Building CXX object CMakeFiles/threshold.dir/msg.cpp.o
-[ 52%] Building CXX object CMakeFiles/trim.dir/msg.cpp.o
-[ 57%] Building CXX object CMakeFiles/findncopy.dir/msg.cpp.o
-[ 61%] Building CXX object CMakeFiles/der_snr.dir/msg.cpp.o
-[ 66%] Building CXX object CMakeFiles/marker.dir/msg.cpp.o
-[ 71%] Linking CXX executable findncopy
-[ 71%] Built target findncopy
+Scanning dependencies of target genrandspec
+[  9%] Building CXX object CMakeFiles/findncopy.dir/src/findncopy.cpp.o
+[  9%] Building CXX object CMakeFiles/findncopy.dir/include/msg.cpp.o
+[ 19%] Building CXX object CMakeFiles/der_snr.dir/src/der_snr.cpp.o
+[ 19%] Building CXX object CMakeFiles/threshold.dir/src/threshold.cpp.o
+[ 23%] Building CXX object CMakeFiles/trim.dir/src/trim.cpp.o
+[ 28%] Building CXX object CMakeFiles/shift.dir/src/shift.cpp.o
+[ 33%] Building CXX object CMakeFiles/genrandspec.dir/src/genrandspec.cpp.o
+[ 38%] Building CXX object CMakeFiles/marker.dir/src/marker.cpp.o
+[ 42%] Building CXX object CMakeFiles/marker.dir/include/msg.cpp.o
+[ 47%] Building CXX object CMakeFiles/trim.dir/include/msg.cpp.o
+[ 52%] Building CXX object CMakeFiles/genrandspec.dir/include/msg.cpp.o
+[ 57%] Linking CXX executable findncopy
+[ 57%] Built target findncopy
+[ 61%] Building CXX object CMakeFiles/shift.dir/include/msg.cpp.o
+[ 66%] Building CXX object CMakeFiles/threshold.dir/include/msg.cpp.o
+[ 71%] Building CXX object CMakeFiles/der_snr.dir/include/msg.cpp.o
 [ 76%] Linking CXX executable genrandspec
 [ 76%] Built target genrandspec
-[ 80%] Linking CXX executable shift
-[ 80%] Built target shift
+[ 80%] Linking CXX executable threshold
+[ 80%] Built target threshold
 [ 85%] Linking CXX executable trim
-[ 90%] Linking CXX executable marker
+[ 90%] Linking CXX executable shift
+[ 90%] Built target shift
 [ 90%] Built target trim
-[ 90%] Built target marker
-[ 95%] Linking CXX executable threshold
-[ 95%] Built target threshold
+[ 95%] Linking CXX executable marker
 [100%] Linking CXX executable der_snr
+[100%] Built target marker
 [100%] Built target der_snr
 
 ```
