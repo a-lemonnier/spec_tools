@@ -3,7 +3,7 @@
 
 :eight_pointed_black_star: A set of codes for csv and for spectrum manipulation with a py wrapper or not:
 
-:gear:
+:gear: List:
  - **threshold**.cpp: remove lines below a wavelength threshold (multi-threaded)
  - **trim**.cpp: cut a spectrum or more between two wavelengths (multi-threaded)
  - **findncopy**.cpp: find and copy files from a file list
@@ -12,7 +12,7 @@
  - **gen_rand_spec**.cpp: generate a set of randomized-flux spectra between two wavelengths for test purposes (multi-threaded)
  - **marker**.cpp: highlight lines on spectrum and plot it in matplotlib plots
  
-:wrench:
+:wrench: TODO:
  - Fix _msg::_msg(const _msg&)
  - Fix copy constructors
  - **marker**.cpp: NOR in cmd check
@@ -32,7 +32,7 @@ This repo. works on Gentoo 17.0 x64 and Ubuntu x64: bionic and eoan.
 - Boost::tokenizer
 
 ---
-> Get it:
+> :floppy_disk: Get it:
 
 ```
 gentoo - /home/gentoo % git clone https://github.com/a-lemonnier/spec_tools.git 
