@@ -98,6 +98,8 @@ int main(int argc, char** argv) {
         std::cout << "\nExample:\n";
         std::cout << "./shift -w -1.0 -f CD-592728.obs\n";
         msgM.msg(_msg::eMsg::START);
+        msgM.msg(_msg::eMsg::MID, "write history");
+        msgM.msg(_msg::eMsg::MID, "remove duplicates in history");
         msgM.msg(_msg::eMsg::MID, "check command line");
         msgM.msg(_msg::eMsg::MID, "shift the spectrum by -1");
         msgM.msg(_msg::eMsg::MID, "output: data_out");
@@ -105,7 +107,78 @@ int main(int argc, char** argv) {
 
         return EXIT_SUCCESS;
     }
+ 
+    // ----------------------------------------------------  
+    
+    msgM.msg(_msg::eMsg::START);
+    
+    // Write history
+    // ----------------------------------------------------  
+    
+    std::fstream sfFlux(HISTFILE, std::ios::app);
+    if (sfFlux) {
+        
+        std::stringstream ssS;
+        ssS << argv[0];
+        for(const auto &arg: vm) {
+            if (arg.second.value().type()==typeid(std::string))
+                ssS << " --" << arg.first.c_str() << " \""<< arg.second.as<std::string>() << "\"";
+            if (arg.second.value().type()==typeid(int))
+                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<int>();
+            if (arg.second.value().type()==typeid(unsigned int))
+                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<unsigned int>();
+            if (arg.second.value().type()==typeid(float))
+                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<float>();
+            if (arg.second.value().type()==typeid(char))
+                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<char>();
+            if (arg.second.value().type()==typeid(std::vector<std::string>)) {
+                for(auto sS: arg.second.as<std::vector<std::string>>())
+                    ssS << " --" << arg.first.c_str() << " \""<< sS << "\"";
+            }
+        }
+        ssS << "\n";
+    
+        sfFlux.close();
+    }
+    else
+        msgM.msg(_msg::eMsg::ERROR, "cannot open history");
+    
+    // ----------------------------------------------------
+    
+    // Remove duplicates
+    // ----------------------------------------------------
+    
+    msgM.msg(_msg::eMsg::MID, "remove duplicates in history");
+    
+    sfFlux=std::fstream(HISTFILE, std::ios::in);
+    if (sfFlux) {
 
+        std::hash<std::string> hH;
+        std::vector<size_t> vIndex;
+        std::vector<std::string> vsLine;
+        
+        std::string sLine;
+                
+        while(std::getline(sfFlux,sLine)) 
+            vsLine.emplace_back(sLine);
+    
+        std::vector<std::string>::iterator vsiTmp(std::unique(vsLine.begin(), vsLine.end()));
+        vsLine.resize(std::distance(vsLine.begin(), vsiTmp));
+
+        sfFlux.close();
+        
+        sfFlux=std::fstream(HISTFILE, std::ios::out | std::ios::trunc);
+        for(auto sS: vsLine)
+            sfFlux << sS << "\n";
+        sfFlux.close();
+    }
+    else
+        msgM.msg(_msg::eMsg::ERROR, "cannot open history");
+
+    // ----------------------------------------------------
+    
+    msgM.msg(_msg::eMsg::MID, "check command line");
+        
     bool bDefVr=false;
     
     float fVr;
@@ -128,41 +201,7 @@ int main(int argc, char** argv) {
     // one copies the original folder and then works on the original
     fs::path path(vm["output"].as<std::string>());
     fs::path path_out;
- 
-    // ----------------------------------------------------  
     
-            // Write history
-    // ----------------------------------------------------  
-    
-    std::fstream sfFlux(HISTFILE, std::ios::app);
-    if (sfFlux) {
-        
-        std::stringstream ssS;
-        ssS << argv[0];
-        for(const auto &arg: vm) {
-            if (arg.second.value().type()==typeid(std::string))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<std::string>();
-            if (arg.second.value().type()==typeid(int))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<int>();
-            if (arg.second.value().type()==typeid(unsigned int))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<unsigned int>();
-            if (arg.second.value().type()==typeid(float))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<float>();
-            if (arg.second.value().type()==typeid(char))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<char>();
-        }
-        ssS << "\n";
-    
-        sfFlux.close();
-    }
-    else
-        msgM.msg(_msg::eMsg::ERROR, "cannot open history");
-    
-    // ----------------------------------------------------
-    
-    msgM.msg(_msg::eMsg::START);
-    msgM.msg(_msg::eMsg::MID, "check command line");
-        
     if (vm.count("filename")) {
         sFilename=vm["filename"].as<std::string>();
         path=fs::path(sFilename);

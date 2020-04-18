@@ -95,12 +95,14 @@ int main(int argc, char** argv) {
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(description).run(), vm);
     po::notify(vm);
-       
+
     if (vm.count("help") || !vm.count("input")  || vm.size()<1) {
         std::cout << description;
         std::cout << "\nExample:\n";
-        std::cout << "-i rand_spectra/0/0.dat -i rand_spectra/0/1.dat -l 0.dat -l 1.dat  -t Spectra -l 'Spectrum 1' -l 'Spectrum 2' -w 4861 -e \\$H\\\\beta\\$\n --nolog";
+        std::cout << "-i rand_spectra/0/0.dat -i rand_spectra/0/1.dat -l 0.dat -l 1.dat  -t Spectra -l 'Spectrum 1' -l 'Spectrum 2' -w 4861 -e \\$H\\\\beta\\$ --nolog\n";
         msgM.msg(_msg::eMsg::START);
+        msgM.msg(_msg::eMsg::MID, "write history");
+        msgM.msg(_msg::eMsg::MID, "remove duplicates in history");
         msgM.msg(_msg::eMsg::MID, "check command line and fill class");
         msgM.msg(_msg::eMsg::MID, "set input: rand_spectra/0/0.dat with sep:'\t'");
         msgM.msg(_msg::eMsg::MID, "set input: rand_spectra/0/1.dat with sep:'\t'");
@@ -114,9 +116,12 @@ int main(int argc, char** argv) {
     
     // ---------------------------------------------------- 
 
+    msgM.msg(_msg::eMsg::START);
         
     // Write history
     // ----------------------------------------------------  
+    
+    msgM.msg(_msg::eMsg::MID, "write history");
     
     std::fstream sfFlux(HISTFILE, std::ios::app);
     if (sfFlux) {
@@ -125,7 +130,7 @@ int main(int argc, char** argv) {
         ssS << argv[0];
         for(const auto &arg: vm) {
             if (arg.second.value().type()==typeid(std::string))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<std::string>();
+                ssS << " --" << arg.first.c_str() << " \""<< arg.second.as<std::string>() << "\"";
             if (arg.second.value().type()==typeid(int))
                 ssS << " --" << arg.first.c_str() << " "<< arg.second.as<int>();
             if (arg.second.value().type()==typeid(unsigned int))
@@ -134,6 +139,10 @@ int main(int argc, char** argv) {
                 ssS << " --" << arg.first.c_str() << " "<< arg.second.as<float>();
             if (arg.second.value().type()==typeid(char))
                 ssS << " --" << arg.first.c_str() << " "<< arg.second.as<char>();
+            if (arg.second.value().type()==typeid(std::vector<std::string>)) {
+                for(auto sS: arg.second.as<std::vector<std::string>>())
+                    ssS << " --" << arg.first.c_str() << " \""<< sS << "\"";
+            }
         }
         ssS << "\n";
     
@@ -146,7 +155,38 @@ int main(int argc, char** argv) {
     
     // ----------------------------------------------------
     
-    msgM.msg(_msg::eMsg::START);
+    // Remove duplicates
+    // ----------------------------------------------------
+    
+    msgM.msg(_msg::eMsg::MID, "remove duplicates in history");
+    
+    sfFlux=std::fstream(HISTFILE, std::ios::in);
+    if (sfFlux) {
+
+        std::hash<std::string> hH;
+        std::vector<size_t> vIndex;
+        std::vector<std::string> vsLine;
+        
+        std::string sLine;
+                
+        while(std::getline(sfFlux,sLine)) 
+            vsLine.emplace_back(sLine);
+    
+        std::vector<std::string>::iterator vsiTmp(std::unique(vsLine.begin(), vsLine.end()));
+        vsLine.resize(std::distance(vsLine.begin(), vsiTmp));
+
+        sfFlux.close();
+        
+        sfFlux=std::fstream(HISTFILE, std::ios::out | std::ios::trunc);
+        for(auto sS: vsLine)
+            sfFlux << sS << "\n";
+        sfFlux.close();
+    }
+    else
+        msgM.msg(_msg::eMsg::ERROR, "cannot open history");
+    
+    // ----------------------------------------------------
+
     msgM.msg(_msg::eMsg::MID, "check command line and fill class");  
     
     std::string sTitle;

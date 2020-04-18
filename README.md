@@ -12,11 +12,11 @@ A set of codes for csv and for spectrum manipulation with a py wrapper or not:
  - **marker**.cpp: highlight lines on spectrum and plot it in matplotlib plots
  
  TODO:
- - fix _msg::_msg(const _msg&)
- - fix copy constructors
+ - **genrandspec**.cpp: Fill help 
+ - Fix _msg::_msg(const _msg&)
+ - Fix copy constructors
  - **marker**.cpp: NOR in cmd check
  - Make classes in order to clean .cpp
- - Additionnal input parameters and file verifications
  - Implement boost:: recursive directory copy
  - Add C++11 and C++14 compatibilities
 
@@ -156,6 +156,8 @@ CPD-591662
 ...
 % ./findncopy -n star_list.txt -i data -o spectra -e sky
 ▶ findncopy
+⚐ findncopy write history 
+⚐ findncopy remove duplicates in history 
 ⚐ parsing file: 36 lines
 ⚐ searching file: 240 files found
 ⚐ erasing string: 'data'
@@ -181,6 +183,8 @@ Usage:
 Example:
 % ./trim -l 4700 -u 4800 -i data -o spectra_trimmed
 ▶ trim
+⚐ trim write history 
+⚐ trim remove duplicates in history 
 ⚐ trim: starting 8 async threads
 ⚡ trim(2416052): 521 files parsed.
 ⚡ trim(2416051): 521 files parsed.
@@ -211,6 +215,8 @@ Usage:
 Example:
 % ./threshold -i data -o spectra -t 0
 ▶ threshold
+⚐ threshold write history 
+⚐ threshold remove duplicates in history 
 ⚐ threshold: starting 8 async threads
 ⚡ trim(2470785): 521 files parsed.
 ⚡ trim(2470786): 521 files parsed.
@@ -243,6 +249,8 @@ Examples:
 
 % ./der_snr -d data -o snr.csv
 ▶ der_snr 
+⚐ der_snr write history 
+⚐ der_snr remove duplicates in history 
 ⚐ der_snr check command line 
 ⚐ der_snr starting 8  async threads 
 ⚡ compute(321893): compute S/N for 521 files 
@@ -301,6 +309,8 @@ Example:
 ```
 gentoo - spec_tools/ % ./genrandspec 
 ▶ genrandspec 
+⚐ genrandspec write history 
+⚐ genrandspec remove duplicates in history 
 ⚐ genrandspec: check command line 
 ⚐ genrandspec: create 8 folders 
 ⚐ genrandspec: start 8 async threads 
@@ -356,6 +366,8 @@ Usage:
 Example:
 % ./marker -i rand_spectra/0/0.dat -i rand_spectra/0/1.dat -l 0.dat -l 1.dat  -t Spectra -l 'Spectrum 1' -l 'Spectrum 2' -w 4861 -e \$H\\beta\$
 ▶ marker 
+⚐ marker write history 
+⚐ marker remove duplicates in history 
 ⚐ marker check command line and fill class 
 ⚐ marker set input: rand_spectra/0/0.dat with sep:'     ' 
 ⚐ marker set input: rand_spectra/0/1.dat with sep:'     ' 
