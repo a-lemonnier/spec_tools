@@ -45,6 +45,7 @@ namespace fs = boost::filesystem;
 #include <csv.h>
 #include <msg.h>
 
+#define LOGFILE ".genrandspec.log"
 #define HISTFILE ".history"
 
 /**
@@ -70,7 +71,7 @@ int main(int argc, char** argv) {
     
     _msg msgM;
     msgM.set_name("genrandspec");
-    
+    msgM.set_log(LOGFILE);
 // Parse cmd line
 // ----------------------------------------------------  
     

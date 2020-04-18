@@ -40,6 +40,7 @@ namespace fs = boost::filesystem;
 
 #include <msg.h>
 
+#define LOGFILE ".findncopy.log"
 #define HISTFILE ".history"
 
 // Prototype
@@ -102,7 +103,8 @@ int main(int argc, char** argv) {
 
     _msg msgM;
     msgM.set_name("findncopy");
-    
+    msgM.set_log(LOGFILE);
+        
 // Parse cmd line
 // ----------------------------------------------------  
     

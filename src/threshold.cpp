@@ -39,6 +39,7 @@ namespace fs = boost::filesystem;
 #include <csv.h>
 #include <msg.h>
 
+#define LOGFILE ".threshold.log"
 #define HISTFILE ".history"
 
 // Prototype
@@ -67,7 +68,8 @@ int main(int argc, char **argv) {
     
     _msg msgM;
     msgM.set_name("threshold");
-    
+    msgM.set_log(LOGFILE);
+        
     // Parse cmd line
     // ----------------------------------------------------  
     

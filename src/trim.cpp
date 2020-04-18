@@ -45,6 +45,7 @@ namespace fs = boost::filesystem;
 #include <csv.h>
 #include <msg.h>
 
+#define LOGFILE ".trim.log"
 #define HISTFILE ".history"
 
 // Prototype
@@ -61,7 +62,8 @@ int main(int argc, char** argv) {
 
     _msg msgM;
     msgM.set_name("trim");
-    
+    msgM.set_log(LOGFILE);
+        
 // Parse cmd line
 // ----------------------------------------------------  
     

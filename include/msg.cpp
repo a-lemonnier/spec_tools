@@ -113,9 +113,9 @@ void _msg::set_name(const std::string sName) {
     if (!sName.empty())
         this->sName=sName;
     else {
-        std::cerr << "set_name(): empty string\n";
+        std::cerr << "- _msg::set_name(): empty string\n";
         if (sfFlux)
-            sfFlux << "set_name(): empty string\n";
+            sfFlux << "- _msg::set_name(): empty string\n";
     }
 }
 
@@ -123,17 +123,17 @@ void _msg::set_threadname(const std::string sName) {
     if (!sName.empty())
         this->sThreadname=sName;
     else {
-        std::cerr << "set_threadname(): empty string\n";
+        std::cerr << "- _msg::set_threadname(): empty string\n";
         if (sfFlux)
-            sfFlux << "set_threadname(): empty string\n";
+            sfFlux << "- _msg::set_threadname(): empty string\n";
     }
 }
 
 void _msg::set_log(const std::string sLog) {
     if (sLog.empty()) {
-        std::cerr << "set_log(): empty string\n";
+        std::cerr << "- _msg::set_log(): empty string\n";
         if (sfFlux)
-            sfFlux << "set_log(): empty string\n";
+            sfFlux << "- _msg::set_log(): empty string\n";
     }
     else {
         this->sLog=sLog;
@@ -142,7 +142,7 @@ void _msg::set_log(const std::string sLog) {
         sfFlux=std::fstream(sLog, std::ios::app);
 
         if(!sfFlux)
-            std::cerr << "set_log(): cannot open "<< sLog << "\n";
+            std::cerr << "- _msg::set_log(): cannot open "<< sLog << "\n";
         
     }
 }
@@ -151,6 +151,6 @@ void _msg::write(const std::string& sS) {
     if (sfFlux)
         sfFlux << sS;
     else
-        std::cerr << "write(): flux not available\n";
+        std::cerr << "- _msg::write(): flux not available\n";
 }
 
