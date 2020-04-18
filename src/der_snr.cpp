@@ -47,6 +47,7 @@ namespace fs = boost::filesystem;
 #include <csv.h>
 #include <msg.h>
 
+#define LOGFILE ".der_snr.log"
 #define HISTFILE ".history"
 
 // Reference
@@ -106,6 +107,7 @@ int main(int argc, char** argv) {
     
     _msg msgM;
     msgM.set_name("der_snr");
+    msgM.set_log(LOGFILE);
     
 // Parse cmd line
 // ----------------------------------------------------  

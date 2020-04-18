@@ -72,6 +72,7 @@ int main(int argc, char** argv) {
     _msg msgM;
     msgM.set_name("genrandspec");
     msgM.set_log(LOGFILE);
+    
 // Parse cmd line
 // ----------------------------------------------------  
     

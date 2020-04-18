@@ -27,6 +27,7 @@ _marker<_T>::_marker():
     bLog(true)
 {
     msgM.set_name("marker()");    
+    msgM.set_log(".marker.log");
 }
 
 // template<typename _T>

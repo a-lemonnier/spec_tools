@@ -59,7 +59,6 @@ int main(int argc, char** argv) {
     msgM.set_name("marker");
     msgM.set_log(LOGFILE);
     
-    
     // Parse cmd line
     // ----------------------------------------------------  
     
