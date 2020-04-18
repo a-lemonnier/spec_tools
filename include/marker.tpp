@@ -145,7 +145,7 @@ bool _marker<_T>::set_yunit(const std::string& sYunit) {
 }
 
 template<typename _T>
-void _marker<_T>::set_output(const std::string& sFilename) {
+bool _marker<_T>::set_output(const std::string& sFilename) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_output(", sFilename,")");
     
@@ -167,11 +167,13 @@ void _marker<_T>::set_output(const std::string& sFilename) {
         this->sExt="png";
         msgM.msg(_msg::eMsg::ERROR,"set_output(): reset extension to:", 
                                     this->sExt);
+        return false;
         }
+    return true;
 }
 
 template<typename _T>
-void _marker<_T>::set_output(const std::string& sFilename, 
+bool _marker<_T>::set_output(const std::string& sFilename, 
                              const int iDpi) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_output(", sFilename, ",", iDpi,")");
@@ -182,50 +184,80 @@ void _marker<_T>::set_output(const std::string& sFilename,
     else
         this->iDpi=iDpi;
     
-    set_output(sFilename);    
+    return set_output(sFilename);    
 }
 
 template<typename _T>
-void _marker<_T>::set_continuum(const _T TContinuum) {
+bool _marker<_T>::set_continuum(const _T TContinuum) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_continuum(", TContinuum,")");
+    if (TContinuum<0. || std::isnan(TContinuum)) {
+        msgM.msg(_msg::eMsg::ERROR,"set_continuum(): invalid number");
+        return false;
+    }
     this->TYcontinuum=TContinuum;
+    return true;
 }
 
 template<typename _T>
-void _marker<_T>::set_supp(const _T TXmin, const _T TXmax) {
+bool _marker<_T>::set_supp(const _T TXmin, const _T TXmax) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID, "set_supp(", TXmin,",", TXmax,")");
+    if (TXmin>TXmax) {
+        msgM.msg(_msg::eMsg::ERROR,"set_supp(): invalid boundaries");
+        return false;
+    }
     this->TXmin=TXmin;
     this->TXmax=TXmax;
+    return true;
 }
 
 template<typename _T>
-void _marker<_T>::set_xmin(const _T TXmin) {
+bool _marker<_T>::set_xmin(const _T TXmin) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_xmin(", TXmin,")");
+    if (TXmin<0 || TXmin>this->TXmax) {
+         msgM.msg(_msg::eMsg::ERROR,"set_xmin(): invalid boundary");
+         return false;
+    }
     this->TXmin=TXmin;
+    return true;
 }
 
 template<typename _T>
-void _marker<_T>::set_xmax(const _T TXmax) {
+bool _marker<_T>::set_xmax(const _T TXmax) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_xmax(", TXmax,")");
+    if (TXmax<0 || TXmax<this->TXmin) {
+         msgM.msg(_msg::eMsg::ERROR,"set_xmax(): invalid boundary");
+         return false;
+    }
     this->TXmax=TXmax;
+    return true;
 }
 
 template<typename _T>
-void _marker<_T>::set_ymin(const _T TYmin) {
+bool _marker<_T>::set_ymin(const _T TYmin) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_ymin(", TYmin,")");
+    if (TYmin<0 || TYmin>this->TYmax) {
+        msgM.msg(_msg::eMsg::ERROR,"set_ymin(): invalid boundary");
+        return false;
+    }
     this->TYmin=TYmin;
+    return true;
 }
 
 template<typename _T>
-void _marker<_T>::set_ymax(const _T TYmax) {
+bool _marker<_T>::set_ymax(const _T TYmax) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_ymax(", TYmax,")");
+    if (TYmax<0 || TYmax<this->TYmin) {
+        msgM.msg(_msg::eMsg::ERROR,"set_ymax(): invalid boundary");
+        return false;
+    }
     this->TYmax=TYmax;
+    return true;
 }
 
 template<typename _T>

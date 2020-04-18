@@ -110,6 +110,173 @@ BOOST_AUTO_TEST_CASE(SetYunit) {
     BOOST_CHECK(rMarker.set_yunit(gen_rand_string()));
 }
 
+BOOST_AUTO_TEST_CASE(SetOutput) {
+    typedef double long real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_output(gen_rand_string()+".png"));
+    BOOST_CHECK(rMarker.set_output(gen_rand_string()+".jpg"));
+    BOOST_CHECK(rMarker.set_output(gen_rand_string()+".jpeg"));
+    BOOST_CHECK(rMarker.set_output(gen_rand_string()+".pdf"));
+}
+
+BOOST_AUTO_TEST_CASE(SetOutputDpi) {
+    typedef double long real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    int iDpi=(rand()%(300-150+1)+150);
+    BOOST_CHECK(rMarker.set_output(gen_rand_string()+".png", iDpi));
+    BOOST_CHECK(rMarker.set_output(gen_rand_string()+".jpg", iDpi));
+    BOOST_CHECK(rMarker.set_output(gen_rand_string()+".jpeg", iDpi));
+    BOOST_CHECK(rMarker.set_output(gen_rand_string()+".pdf", iDpi));
+}
+
+// ----------------------------------
+// Real Setters
+BOOST_AUTO_TEST_CASE(SetContinuum_float) {
+    typedef float real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_continuum(norm_rand()));
+}
+
+BOOST_AUTO_TEST_CASE(SetContinuum_double) {
+    typedef double real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_continuum(static_cast<real>(norm_rand())));
+}
+
+BOOST_AUTO_TEST_CASE(SetContinuum_double_long) {
+    typedef double long real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_continuum(static_cast<real>(norm_rand())));
+}
+
+BOOST_AUTO_TEST_CASE(SetSupp_float) {
+    typedef float real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    real RMin=static_cast<real>(norm_rand());
+    real RMax=static_cast<real>(norm_rand());
+    while(RMin>RMax) {
+        RMin=static_cast<real>(norm_rand());
+        RMax=static_cast<real>(norm_rand());
+    }
+    BOOST_CHECK(rMarker.set_supp(RMin, RMax));
+}
+
+BOOST_AUTO_TEST_CASE(SetSupp_double) {
+    typedef double real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    real RMin=static_cast<real>(norm_rand());
+    real RMax=static_cast<real>(norm_rand());
+    while(RMin>RMax) {
+        RMin=static_cast<real>(norm_rand());
+        RMax=static_cast<real>(norm_rand());
+    }
+    BOOST_CHECK(rMarker.set_supp(RMin, RMax));
+}
+
+BOOST_AUTO_TEST_CASE(SetSupp_double_long) {
+    typedef double long real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    real RMin=static_cast<real>(norm_rand());
+    real RMax=static_cast<real>(norm_rand());
+    while(RMin>RMax) {
+        RMin=static_cast<real>(norm_rand());
+        RMax=static_cast<real>(norm_rand());
+    }
+    BOOST_CHECK(rMarker.set_supp(RMin, RMax));
+}
+
+BOOST_AUTO_TEST_CASE(SetXmin_float) {
+    typedef float real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_xmin(static_cast<real>(0)));
+}
+
+BOOST_AUTO_TEST_CASE(SetXmin_double) {
+    typedef double real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_xmin(static_cast<real>(0)));
+}
+
+BOOST_AUTO_TEST_CASE(SetXmin_double_long) {
+    typedef double long real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_xmin(static_cast<real>(0)));
+}
+
+BOOST_AUTO_TEST_CASE(SetXmax_float) {
+    typedef float real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_xmax(static_cast<real>(norm_rand()*100.+1.)));
+}
+
+BOOST_AUTO_TEST_CASE(SetXmax_double) {
+    typedef double real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_xmax(static_cast<real>(norm_rand()*100.+1.)));
+}
+
+BOOST_AUTO_TEST_CASE(SetXmax_double_long) {
+    typedef double long real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_xmax(static_cast<real>(norm_rand()*100.+1.)));
+}
+
+BOOST_AUTO_TEST_CASE(SetYmin_float) {
+    typedef float real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_ymax(static_cast<real>(0)));
+}
+
+BOOST_AUTO_TEST_CASE(SetYmin_double) {
+    typedef double real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_ymax(static_cast<real>(0)));
+}
+
+BOOST_AUTO_TEST_CASE(SetYmin_double_long) {
+    typedef double long real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_ymax(static_cast<real>(0)));
+}
+
+BOOST_AUTO_TEST_CASE(SetYmax_float) {
+    typedef float real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_ymax(static_cast<real>(norm_rand()+.1)));
+}
+
+BOOST_AUTO_TEST_CASE(SetYmax_double) {
+    typedef double real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_ymax(static_cast<real>(norm_rand()+.1)));
+}
+
+BOOST_AUTO_TEST_CASE(SetYmax_double_long) {
+    typedef double long real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_ymax(static_cast<real>(norm_rand()+.1)));
+}
+
 // ----------------------------------
 // Misc. functions
 

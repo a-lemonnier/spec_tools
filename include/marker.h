@@ -60,34 +60,34 @@ public:
     bool set_xunit(const std::string& sXunit);
     bool set_yunit(const std::string& sYunit);
     
-    void set_output(const std::string& sFilename);
+    bool set_output(const std::string& sFilename);
     
     /**
-     * \fn void set_output(const std::string& sFilename, const int iDpi)
+     * \fn bool set_output(const std::string& sFilename, const int iDpi)
      * \brief Set the picture filename with the extension (png, pdf, jpeg...) and the density (iDpi>50)
      * \param sFilename Picture name
      * \param iDpi Density
      */
-    void set_output(const std::string& sFilename, const int iDpi);
+    bool set_output(const std::string& sFilename, const int iDpi);
     
     /**
-     * \fn void set_continuum(const _T TContinuum)
+     * \fn bool set_continuum(const _T TContinuum)
      * \brief Set the continuum position and therefore ymax
      */
-    void set_continuum(const _T TContinuum);
+    bool set_continuum(const _T TContinuum);
     
     /**
-     * \fn void set_supp(const _T TXmin, const _T TXmax)
+     * \fn bool set_supp(const _T TXmin, const _T TXmax)
      * \brief Set the support of the first spectrum
      * \param TXmin \f$x_{min}\f$
      * \param TXmax \f$x_{max}\f$
      */
-    void set_supp(const _T TXmin, const _T TXmax);
-    void set_xmin(const _T TXmin);
-    void set_xmax(const _T TXmax);
+    bool set_supp(const _T TXmin, const _T TXmax);
+    bool set_xmin(const _T TXmin);
+    bool set_xmax(const _T TXmax);
     
-    void set_ymin(const _T TYmin);
-    void set_ymax(const _T TYmax);
+    bool set_ymin(const _T TYmin);
+    bool set_ymax(const _T TYmax);
 
     void set_figsize(int iHeight, int iWidth);
     
