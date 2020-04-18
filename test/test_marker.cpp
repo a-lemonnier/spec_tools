@@ -30,4 +30,6 @@ BOOST_AUTO_TEST_CASE(SetData) {
         vllY.emplace_back(rand());
     }
   
+  BOOST_CHECK_EQUAL(0,0);
+  
 }

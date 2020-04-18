@@ -16,6 +16,8 @@
 #include <algorithm> 
 
 #include <boost/program_options.hpp>
+#include <boost/spirit/include/qi_parse.hpp>
+#include <boost/spirit/include/qi_numeric.hpp>
 
 #include "msg.h"
 
