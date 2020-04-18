@@ -128,6 +128,7 @@ int main(int argc, char** argv) {
     po::notify(vm);
     
      if (vm.count("help") || vm.size()<1 || !(vm.count("filename") ^ vm.count("directory"))) {
+        msgM.enable_log(false);
         std::cout << description;
         std::cout << "\n";
         std::cout << "Examples:\n";

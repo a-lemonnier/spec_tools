@@ -87,6 +87,7 @@ int main(int argc, char **argv) {
     po::notify(vm);
     
     if (vm.count("help") || !vm.count("threshold") || !vm.count("input_folder")  || vm.size()<2) {
+        msgM.enable_log(false);
         msgM.set_threadname("trim");
         std::cout << description;
         std::cout << "\nExample:\n";

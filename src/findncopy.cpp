@@ -122,7 +122,10 @@ int main(int argc, char** argv) {
     po::store(po::command_line_parser(argc, argv).options(description).run(), vm);
     po::notify(vm);
     
-    if (vm.count("help") || !vm.count("i_folder") || !vm.count("namelist")  || vm.size()<2) {
+    if (vm.count("help") || !vm.count("i_folder") 
+                         || !vm.count("namelist")  
+                         || vm.size()<2) {
+        msgM.enable_log(false);
         std::cout << description;
         std::cout << "\nExample:\n";
         std::cout << "# ls\n";

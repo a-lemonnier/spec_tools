@@ -115,6 +115,8 @@ public:
      */
     void set_log(const std::string sLog);
     
+    void enable_log(bool bLog);
+    
 
 private:
     

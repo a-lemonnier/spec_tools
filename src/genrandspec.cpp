@@ -93,7 +93,30 @@ int main(int argc, char** argv) {
     po::notify(vm);
     
      if (vm.count("help")) {
+        msgM.set_threadname("run");
+        msgM.set_log(LOGFILE);
+        msgM.enable_log(false);
+        
         std::cout << description;
+        
+        std::cout << "\nExample:\n";
+        std::cout << "./shift -w -1.0 -f CD-592728.obs\n";
+        msgM.msg(_msg::eMsg::START);
+        msgM.msg(_msg::eMsg::MID, "write history");
+        msgM.msg(_msg::eMsg::MID, "remove duplicates in history");
+        msgM.msg(_msg::eMsg::MID, "check command line");
+        msgM.msg(_msg::eMsg::MID, "create 8 async threads");
+        msgM.msg(_msg::eMsg::MID, "start 8 async threads");
+        msgM.msg(_msg::eMsg::THREADS, "create spectra in rand_spectra/0 ");
+        msgM.msg(_msg::eMsg::THREADS, "create spectra in rand_spectra/1 ");
+        msgM.msg(_msg::eMsg::THREADS, "create spectra in rand_spectra/2 ");
+        msgM.msg(_msg::eMsg::THREADS, "create spectra in rand_spectra/3 ");
+        msgM.msg(_msg::eMsg::THREADS, "create spectra in rand_spectra/4 ");
+        msgM.msg(_msg::eMsg::THREADS, "create spectra in rand_spectra/5 ");
+        msgM.msg(_msg::eMsg::THREADS, "create spectra in rand_spectra/6 ");
+        msgM.msg(_msg::eMsg::THREADS, "create spectra in rand_spectra/7 ");
+        msgM.msg(_msg::eMsg::END," 10.694788s wall, 77.990000s user + 3.050000s system = 81.040000s CPU (757.8%)");
+        
         return EXIT_SUCCESS;
     }
    
@@ -210,7 +233,6 @@ int main(int argc, char** argv) {
     if (iMax_thread>1) {
         msgM.msg(_msg::eMsg::MID, "start", iMax_thread, "async threads");
         
-        msgM.msg(_msg::eMsg::MID, "create directories");
         if (fs::create_directory(pOutput)) {
             std::vector<std::string> vsList;
             for(int i=0; i<iMax_thread; i++)

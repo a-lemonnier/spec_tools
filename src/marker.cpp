@@ -96,6 +96,7 @@ int main(int argc, char** argv) {
     po::notify(vm);
 
     if (vm.count("help") || !vm.count("input")  || vm.size()<1) {
+        msgM.enable_log(false);
         std::cout << description;
         std::cout << "\nExample:\n";
         std::cout << "-i rand_spectra/0/0.dat -i rand_spectra/0/1.dat -l 0.dat -l 1.dat  -t Spectra -l 'Spectrum 1' -l 'Spectrum 2' -w 4861 -e \\$H\\\\beta\\$ --nolog\n";

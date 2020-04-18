@@ -11,8 +11,7 @@ A set of codes for csv and for spectrum manipulation with a py wrapper or not:
  - **gen_rand_spec**.cpp: generate a set of randomized-flux spectra between two wavelengths for test purposes (multi-threaded)
  - **marker**.cpp: highlight lines on spectrum and plot it in matplotlib plots
  
- TODO:
- - **genrandspec**.cpp: Fill help 
+ TODO: 
  - Fix _msg::_msg(const _msg&)
  - Fix copy constructors
  - **marker**.cpp: NOR in cmd check
@@ -311,10 +310,9 @@ gentoo - spec_tools/ % ./genrandspec
 ▶ genrandspec 
 ⚐ genrandspec write history 
 ⚐ genrandspec remove duplicates in history 
-⚐ genrandspec: check command line 
-⚐ genrandspec: create 8 folders 
-⚐ genrandspec: start 8 async threads 
-⚐ genrandspec: create directories 
+⚐ genrandspec check command line 
+⚐ genrandspec create 8 async threads 
+⚐ genrandspec start 8 async threads 
 ⚡ run(3280006): create spectra in rand_spectra/0 
 ⚡ run(3280007): create spectra in rand_spectra/1 
 ⚡ run(3280008): create spectra in rand_spectra/2 

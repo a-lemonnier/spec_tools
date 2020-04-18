@@ -57,7 +57,9 @@ void _msg::msg(const std::string& sMsg) {
     ssSw << sName << ": " << sMsg << "\n";
     
     std::cout << ssS.str();
-    write(ssSw.str());
+    
+    if (bLog)
+        write(ssSw.str());
 }
 
 void _msg::msg(eMsg emType, const std::string& sMsg) {
@@ -116,7 +118,8 @@ void _msg::msg(eMsg emType, const std::string& sMsg) {
             break;
     }
     std::cout << ssS.str();
-    write(ssSw.str());
+    if (bLog)
+        write(ssSw.str());
 }
 
 void _msg::error(const std::string& sMsg) {
@@ -136,7 +139,8 @@ void _msg::error(const std::string& sMsg) {
                << "\n";
                
     std::cout << ssS.str();
-    write(ssSw.str());
+    if (bLog)
+        write(ssSw.str());
 }
 
 void _msg::set_name(const std::string sName) {
@@ -187,3 +191,6 @@ void _msg::write(const std::string& sS) {
     
 }
 
+void _msg::enable_log(bool bLog) {
+    this->bLog=bLog;
+}

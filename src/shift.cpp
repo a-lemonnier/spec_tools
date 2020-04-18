@@ -96,6 +96,7 @@ int main(int argc, char** argv) {
     po::notify(vm);
     
     if (vm.count("help") || !(vm.count("wavelength") ^ vm.count("velocity")) || !(vm.count("input_folder") ^ vm.count("filename"))  || vm.size()<2) {
+        msgM.enable_log(false);
         std::cout << description;
         std::cout << "\nExample:\n";
         std::cout << "./shift -w -1.0 -f CD-592728.obs\n";
