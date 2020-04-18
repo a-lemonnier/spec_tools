@@ -269,6 +269,7 @@ void trim(const std::vector<std::string> &list, double threshold) {
     _msg msgM;
     msgM.set_name("compute()");
     msgM.set_threadname("compute");
+    msgM.set_log(LOGFILE);
     
     for(auto file: list ) {
         

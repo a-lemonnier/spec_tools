@@ -549,7 +549,6 @@ float der_snr(const std::vector<float> &vFlux) {
         std::vector<float> vSum1=std::vector<float>(vNo0.begin()  , vNo0.end()-4);
         std::vector<float> vSum2=std::vector<float>(vNo0.begin()+4, vNo0.end()  );
         
-        
         // Sum1 = Sum1 + Sum2 
         std::transform(vSum1.begin(), vSum1.end(), 
                        vSum2.begin(), vSum1.begin(), 
@@ -569,11 +568,6 @@ float der_snr(const std::vector<float> &vFlux) {
         std::for_each(vSum0.begin(), vSum0.end(), 
                       [](float &fF) { fF=abs(fF);});
         
-        
-//         for(int i=0; i<iSize; i++) 
-//             vSum[i]=abs(2*vSum0[i]-vSum1[i]-vSum2[i]);
-            
-        
         float fNoise=1.482602/sqrt(6)*median(vSum0);
         float fSignal=median(vNo0);
         
@@ -587,6 +581,7 @@ double der_snr(const std::vector<double> &vFlux) {
         _msg msgM;
         msgM.set_name("der_snr()");
         msgM.set_log(LOGFILE);
+        
         msgM.msg(_msg::eMsg::MID, "error: flux is empty");
         return 0;
     }

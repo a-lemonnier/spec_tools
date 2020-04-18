@@ -13,6 +13,8 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <ctime>
+#include <algorithm>
 
 #if __has_include (<sys/syscall.h>) && __has_include (<unistd.h>)
 #include <unistd.h>
@@ -130,6 +132,7 @@ private:
     
     std::string sLog;
     bool bLog;
+
 };
 
 #endif // _MSG_H

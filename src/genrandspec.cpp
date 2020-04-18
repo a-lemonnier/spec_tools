@@ -265,6 +265,7 @@ void run(const std::string& sOutput, char cSep, float fMinw, float fMaxw, float 
     _msg msgM;
     msgM.set_name("run()");
     msgM.set_threadname("run");
+    msgM.set_log(LOGFILE);
     
 #ifdef HAS_SYSCALL
     msgM.msg(_msg::eMsg::THREADS, "create spectra in", sOutput);

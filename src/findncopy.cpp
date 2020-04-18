@@ -275,6 +275,7 @@ std::vector<std::string> parse_filelist(std::fstream &flux) {
     
     _msg msgM;
     msgM.set_name("findncopy");
+    msgM.set_log(LOGFILE);
     
     std::vector<std::string> vsFilelist;
     std::string sS;
@@ -290,6 +291,7 @@ std::vector<std::string> get_fullrpath(std::vector<std::string>& vsFilelist,
                                         const fs::path &fspPidir) {
      _msg msgM;
     msgM.set_name("findncopy");
+    msgM.set_log(LOGFILE);
     
     std::vector<std::string> vsFullrpath;
     for(auto isF: vsFilelist) 
@@ -308,6 +310,7 @@ std::vector<std::string> get_fullrpath(std::vector<std::string>& vsFilelist,
                                         const std::string &sExclude) {
     _msg msgM;
     msgM.set_name("findncopy");
+    msgM.set_log(LOGFILE);
     
     std::vector<std::string> vsFullrpath;
     for(auto isF: vsFilelist) 
@@ -325,6 +328,7 @@ void erase_string(std::vector<std::string> &vsFullrpath,
                   const std::string &sToerase) {
     _msg msgM;
     msgM.set_name("findncopy");
+    msgM.set_log(LOGFILE);
     
     msgM.msg(_msg::eMsg::MID, "erasing string:", sToerase);
  
@@ -339,6 +343,7 @@ std::vector<std::string> make_dir_list(const fs::path &fspPath,
                                         const std::string &sDirbase) {
     _msg msgM;
     msgM.set_name("findncopy");
+    msgM.set_log(LOGFILE);
     
     msgM.msg(_msg::eMsg::MID, "creating directory lists");
     
@@ -362,6 +367,7 @@ void make_dir(const std::vector<std::string> &vsBaserpath,
               const std::string &sOfolder) {
     _msg msgM;
     msgM.set_name("findncopy");
+    msgM.set_log(LOGFILE);
     
     msgM.msg(_msg::eMsg::MID, "creating folders");
 
@@ -375,6 +381,7 @@ void copy_file(std::vector<std::string> &vsFullrpath,
                const std::string &sIfolder) {
     _msg msgM;
     msgM.set_name("findncopy");
+    msgM.set_log(LOGFILE);
     
     int iCount=0;
     for(auto sF: vsFullrpath) 

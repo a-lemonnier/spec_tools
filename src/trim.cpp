@@ -276,6 +276,7 @@ void trim(const std::vector<std::string> &list, float min, float max) {
     _msg msgM;
     msgM.set_threadname("trim");
     msgM.set_name("trim()");
+    msgM.set_log(LOGFILE);
     
     for(auto file: list ) {
         

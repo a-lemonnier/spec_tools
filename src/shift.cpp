@@ -340,6 +340,7 @@ void add(const std::vector<std::string> &vsList, float fWavelength) {
     _msg msgM;
     msgM.set_threadname("add");
     msgM.set_name("add");
+    msgM.set_log(LOGFILE);
     
      for(auto sFile: vsList) {
         
@@ -367,6 +368,7 @@ void add_sep(const std::vector<std::string> &vsList, char cSep , float fWaveleng
     _msg msgM;
     msgM.set_threadname("add");
     msgM.set_name("add");
+    msgM.set_log(LOGFILE);
     
      for(auto sFile: vsList) {
         
@@ -394,6 +396,7 @@ void transform_sep(const std::vector<std::string> &vsList, char cSep , float fVr
     _msg msgM;
     msgM.set_threadname("transform");
     msgM.set_name("transform");
+    msgM.set_log(LOGFILE);
     
      for(auto sFile: vsList) {
         
