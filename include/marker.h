@@ -19,7 +19,9 @@
 #include <boost/spirit/include/qi_parse.hpp>
 #include <boost/spirit/include/qi_numeric.hpp>
 
-#include "msg.h"
+#include <csv.h>
+#include <msg.h>
+
 
 /**
  * \class _marker
@@ -49,7 +51,7 @@ public:
 
     void set_verbose(const bool bVerbose);
     
-    void set_data(const std::vector<_T>& vTX, const std::vector<_T>& vTY);
+    bool set_data(const std::vector<_T>& vTX, const std::vector<_T>& vTY);
     
     void set_title(const std::string& sTitle);
     void set_label(const std::string& sLabel);
@@ -235,8 +237,6 @@ private:
     
     std::string sLog;
     bool bLog;
-    
-    std::mutex mLock;
     
 };
 

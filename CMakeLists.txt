@@ -12,7 +12,7 @@ add_executable(shift src/shift.cpp include/msg.cpp)
 add_executable(genrandspec src/genrandspec.cpp include/msg.cpp)
 add_executable(marker src/marker.cpp include/msg.cpp)
 
-# add_executable(unit_tests test/test_marker.cpp)
+add_library(msg include/msg.cpp include/msg.h)
 
 set_property(TARGET threshold PROPERTY CXX_STANDARD 17)
 set_property(TARGET threshold PROPERTY CXX_STANDARD_REQUIRED ON)
@@ -35,10 +35,14 @@ set_property(TARGET genrandspec PROPERTY CXX_STANDARD_REQUIRED ON)
 set_property(TARGET marker PROPERTY CXX_STANDARD 17)
 set_property(TARGET marker PROPERTY CXX_STANDARD_REQUIRED ON)
 
+set_property(TARGET msg PROPERTY CXX_STANDARD 17)
+set_property(TARGET msg PROPERTY CXX_STANDARD_REQUIRED ON)
+
 find_package( Boost 1.40 COMPONENTS program_options 
                          REQUIRED timer filesystem unit_test_framework)
 
-                         
+target_link_libraries(msg LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
+
 target_link_libraries(threshold LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 target_link_libraries(findncopy LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 target_link_libraries(trim LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
@@ -46,6 +50,8 @@ target_link_libraries(der_snr LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++f
 target_link_libraries(shift LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 target_link_libraries(genrandspec LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 target_link_libraries(marker LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
+
+install(TARGETS msg RUNTIME DESTINATION lib)
 
 install(TARGETS threshold RUNTIME DESTINATION bin)
 install(TARGETS findncopy RUNTIME DESTINATION bin)
@@ -55,9 +61,21 @@ install(TARGETS shift RUNTIME DESTINATION bin)
 install(TARGETS genrandspec RUNTIME DESTINATION bin)
 install(TARGETS marker RUNTIME DESTINATION bin)
 
-
+function(create_test exe)
+    add_executable (test_${exe} ./test/test_${exe}.cpp) 
+    target_include_directories(test_${exe} PRIVATE ${BOOST_INCLUDE_DIRS})
+    target_link_libraries(test_${exe} msg ${Boost_LIBRARIES} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} )
+    add_test (NAME test_${exe} COMMAND test_${exe} )
+endfunction()
 
 
 enable_testing ()
-add_test (NAME RunTests  
-          COMMAND Tests )
+
+include_directories (${CMAKE_SOURCE_DIR}/src
+                     ${CMAKE_SOURCE_DIR}/include
+                     ${Boost_INCLUDE_DIRS} )
+
+add_definitions (-DBOOST_TEST_DYN_LINK)
+
+create_test(marker)
+

@@ -1,4 +1,4 @@
-#include "msg.h"
+#include <msg.h>
 
 _msg::_msg(): sSuf("\033[0m"),
               sSta_pre("\033[3;32m\u25B6\033[0m \033[1;34m"),

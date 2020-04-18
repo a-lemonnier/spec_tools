@@ -12,7 +12,9 @@ steps:
     - apt update -y
     - export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
     - apt-get install -y tzdata
-    - apt-get install -y make gcc g++ cmake perl libboost-all-dev python3-matplotlib python3-numpy
+    - apt-get install -y make gcc g++ cmake perl
+    - apt-get install -y libboost-all-dev libboost-test-dev
+    - apt-get install -y python3-matplotlib python3-numpy 
     - cmake .
     - make -j$(nproc)
     - ./genrandspec
@@ -24,4 +26,6 @@ steps:
     - ./der_snr -f rand_spectra/0/0.dat
     - ./shift  -v 1.0e5 -i rand_spectra
     - ./marker -v -i rand_spectra/0/0.dat -i rand_spectra/0/1.dat -l 0.dat -l 1.dat  -t Spectra -l "Spectrum 1" -l "Spectrum 2" --elemlist data/line.list --shift 0.1 
+    - BOOST_TEST_LOG_LEVEL="all"  ./test_marker
 
+    

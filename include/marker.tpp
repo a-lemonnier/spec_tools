@@ -51,13 +51,13 @@ void _marker<_T>::set_verbose(const bool bVerbose) {
 }
 
 template<typename _T>
-void _marker<_T>::set_data(const std::vector<_T>& vTX, 
+bool _marker<_T>::set_data(const std::vector<_T>& vTX, 
                            const std::vector<_T>& vTY) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_data()");
     if (vTX.empty() || vTY.empty()) 
         msgM.msg(_msg::eMsg::ERROR,"set_data(): empty vector");
-    else if (vTX.size()!=vTY.size())
+    else if (vTX.size()!=vTY.size()) 
         msgM.msg(_msg::eMsg::ERROR,"set_data(): dimension mismatches");
     else {
         this->X=vTX;
@@ -65,7 +65,9 @@ void _marker<_T>::set_data(const std::vector<_T>& vTX,
                 
         set_xmin(*std::min_element(vTX.begin(), vTX.end()));
         set_xmax(*std::max_element(vTX.begin(), vTX.end()));
+        return true;
     }
+    return false;
 }
 
 template<typename _T>
