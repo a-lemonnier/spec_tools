@@ -6,7 +6,7 @@ platform:
   arch: arm64
 
 steps:
-- name: Build, run and test
+- name: Build, run
   image: ubuntu:19.10
   commands:
     - apt update -y
@@ -31,5 +31,6 @@ steps:
 - name: Unit tests
   image: ubuntu:19.10
   commands:
+    - apt-get install -y libboost-test-dev
     - BOOST_TEST_LOG_LEVEL="all"  ./test_marker
   
