@@ -374,6 +374,7 @@ void compute(const std::vector<std::string>& vsList, const std::string& sOutput)
     _msg msgM;
     msgM.set_name("compute()");
     msgM.set_threadname("compute");
+    msgM.set_log(LOGFILE);
     
 #ifdef HAS_SYSCALL
     msgM.msg(_msg::eMsg::THREADS, "compute S/N for", vsList.size(), "files");
@@ -404,6 +405,7 @@ void compute_sep(const std::vector<std::string>& vsList, const std::string& sOut
     _msg msgM;
     msgM.set_name("compute()");
     msgM.set_threadname("compute");
+    msgM.set_log(LOGFILE);
     
 #ifdef HAS_SYSCALL
     msgM.msg(_msg::eMsg::THREADS, "compute S/N for", vsList.size(), "files");
@@ -441,6 +443,7 @@ bool write(std::vector<std::string> vsResults, const std::string& sOutput) {
     else {
         _msg msgM;
         msgM.set_name("write()");
+        msgM.set_log(LOGFILE);
         
         msgM.msg(_msg::eMsg::ERROR, "cannot open", sOutput);
         sStatus=false;
@@ -451,6 +454,7 @@ bool write(std::vector<std::string> vsResults, const std::string& sOutput) {
 bool merge(const std::string &sPattern) {
     _msg msgM;
     msgM.set_name("merge()");
+    msgM.set_log(LOGFILE);
         
     std::fstream fFlux0(sPattern, std::ios::out);
     
@@ -486,6 +490,7 @@ float median(const std::vector<float> &vFlux) {
     if (iSize==0) {
         _msg msgM;
         msgM.set_name("median()");
+        msgM.set_log(LOGFILE);
         msgM.msg(_msg::eMsg::MID, "error: flux is empty");
         return 0;
     }
@@ -505,6 +510,7 @@ double median(const std::vector<double> &vFlux) {
     if (iSize==0) {
         _msg msgM;
         msgM.set_name("median()");
+        msgM.set_log(LOGFILE);
         msgM.msg(_msg::eMsg::MID, "error: flux is empty");
         return 0;
     }
@@ -525,6 +531,7 @@ float der_snr(const std::vector<float> &vFlux) {
     if (vFlux.empty()) {
         _msg msgM;
         msgM.set_name("der_snr()");
+        msgM.set_log(LOGFILE);
         msgM.msg(_msg::eMsg::MID, "error: flux is empty");
         return 0;
     }
@@ -579,6 +586,7 @@ double der_snr(const std::vector<double> &vFlux) {
     if (vFlux.empty()) {
         _msg msgM;
         msgM.set_name("der_snr()");
+        msgM.set_log(LOGFILE);
         msgM.msg(_msg::eMsg::MID, "error: flux is empty");
         return 0;
     }
