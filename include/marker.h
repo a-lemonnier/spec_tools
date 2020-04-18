@@ -234,6 +234,8 @@ private:
     std::string sLog;
     bool bLog;
     
+    std::mutex mLock;
+    
 };
 
 

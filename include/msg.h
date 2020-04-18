@@ -16,6 +16,8 @@
 #include <ctime>
 #include <algorithm>
 
+#include <mutex>
+
 #if __has_include (<sys/syscall.h>) && __has_include (<unistd.h>)
 #include <unistd.h>
 #include <sys/syscall.h>
@@ -132,6 +134,8 @@ private:
     
     std::string sLog;
     bool bLog;
+    
+    std::mutex mLock;
 
 };
 

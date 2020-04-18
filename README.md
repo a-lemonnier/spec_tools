@@ -12,7 +12,6 @@ A set of codes for csv and for spectrum manipulation with a py wrapper or not:
  - **marker**.cpp: highlight lines on spectrum and plot it in matplotlib plots
  
  TODO:
- - Add mutex for log
  - **genrandspec**.cpp: Fill help 
  - Fix _msg::_msg(const _msg&)
  - Fix copy constructors

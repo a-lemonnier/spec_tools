@@ -31,6 +31,8 @@ _msg::~_msg() {
     sThd_pre.clear();
     sThd_suf.clear();
     
+    std::lock_guard<std::mutex> lgG(this->mLock);
+    
     if (sfFlux.is_open()) {
         sfFlux << "\n";
         sfFlux.close();
@@ -171,6 +173,8 @@ void _msg::set_log(const std::string sLog) {
 }
 
 void _msg::write(const std::string& sS) {
+    
+    std::lock_guard<std::mutex> lgG(this->mLock);
     
     sfFlux=std::fstream(sLog, std::ios::app);
     
