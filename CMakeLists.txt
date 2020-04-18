@@ -61,8 +61,10 @@ install(TARGETS marker RUNTIME DESTINATION bin)
 
 function(create_test exe)
     add_executable (test_${exe} ./test/test_${exe}.cpp) 
+    set_property(TARGET test_${exe} PROPERTY CXX_STANDARD 17)
+    set_property(TARGET test_${exe} PROPERTY CXX_STANDARD_REQUIRED ON)
     target_include_directories(test_${exe} PRIVATE ${BOOST_INCLUDE_DIRS})
-    target_link_libraries(test_${exe} msg ${Boost_LIBRARIES} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} )
+    target_link_libraries(test_${exe} msg ${Boost_LIBRARIES} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} -Wno-c++17-extensions)
     add_test (NAME test_${exe} COMMAND test_${exe} )
 endfunction()
 
