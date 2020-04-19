@@ -100,10 +100,10 @@ public:
     bool set_linewidth(float fWidth);
     bool set_titlesize(int iSize);
     bool set_labelsize(int iSize);
-    void set_ticklabelsize(int iSize);
-    void set_annotatesize(int iSize);
-    void set_legendsize(int iSize);
-    void set_continnumsize(float fWidth);
+    bool set_ticklabelsize(int iSize);
+    bool set_annotatesize(int iSize);
+    bool set_legendsize(int iSize);
+    bool set_continnumsize(float fWidth);
     void set_showgrid(bool bShowgrid);
     
     /**

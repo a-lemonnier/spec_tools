@@ -216,7 +216,7 @@ template<typename _T>
 bool _marker<_T>::set_xmin(const _T TXmin) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_xmin(", TXmin,")");
-    if (TXmin<0 || TXmin>this->TXmax) {
+    if (TXmin<0) {
          msgM.msg(_msg::eMsg::ERROR,"set_xmin(): invalid boundary");
          return false;
     }
@@ -228,7 +228,7 @@ template<typename _T>
 bool _marker<_T>::set_xmax(const _T TXmax) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_xmax(", TXmax,")");
-    if (TXmax<0 || TXmax<this->TXmin) {
+    if (TXmax<0) {
          msgM.msg(_msg::eMsg::ERROR,"set_xmax(): invalid boundary");
          return false;
     }
@@ -240,7 +240,7 @@ template<typename _T>
 bool _marker<_T>::set_ymin(const _T TYmin) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_ymin(", TYmin,")");
-    if (TYmin<0 || TYmin>this->TYmax) {
+    if (TYmin<0) {
         msgM.msg(_msg::eMsg::ERROR,"set_ymin(): invalid boundary");
         return false;
     }
@@ -252,7 +252,7 @@ template<typename _T>
 bool _marker<_T>::set_ymax(const _T TYmax) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_ymax(", TYmax,")");
-    if (TYmax<0 || TYmax<this->TYmin) {
+    if (TYmax<0) {
         msgM.msg(_msg::eMsg::ERROR,"set_ymax(): invalid boundary");
         return false;
     }
@@ -320,35 +320,51 @@ bool _marker<_T>::set_labelsize(int iSize) {
 }
 
 template<typename _T>
-void _marker<_T>::set_ticklabelsize(int iSize) {
+bool _marker<_T>::set_ticklabelsize(int iSize) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_ticklabelsize(",iSize,")");
-    if (iSize>0)
-        this->iTicklabelsize=iSize;    
+    if (iSize<1) {
+        msgM.msg(_msg::eMsg::ERROR,"set_ticklabelsize(): invalid size");
+        return false;
+    }
+    this->iTicklabelsize=iSize;
+    return true;
 }
 
 template<typename _T>
-void _marker<_T>::set_annotatesize(int iSize) {
+bool _marker<_T>::set_annotatesize(int iSize) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_annotatesize(",iSize,")");
-    if (iSize>0)
-        this->iAnnotatesize=iSize;    
+    if (iSize<1) {
+        msgM.msg(_msg::eMsg::ERROR,"set_annotatesize(): invalid size");
+        return false;
+    }
+    this->iAnnotatesize=iSize;  
+    return true;
 }
 
 template<typename _T>
-void _marker<_T>::set_legendsize(int iSize) {
+bool _marker<_T>::set_legendsize(int iSize) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_legendsize(",iSize,")");
-     if (iSize>0)
-        this->iLegendsize=iSize;    
+    if (iSize<1) {
+        msgM.msg(_msg::eMsg::ERROR,"set_legendsize(): invalid size");
+        return false;
+    }
+    this->iLegendsize=iSize;
+    return true;
 }
 
 template<typename _T>
-void _marker<_T>::set_continnumsize(float fWidth) {
+bool _marker<_T>::set_continnumsize(float fWidth) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_continnumsize(", fWidth,")");
-    if (fWidth>0)
-        this->fContinnumsize=fWidth;    
+    if (fWidth<0.1) {
+        msgM.msg(_msg::eMsg::ERROR,"set_continnumsize(): invalid size");
+        return false;
+    }
+    this->fContinnumsize=fWidth;   
+    return true;
 }
 
 template<typename _T>

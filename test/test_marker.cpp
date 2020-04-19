@@ -197,21 +197,21 @@ BOOST_AUTO_TEST_CASE(SetXmin_float) {
     typedef float real;
     _marker<real> rMarker;
     rMarker.set_verbose(false);
-    BOOST_CHECK(rMarker.set_xmin(static_cast<real>(0)));
+    BOOST_CHECK(rMarker.set_xmin(static_cast<real>(0.)));
 }
 
 BOOST_AUTO_TEST_CASE(SetXmin_double) {
     typedef double real;
     _marker<real> rMarker;
     rMarker.set_verbose(false);
-    BOOST_CHECK(rMarker.set_xmin(static_cast<real>(0)));
+    BOOST_CHECK(rMarker.set_xmin(static_cast<real>(0.)));
 }
 
 BOOST_AUTO_TEST_CASE(SetXmin_double_long) {
     typedef double long real;
     _marker<real> rMarker;
     rMarker.set_verbose(false);
-    BOOST_CHECK(rMarker.set_xmin(static_cast<real>(0)));
+    BOOST_CHECK(rMarker.set_xmin(static_cast<real>(0.)));
 }
 
 BOOST_AUTO_TEST_CASE(SetXmax_float) {
@@ -332,6 +332,49 @@ BOOST_AUTO_TEST_CASE(SetLabelSize) {
     rMarker.set_verbose(false);
     BOOST_CHECK(rMarker.set_labelsize(rand()%10+1));
 }
+
+BOOST_AUTO_TEST_CASE(SetTickLabelSize) {
+    typedef double long real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_ticklabelsize(rand()%10+1));
+}
+
+BOOST_AUTO_TEST_CASE(SetAnnotateSize) {
+    typedef double long real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_annotatesize(rand()%10+1));
+}
+
+BOOST_AUTO_TEST_CASE(SetLegendSize) {
+    typedef double long real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_legendsize(rand()%10+1));
+}
+
+BOOST_AUTO_TEST_CASE(SetContinuumSize_float) {
+    typedef float real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_continuum(norm_rand()+1.));
+}
+
+BOOST_AUTO_TEST_CASE(SetContinuumSize_double) {
+    typedef double real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_continuum(norm_rand()+1.));
+}
+
+BOOST_AUTO_TEST_CASE(SetContinuumSize_double_long) {
+    typedef double long real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_continuum(norm_rand()+1.));
+}
+
 
 // ----------------------------------
 // Misc. functions
