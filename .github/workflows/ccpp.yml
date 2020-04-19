@@ -14,11 +14,11 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: upgrade
-      run: sudo apt update; sudo apt upgrade -y; sudo apt install - y tzdata make gcc g++ cmake perl
+      run: sudo apt update; sudo apt install - y tzdata gcc g++ cmake
     - name: install boost
       run: sudo apt install -y libboost-all-dev libboost-test-dev
     - name: install py
-      run: sudo apt-get install -y python3-matplotlib python3-numpy 
+      run: sudo apt install -y python3-matplotlib python3-numpy 
     - name: configure
       run: mkdir build && cd build && cmake -DCMAKE_CXX_FLAGS="-Werror" ..
     - name: build

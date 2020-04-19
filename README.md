@@ -1,4 +1,4 @@
-# spec_tools [![Build Status](https://cloud.drone.io/api/badges/a-lemonnier/spec_tools/status.svg)](https://cloud.drone.io/a-lemonnier/spec_tools)
+# spec_tools [![Build Status](https://cloud.drone.io/api/badges/a-lemonnier/spec_tools/status.svg)](https://cloud.drone.io/a-lemonnier/spec_tools) ![C/C++ CI](https://github.com/a-lemonnier/spec_tools/workflows/C/C++%20CI/badge.svg)
 
 
 :eight_pointed_black_star: A set of codes for csv and for spectrum manipulation with a py wrapper or not:

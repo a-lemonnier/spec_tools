@@ -442,8 +442,6 @@ BOOST_AUTO_TEST_CASE(MinThres_int_double_long) {
         BOOST_CHECK(csv.apply_min_threshold(rR,i));
 }
 
-
-
 // ----------------------------------
 // Misc. functions
 
