@@ -1,6 +1,7 @@
 #define BOOST_TEST_MODULE Tests
 
 #include <iostream>
+#include <cstdio>
 #include <string>
 #include <ctime>
 #include <tuple>
@@ -137,6 +138,7 @@ BOOST_AUTO_TEST_CASE(SetOutputDpi) {
     BOOST_CHECK(rMarker.set_output(gen_rand_string()+".jpeg", iDpi));
     BOOST_CHECK(rMarker.set_output(gen_rand_string()+".pdf", iDpi));
     BOOST_CHECK(!rMarker.get_output().empty());
+    BOOST_CHECK(rMarker.get_dpi()>0);
 }
 
 BOOST_AUTO_TEST_CASE(SetGetScriptName) {
@@ -484,6 +486,104 @@ BOOST_AUTO_TEST_CASE(AddDataLabel_double_long) {
     BOOST_CHECK(rMarker.add_data(vrX, vrY, gen_rand_string()));      
 }
 
+BOOST_AUTO_TEST_CASE(Make_float) {
+    typedef float real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    auto [vrX, vrY]=gen_rand_spec<real>();
+    rMarker.set_data(vrX, vrY);
+    rMarker.add_data(vrX, vrY, gen_rand_string());
+    std::string sOutput(gen_rand_string()+".png");
+    rMarker.set_output(sOutput);    
+    BOOST_CHECK(rMarker.make());
+    remove(sOutput.c_str());
+    remove(".plot.py");
+    remove(".data.csv");
+    remove(".data_0.csv");
+}
+
+BOOST_AUTO_TEST_CASE(Make_double) {
+    typedef double real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    auto [vrX, vrY]=gen_rand_spec<real>();
+    rMarker.set_data(vrX, vrY);
+    rMarker.add_data(vrX, vrY, gen_rand_string());
+    std::string sOutput(gen_rand_string()+".png");
+    rMarker.set_output(sOutput);    
+    BOOST_CHECK(rMarker.make());
+    remove(sOutput.c_str());
+    remove(".plot.py");
+    remove(".data.csv");
+    remove(".data_0.csv");
+}
+
+BOOST_AUTO_TEST_CASE(Make_double_long) {
+    typedef double long real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    auto [vrX, vrY]=gen_rand_spec<real>();
+    rMarker.set_data(vrX, vrY);
+    rMarker.add_data(vrX, vrY, gen_rand_string());
+    std::string sOutput(gen_rand_string()+".png");
+    rMarker.set_output(sOutput);    
+    BOOST_CHECK(rMarker.make());
+    remove(sOutput.c_str());
+    remove(".plot.py");
+    remove(".data.csv");
+    remove(".data_0.csv");
+}
+
+BOOST_AUTO_TEST_CASE(Plot_float) {
+    typedef float real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    auto [vrX, vrY]=gen_rand_spec<real>();
+    rMarker.set_data(vrX, vrY);
+    rMarker.add_data(vrX, vrY, gen_rand_string());
+    std::string sOutput(gen_rand_string()+".png");
+    rMarker.set_output(sOutput);    
+    rMarker.make();
+    BOOST_CHECK(rMarker.plot()==0);
+    remove(sOutput.c_str());
+    remove(".plot.py");
+    remove(".data.csv");
+    remove(".data_0.csv");
+}
+
+BOOST_AUTO_TEST_CASE(Plot_double) {
+    typedef double real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    auto [vrX, vrY]=gen_rand_spec<real>();
+    rMarker.set_data(vrX, vrY);
+    rMarker.add_data(vrX, vrY, gen_rand_string());
+    std::string sOutput(gen_rand_string()+".png");
+    rMarker.set_output(sOutput);    
+    rMarker.make();
+    BOOST_CHECK(rMarker.plot()==0);
+    remove(sOutput.c_str());
+    remove(".plot.py");
+    remove(".data.csv");
+    remove(".data_0.csv");
+}
+
+BOOST_AUTO_TEST_CASE(Plot_double_long) {
+    typedef double long real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    auto [vrX, vrY]=gen_rand_spec<real>();
+    rMarker.set_data(vrX, vrY);
+    rMarker.add_data(vrX, vrY, gen_rand_string());
+    std::string sOutput(gen_rand_string()+".png");
+    rMarker.set_output(sOutput);    
+    rMarker.make();
+    BOOST_CHECK(rMarker.plot()==0);
+    remove(sOutput.c_str());
+    remove(".plot.py");
+    remove(".data.csv");
+    remove(".data_0.csv");
+}
 
 // ----------------------------------
 // Misc. functions
@@ -496,9 +596,9 @@ template<typename _T>
 std::tuple<std::vector<_T>, std::vector<_T> > gen_rand_spec() {
     srand(time(nullptr));
     std::vector<_T> TX, TY;
-    int iSize=rand()%500+500;
+    int iSize=rand()%4000+4000;
     for(int i=0;i<iSize;i++) {
-        TX.emplace_back(i*STEP);
+        TX.emplace_back(i*STEP+4000);
         TY.emplace_back(norm_rand());
      }
     return {TX, TY};
