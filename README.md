@@ -1,7 +1,7 @@
 # spec_tools [![Build Status](https://cloud.drone.io/api/badges/a-lemonnier/spec_tools/status.svg)](https://cloud.drone.io/a-lemonnier/spec_tools) ![C/C++ CI](https://github.com/a-lemonnier/spec_tools/workflows/C/C++%20CI/badge.svg)
 
 
-:eight_pointed_black_star: A set of codes for csv and for spectrum manipulation with a py wrapper or not:
+:eight_pointed_black_star: A set of codes for csv and for spectrum manipulation with a py wrapper or not.
 
 :gear: List:
  - **threshold**.cpp: remove lines below a wavelength threshold (multi-threaded)
@@ -13,7 +13,6 @@
  - **marker**.cpp: highlight lines on spectrum and plot it in matplotlib plots
  
 :wrench: TODO:
- - Fill Unit Tests
  - Fix _msg::_msg(const _msg&)
  - Fix copy constructors
  - **marker**.cpp: NOR in cmd check
