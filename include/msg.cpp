@@ -16,7 +16,6 @@ _msg::_msg(): sSuf("\033[0m"),
 _msg::_msg(const _msg& other) {
     this->sName=other.sName;
     this->sThreadname=other.sThreadname;
-    
 }
 
 _msg::~_msg() {
@@ -39,7 +38,7 @@ _msg::~_msg() {
     }
 }
 
-void _msg::msg(const std::string& sMsg) {
+bool _msg::msg(const std::string& sMsg) {
     
     std::stringstream ssS, ssSw;
     
@@ -57,12 +56,12 @@ void _msg::msg(const std::string& sMsg) {
     ssSw << sName << ": " << sMsg << "\n";
     
     std::cout << ssS.str();
-    
     if (bLog)
-        write(ssSw.str());
+        return write(ssSw.str());
+    return true;
 }
 
-void _msg::msg(eMsg emType, const std::string& sMsg) {
+bool _msg::msg(eMsg emType, const std::string& sMsg) {
     
     std::stringstream ssS, ssSw;
     
@@ -119,11 +118,11 @@ void _msg::msg(eMsg emType, const std::string& sMsg) {
     }
     std::cout << ssS.str();
     if (bLog)
-        write(ssSw.str());
+        return write(ssSw.str());
+    return true;
 }
 
-void _msg::error(const std::string& sMsg) {
-    
+bool _msg::error(const std::string& sMsg) {
     std::stringstream ssS, ssSw;
     
     time_t ttT=time(nullptr);
@@ -133,62 +132,62 @@ void _msg::error(const std::string& sMsg) {
     
     ssSw << "- " << sS << " | ";
     
-     std::cout << sErr_pre << sName << sSuf
+    std::cout << sErr_pre << sName << sSuf
                << " "
                << sMsg
                << "\n";
                
     std::cout << ssS.str();
     if (bLog)
-        write(ssSw.str());
+        return write(ssSw.str());
+    return true;
 }
 
-void _msg::set_name(const std::string sName) {
-
-    if (!sName.empty())
+bool _msg::set_name(const std::string sName) {
+    if (!sName.empty()) {
         this->sName=sName;
-    else {
-        std::cerr << "- _msg::set_name(): empty string\n";
-        if (sfFlux)
-            sfFlux << "- _msg::set_name(): empty string\n";
+        return true;
     }
+    std::cerr << "- _msg::set_name(): empty string\n";
+    if (sfFlux)
+        sfFlux << "- _msg::set_name(): empty string\n";
+    return false;
 }
 
-void _msg::set_threadname(const std::string sName) {
-    if (!sName.empty())
+
+bool _msg::set_threadname(const std::string sName) {
+    if (!sName.empty()) {
         this->sThreadname=sName;
-    else {
-        std::cerr << "- _msg::set_threadname(): empty string\n";
-        if (sfFlux)
-            sfFlux << "- _msg::set_threadname(): empty string\n";
+        return true;
     }
+    std::cerr << "- _msg::set_threadname(): empty string\n";
+    if (sfFlux)
+        sfFlux << "- _msg::set_threadname(): empty string\n";
+    return false;
 }
 
-void _msg::set_log(const std::string sLog) {
+bool _msg::set_log(const std::string sLog) {
     if (sLog.empty()) {
         std::cerr << "- _msg::set_log(): empty string\n";
         if (sfFlux)
             sfFlux << "- _msg::set_log(): empty string\n";
+        return false;
     }
-    else {
-        this->sLog=sLog;
-        this->bLog=true;
-    }
+    this->sLog=sLog;
+    this->bLog=true;
+    return true;
 }
 
-void _msg::write(const std::string& sS) {
-    
+bool _msg::write(const std::string& sS) {
     std::lock_guard<std::mutex> lgG(this->mLock);
-    
     sfFlux=std::fstream(sLog, std::ios::app);
-    
     if (sfFlux) {
         sfFlux << sS;
         sfFlux.close();
+        return true;
     }
-    else
-        std::cerr << "- _msg::write(): flux not available\n";
-    
+    std::cerr << "- _msg::write(): flux not available\n";
+    return false;
 }
 
 void _msg::enable_log(bool bLog) {

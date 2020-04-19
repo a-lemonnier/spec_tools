@@ -49,78 +49,78 @@ public:
     virtual ~_msg();
         
     /**
-     * \fn void msg(const std::string& sMsg)
+     * \fn bool msg(const std::string& sMsg)
      * \brief Send a message with eMsg::MID as default
      */
-    void msg(const std::string& sMsg);
+    bool msg(const std::string& sMsg);
     
     /**
-     * \fn void msg(eMsg emType, const std::string& sMsg)
+     * \fn bool msg(eMsg emType, const std::string& sMsg)
      * \brief Send a message...
      * \param emType See enum eMsg::
      */
-    void msg(eMsg emType, const std::string& sMsg);
+    bool msg(eMsg emType, const std::string& sMsg);
     
     /**
-     * \fn void error(const std::string& sMsg) 
+     * \fn bool error(const std::string& sMsg) 
      * \brief Send an error message...
      */
-    void error(const std::string& sMsg);
+    bool error(const std::string& sMsg);
     
     /**
-     * \fn template<typename ...Args> void msg(const Args& ...args) 
+     * \fn template<typename ...Args> bool msg(const Args& ...args) 
      * \brief A variadic formatter method that indeed sends arbitratry number of variable to the std output... with eMsg::MID as default
      */
-    template<typename ...Args> void msg(const Args& ...args) {
+    template<typename ...Args> bool msg(const Args& ...args) {
         std::stringstream sS;
         (void)(int[]){0, ( (void)(sS << " " << args), 0 ) ... };
-        msg(sS.str());
+        return msg(sS.str());
     }
 
     /**
-     * \fn template<typename ...Args> void msg(eMsg emType, const Args& ...args) 
+     * \fn template<typename ...Args> bool msg(eMsg emType, const Args& ...args) 
      * \brief A variadic formatter method that indeed sends arbitratry number of variable to the std output... The first parameter is always the enum eMsg.
      */
-    template<typename ...Args> void msg(eMsg emType, const Args& ...args) {
+    template<typename ...Args> bool msg(eMsg emType, const Args& ...args) {
         std::stringstream sS;
         (void)(int[]){0, ( (void)(sS << args << " "), 0 ) ... };
-        msg(emType, sS.str());
+        return msg(emType, sS.str());
     }
     
     /**
-     * \fn template<typename ...Args> void error(const Args& ...args)
+     * \fn template<typename ...Args> bool error(const Args& ...args)
      * \brief A variadic formatter method that indeed sends arbitratry number of variable to the std error output... with eMsg::ERROR as default
      */
-    template<typename ...Args> void error(const Args& ...args) {
+    template<typename ...Args> bool error(const Args& ...args) {
         std::stringstream sS;
         (void)(int[]){0, ( (void)(sS << args << " "), 0 ) ... };
-        error(sS.str());
+        return error(sS.str());
     }
     
     /**
      * \fn void set_name(const std::string sName)
      * \brief Set the name of the main instance
      */
-    void set_name(const std::string sName);
+    bool set_name(const std::string sName);
     
     /**
      * \fn void set_threadname(const std::string sName)
      * \brief Set the name of threads
      */
-    void set_threadname(const std::string sName);
+    bool set_threadname(const std::string sName);
     
     /**
      * \fn void set_log(const std::string& sLog)
      * \brief Enable or disable log file
      */
-    void set_log(const std::string sLog);
+    bool set_log(const std::string sLog);
     
     void enable_log(bool bLog);
     
 
 private:
     
-    void write(const std::string& sS);
+    bool write(const std::string& sS);
     
     std::string sThreadname;
     std::string sName;

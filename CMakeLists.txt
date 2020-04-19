@@ -79,4 +79,5 @@ add_definitions (-DBOOST_TEST_DYN_LINK)
 
 create_test(marker)
 create_test(csv)
+create_test(msg)
 
