@@ -78,4 +78,5 @@ include_directories (${CMAKE_SOURCE_DIR}/src
 add_definitions (-DBOOST_TEST_DYN_LINK)
 
 create_test(marker)
+create_test(csv)
 

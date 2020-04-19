@@ -608,7 +608,7 @@ std::string gen_rand_string() {
     srand(time(nullptr));
     std::string sRes;
     int iSize=rand()%MAXLSTR+5;
-    for(int i=0; i<iSize/2;i++) {
+    for(int i=0; i<iSize;i++) {
         char cC;
         if (i%2==0)
             cC=(rand()%(90-65+1))+65;

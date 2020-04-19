@@ -74,7 +74,7 @@ _csv<_T>::_csv(const std::vector<std::string>& vsHeader,
                {"\t",'\t'},{"\\t",'\t'}})
     , sFilename("out.csv")
     , cSeparator('\t')
-    , evVerbose(DEBUG)
+    , evVerbose(QUIET)
     , bStatus(true)
     , vvData(std::vector<std::vector<_T> >(0))
 {
@@ -94,7 +94,7 @@ _csv<_T>::_csv(const std::vector<std::string>& vsHeader,
                {"\t",'\t'},{"\\t",'\t'}})
     , sFilename("out.csv")
     , cSeparator('\t')
-    , evVerbose(DEBUG)
+    , evVerbose(QUIET)
     , bStatus(true)
     , vvData(std::vector<std::vector<_T> >(0))
 {

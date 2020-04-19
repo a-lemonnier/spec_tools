@@ -33,5 +33,6 @@ steps:
   commands:
     - apt update -y
     - apt-get install -y libboost-all-dev
-    - BOOST_TEST_LOG_LEVEL="all"  ./test_marker
+    - ctest
+    
   
