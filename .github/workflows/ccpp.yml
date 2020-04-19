@@ -15,10 +15,10 @@ jobs:
     - uses: actions/checkout@v1
     - name: upgrade
       run: apt update; apt upgrade -y; apt install - y tzdata make gcc g++ cmake perl
-    - name: install_boost
+    - name: install boost
       run: apt install -y libboost-all-dev libboost-test-dev
-    - name: install_py
-    - run: apt-get install -y python3-matplotlib python3-numpy 
+    - name: install py
+      run: apt-get install -y python3-matplotlib python3-numpy 
     - name: configure
       run: mkdir build && cd build && cmake -DCMAKE_CXX_FLAGS="-Werror" ..
     - name: build
