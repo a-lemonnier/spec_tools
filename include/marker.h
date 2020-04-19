@@ -89,7 +89,7 @@ public:
     bool set_ymin(const _T TYmin);
     bool set_ymax(const _T TYmax);
 
-    void set_figsize(int iHeight, int iWidth);
+    bool set_figsize(int iHeight, int iWidth);
     
     /**
      * \fn void set_colorline(const std::string &sColor)
@@ -97,9 +97,9 @@ public:
      * \param sColor A string like "red", "green", "blue" or and a rgba hex string like "#rrggbbaa"
      */
     void set_colorline(const std::string &sColor);
-    void set_linewidth(float fWidth);
-    void set_titlesize(int iSize);
-    void set_labelsize(int iSize);
+    bool set_linewidth(float fWidth);
+    bool set_titlesize(int iSize);
+    bool set_labelsize(int iSize);
     void set_ticklabelsize(int iSize);
     void set_annotatesize(int iSize);
     void set_legendsize(int iSize);

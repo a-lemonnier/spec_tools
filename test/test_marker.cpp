@@ -277,6 +277,62 @@ BOOST_AUTO_TEST_CASE(SetYmax_double_long) {
     BOOST_CHECK(rMarker.set_ymax(static_cast<real>(norm_rand()+.1)));
 }
 
+BOOST_AUTO_TEST_CASE(SetFigsize_float) {
+    typedef float real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_figsize(rand()%1024+1, rand()%1024+1));
+}
+
+BOOST_AUTO_TEST_CASE(SetFigsize_double) {
+    typedef double real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_figsize(rand()%1024+1, rand()%1024+1));
+}
+
+BOOST_AUTO_TEST_CASE(SetFigsize_double_long) {
+    typedef double long real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_figsize(rand()%1024+1, rand()%1024+1));
+}
+
+BOOST_AUTO_TEST_CASE(SetLineWidth_float) {
+    typedef float real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_linewidth(norm_rand()+0.01));
+}
+
+BOOST_AUTO_TEST_CASE(SetLineWidth_double) {
+    typedef double real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_linewidth(norm_rand()+0.01));
+}
+
+BOOST_AUTO_TEST_CASE(SetLineWidth_double_long) {
+    typedef double long real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_linewidth(norm_rand()+0.01));
+}
+
+BOOST_AUTO_TEST_CASE(SetTitleSize) {
+    typedef double long real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_titlesize(rand()%10+1));
+}
+
+BOOST_AUTO_TEST_CASE(SetLabelSize) {
+    typedef double long real;
+    _marker<real> rMarker;
+    rMarker.set_verbose(false);
+    BOOST_CHECK(rMarker.set_labelsize(rand()%10+1));
+}
+
 // ----------------------------------
 // Misc. functions
 

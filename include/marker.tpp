@@ -261,16 +261,17 @@ bool _marker<_T>::set_ymax(const _T TYmax) {
 }
 
 template<typename _T>
-void _marker<_T>::set_figsize(int iHeight, int iWidth) {
+bool _marker<_T>::set_figsize(int iHeight, int iWidth) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_figsize(", iHeight, ",", iWidth,")");
     if (iHeight>0 && iWidth>0) {
         this->iHeight=iHeight;
         this->iWidth=iWidth;
         bIsset_fig_size=true;
+        return true;
     }
-    else
-        msgM.msg(_msg::eMsg::ERROR,"set_figsize(): invalid size");
+    msgM.msg(_msg::eMsg::ERROR,"set_figsize(): invalid size");
+    return false;
 }
 
 template<typename _T>
@@ -282,27 +283,40 @@ void _marker<_T>::set_colorline(const std::string &sColor) {
 }
 
 template<typename _T>
-void _marker<_T>::set_linewidth(float fWidth) {
+bool _marker<_T>::set_linewidth(float fWidth) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set line width:",fWidth);
-    if (fWidth>0)
-        this->fLinewidth=fWidth;
+    if (fWidth<0) {
+        msgM.msg(_msg::eMsg::ERROR,"set_linewidth(): invalid size");
+        return false;
+    }
+        
+    this->fLinewidth=fWidth;
+    return true;
 }
 
 template<typename _T>
-void _marker<_T>::set_titlesize(int iSize) {
+bool _marker<_T>::set_titlesize(int iSize) {
     if (bVerbose)
-        msgM.msg(_msg::eMsg::MID,"set_linewidth(",iSize,")");
-    if (iSize>0)
-        this->iTitlesize=iSize;    
+        msgM.msg(_msg::eMsg::MID,"set_titlesize(",iSize,")");
+    if (iSize<1) {
+        msgM.msg(_msg::eMsg::ERROR,"set_titlesize(): invalid size");
+        return false;
+    }
+    this->iTitlesize=iSize;
+    return true;
 }
 
 template<typename _T>
-void _marker<_T>::set_labelsize(int iSize) {
+bool _marker<_T>::set_labelsize(int iSize) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_labelsize(",iSize,")");
-    if (iSize>0)
-        this->iLabelsize=iSize;    
+    if (iSize<1) {
+        msgM.msg(_msg::eMsg::ERROR,"set_labelsize(): invalid size");
+        return false;
+    }
+    this->iLabelsize=iSize;
+    return true;
 }
 
 template<typename _T>
