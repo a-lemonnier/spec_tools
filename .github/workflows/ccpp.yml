@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: upgrade
-      run: sudo apt update; sudo apt install - y tzdata gcc g++ cmake
+      run: sudo apt update; sudo apt install -y tzdata gcc g++ cmake
     - name: install boost
       run: sudo apt install -y libboost-all-dev libboost-test-dev
     - name: install py
