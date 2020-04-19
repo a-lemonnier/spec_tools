@@ -376,56 +376,72 @@ void _marker<_T>::set_showgrid(bool bShowgrid) {
 }
 
 template<typename _T>
-void _marker<_T>::set_scriptname(const std::string &sScriptname) {
-    if (!sScriptname.empty())
-        this->sScriptname=sScriptname;
-    msgM.msg(_msg::eMsg::MID,"set_scriptname(:", this->sScriptname,")");
+bool _marker<_T>::set_scriptname(const std::string &sScriptname) {
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"set_scriptname(:", this->sScriptname,")");
+    if (sScriptname.empty()) {
+        msgM.msg(_msg::eMsg::ERROR,"set_scriptname(): empty string");
+        return false;
+    }
+    this->sScriptname=sScriptname;
+    return true;
 }
 
 template<typename _T>
-void _marker<_T>::set_log(const std::string& sLog) {
+bool _marker<_T>::set_log(const std::string& sLog) {
      if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_log(", sLog,")");
+     if (sLog.empty()) {
+         msgM.msg(_msg::eMsg::ERROR,"set_log): empty string");
+         return false;
+     }
      this->sLog=sLog;
-     this->bLog=true;    
+     this->bLog=true;
+     return true;
 }
 
 template<typename _T>
-void _marker<_T>::add_line(_T TWl, const std::string &sName) {
-    if (TWl<0 || sName.empty())
+bool _marker<_T>::add_line(_T TWl, const std::string &sName) {
+    if (TWl<0 || sName.empty()) {
         msgM.msg(_msg::eMsg::ERROR,"add_line(): invalid line");
-    else {
-        if (bVerbose)
-            msgM.msg(_msg::eMsg::MID,"add_line('",sName,"'", TWl,")");
-        vllSet.push_back({TWl, sName});
+        return false;
     }
+
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"add_line('",sName,"'", TWl,")");
+    vllSet.push_back({TWl, sName});
+    return true;
 }
 
 template<typename _T>
-void _marker<_T>::add_data(const std::vector<_T>& vTX, 
+bool _marker<_T>::add_data(const std::vector<_T>& vTX, 
                            const std::vector<_T>& vTY) {
-    if (vTX.empty() || vTY.empty()) 
+    if (vTX.empty() || vTY.empty())  {
         msgM.msg(_msg::eMsg::ERROR,"add_data(): empty data");
-    else if (vTX.size()!=vTY.size())
-        msgM.msg(_msg::eMsg::ERROR,"add_data(): vector sizes mismatch");
-    else {
-        if (bVerbose)
-            msgM.msg(_msg::eMsg::MID,"add_data()");
-        
-        if (X.empty() || Y.empty()) {
-            set_data(vTX, vTY);
-        }
-        else {
-            std::vector<std::vector<_T> > vData;
-            vData.emplace_back(vTX);
-            vData.emplace_back(vTY);
-            vvvAdddata.emplace_back(vData);
-        }
+        return false;
     }
+    else if (vTX.size()!=vTY.size()) {
+        msgM.msg(_msg::eMsg::ERROR,"add_data(): vector sizes mismatch");
+        return false;
+    }
+
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"add_data()");
+    
+    if (X.empty() || Y.empty()) {
+        return set_data(vTX, vTY);
+    }
+
+    std::vector<std::vector<_T> > vData;
+    vData.emplace_back(vTX);
+    vData.emplace_back(vTY);
+    vvvAdddata.emplace_back(vData);
+
+    return true;
 }
 
 template<typename _T>
-void _marker<_T>::add_data(const std::vector<_T>& vTX, 
+bool _marker<_T>::add_data(const std::vector<_T>& vTX, 
                            const std::vector<_T>& vTY, 
                            const std::string &sTitle) {
     
@@ -433,19 +449,21 @@ void _marker<_T>::add_data(const std::vector<_T>& vTX,
             msgM.msg(_msg::eMsg::MID,"add_data(): set label", sTitle);
     
     bool bFirstdef=false;
+    bool bErr=true;
     if (X.empty() || Y.empty()) {
-        set_data(vTX, vTY);
-        set_label(sTitle);
+        bErr&=set_data(vTX, vTY);
+        bErr&=set_label(sTitle);
         bFirstdef=true;
     }
     else
-        add_data(vTX, vTY);
+        bErr&=add_data(vTX, vTY);
     if (!bFirstdef) {
         if (sTitle.empty())
             this->vsTitle.emplace_back(" ");
         else
             this->vsTitle.emplace_back(sTitle);
     }
+    return bErr;
 }
 
 template<typename _T>

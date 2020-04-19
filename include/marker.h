@@ -110,32 +110,32 @@ public:
      * \fn void set_scriptname(const std::string &sScriptname)
      * \brief Set the name of the py script. Default: .plot.py
      */
-    void set_scriptname(const std::string &sScriptname);
+    bool set_scriptname(const std::string &sScriptname);
     
     /**
      * \fn void set_log(const std::string& sLog)
      * \brief Enable or disable log file
      */
-    void set_log(const std::string& sLog);
+    bool set_log(const std::string& sLog);
     
     /**
      * \fn void add_line(_T TWl, const std::string &sName)
      * \brief Add a marker with a name on the figure
      */
-    void add_line(_T TWl, const std::string &sName);
+    bool add_line(_T TWl, const std::string &sName);
     
     /**
      * \fn add_data(const std::vector<_T>& vTX, const std::vector<_T>& vTY)
      * \brief Add an additionnal spectrum which has to be plot
      */
-    void add_data(const std::vector<_T>& vTX, 
+    bool add_data(const std::vector<_T>& vTX, 
                   const std::vector<_T>& vTY);
     
     /**
      * \fn add_data(const std::vector<_T>& vTX, const std::vector<_T>& vTY, const std::string &sTitle)
      * \brief Add an additionnal spectrum which has to be plot
      */
-    void add_data(const std::vector<_T>& vTX, 
+    bool add_data(const std::vector<_T>& vTX, 
                   const std::vector<_T>& vTY, 
                   const std::string &sLabel);
     
