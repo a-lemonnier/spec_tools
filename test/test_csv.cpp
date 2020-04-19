@@ -265,6 +265,185 @@ BOOST_AUTO_TEST_CASE(SelectCol_double_long) {
             BOOST_CHECK( vvR[i][j]==csv.select_column(j)[i] );
 }
 
+BOOST_AUTO_TEST_CASE(GenRandSpec_float) {
+    typedef float real;
+    _csv<real> csv;
+    real rMin=rand()%4000+4000;
+    BOOST_CHECK(csv.genrandspec(rMin, rMin+4000, STEP));
+}
+
+BOOST_AUTO_TEST_CASE(GenRandSpec_double) {
+    typedef double real;
+    _csv<real> csv;
+    real rMin=rand()%4000+4000;
+    BOOST_CHECK(csv.genrandspec(rMin, rMin+4000, STEP));
+}
+
+BOOST_AUTO_TEST_CASE(GenRandSpec_double_long) {
+    typedef double long real;
+    _csv<real> csv;
+    real rMin=rand()%4000+4000;
+    BOOST_CHECK(csv.genrandspec(rMin, rMin+4000, STEP));
+}
+
+BOOST_AUTO_TEST_CASE(TransformLin_float) {
+    typedef float real;
+    real rA=rand()%4000;
+    real rB=1./(rand()+1.0);
+    auto vvR=gen_rand_vv<real>();
+    _csv<real> csv(vvR);
+    for(int i=0;i<vvR[0].size();i++)
+        BOOST_CHECK(csv.transform_lin(rA, rB, i));
+}
+
+BOOST_AUTO_TEST_CASE(TransformLin_double) {
+    typedef double real;
+    real rA=rand()%4000;
+    real rB=1./(rand()+1.0);
+    auto vvR=gen_rand_vv<real>();
+    _csv<real> csv(vvR);
+    for(int i=0;i<vvR[0].size();i++)
+        BOOST_CHECK(csv.transform_lin(rA, rB, i));
+}
+
+BOOST_AUTO_TEST_CASE(TransformLin_double_long) {
+    typedef double long real;
+    real rA=rand()%4000;
+    real rB=1./(rand()+1.0);
+    auto vvR=gen_rand_vv<real>();
+    _csv<real> csv(vvR);
+    for(int i=0;i<vvR[0].size();i++)
+        BOOST_CHECK(csv.transform_lin(rA, rB, i));
+}
+
+BOOST_AUTO_TEST_CASE(Shift_float) {
+    typedef float real;
+    real rR=1./(rand()+1.0);
+    auto vvR=gen_rand_vv<real>();
+    _csv<real> csv(vvR);
+    BOOST_CHECK(csv.shift(rR));
+}
+
+BOOST_AUTO_TEST_CASE(Shift_double) {
+    typedef double real;
+    real rR=1./(rand()+1.0);
+    auto vvR=gen_rand_vv<real>();
+    _csv<real> csv(vvR);
+    BOOST_CHECK(csv.shift(rR));
+}
+
+BOOST_AUTO_TEST_CASE(Shift_double_long) {
+    typedef double long real;
+    real rR=1./(rand()+1.0);
+    auto vvR=gen_rand_vv<real>();
+    _csv<real> csv(vvR);
+    BOOST_CHECK(csv.shift(rR));
+}
+
+BOOST_AUTO_TEST_CASE(MaxThres_float) {
+    typedef float real;
+    real rR=1./(rand()+1.0);
+    auto vvR=gen_rand_vv<real>();
+    _csv<real> csv(vvR);
+    BOOST_CHECK(csv.apply_max_threshold(rR));
+}
+
+BOOST_AUTO_TEST_CASE(MaxThres_double) {
+    typedef double real;
+    real rR=1./(rand()+1.0);
+    auto vvR=gen_rand_vv<real>();
+    _csv<real> csv(vvR);
+    BOOST_CHECK(csv.apply_max_threshold(rR));
+}
+
+BOOST_AUTO_TEST_CASE(MaxThres_double_long) {
+    typedef double long real;
+    real rR=1./(rand()+1.0);
+    auto vvR=gen_rand_vv<real>();
+    _csv<real> csv(vvR);
+    BOOST_CHECK(csv.apply_max_threshold(rR));
+}
+
+BOOST_AUTO_TEST_CASE(MinThres_float) {
+    typedef float real;
+    real rR=1./(rand()+1.0);
+    auto vvR=gen_rand_vv<real>();
+    _csv<real> csv(vvR);
+    BOOST_CHECK(csv.apply_min_threshold(rR));
+}
+
+BOOST_AUTO_TEST_CASE(MinThres_double) {
+    typedef double real;
+    real rR=1./(rand()+1.0);
+    auto vvR=gen_rand_vv<real>();
+    _csv<real> csv(vvR);
+    BOOST_CHECK(csv.apply_min_threshold(rR));
+}
+
+BOOST_AUTO_TEST_CASE(MinThres_double_long) {
+    typedef double long real;
+    real rR=1./(rand()+1.0);
+    auto vvR=gen_rand_vv<real>();
+    _csv<real> csv(vvR);
+    BOOST_CHECK(csv.apply_min_threshold(rR));
+}
+
+BOOST_AUTO_TEST_CASE(MaxThres_int_float) {
+    typedef float real;
+    real rR=1./(rand()+1.0);
+    auto vvR=gen_rand_vv<real>();
+    _csv<real> csv(vvR);
+    for(int i=0; i<vvR[0].size(); i++)
+        BOOST_CHECK(csv.apply_max_threshold(rR,i));
+}
+
+BOOST_AUTO_TEST_CASE(MaxThres_int_double) {
+    typedef double real;
+    real rR=1./(rand()+1.0);
+    auto vvR=gen_rand_vv<real>();
+    _csv<real> csv(vvR);
+    for(int i=0; i<vvR[0].size(); i++)
+        BOOST_CHECK(csv.apply_max_threshold(rR,i));
+}
+
+BOOST_AUTO_TEST_CASE(MaxThres_int_double_long) {
+    typedef double long real;
+    real rR=1./(rand()+1.0);
+    auto vvR=gen_rand_vv<real>();
+    _csv<real> csv(vvR);
+    for(int i=0; i<vvR[0].size(); i++)
+        BOOST_CHECK(csv.apply_max_threshold(rR,i));
+}
+
+BOOST_AUTO_TEST_CASE(MinThres_int_float) {
+    typedef float real;
+    real rR=1./(rand()+1.0);
+    auto vvR=gen_rand_vv<real>();
+    _csv<real> csv(vvR);
+    for(int i=0; i<vvR[0].size(); i++)
+        BOOST_CHECK(csv.apply_min_threshold(rR,i));
+}
+
+BOOST_AUTO_TEST_CASE(MinThres_int_double) {
+    typedef double real;
+    real rR=1./(rand()+1.0);
+    auto vvR=gen_rand_vv<real>();
+    _csv<real> csv(vvR);
+    for(int i=0; i<vvR[0].size(); i++)
+        BOOST_CHECK(csv.apply_min_threshold(rR,i));
+}
+
+BOOST_AUTO_TEST_CASE(MinThres_int_double_long) {
+    typedef double long real;
+    real rR=1./(rand()+1.0);
+    auto vvR=gen_rand_vv<real>();
+    _csv<real> csv(vvR);
+    for(int i=0; i<vvR[0].size(); i++)
+        BOOST_CHECK(csv.apply_min_threshold(rR,i));
+}
+
+
+
 // ----------------------------------
 // Misc. functions
 

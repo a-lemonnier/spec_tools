@@ -32,7 +32,7 @@ steps:
   image: ubuntu:19.10
   commands:
     - apt update -y
-    - apt-get install -y libboost-all-dev
-    - ctest
+    - apt-get install -y cmake libboost-all-dev
+    - ctest -V
     
   
