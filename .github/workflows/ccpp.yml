@@ -28,7 +28,7 @@ jobs:
     - name: doxygen
       run: cd doc; doxygen Doxyfile; cd latex; make;
     - name: git conf
-      run: git config --global user.name "a-lemonnier"; git remote set-url origin https://a-lemonnier:${{ secrets.pass }}@github.com/a-lemonnier/crappy-code-covid.git
+      run: git config --global user.name "a-lemonnier"; git remote set-url origin https://a-lemonnier:${{ secrets.pass }}@github.com/a-lemonnier/spec_tools.git
     - name: push
       run: git add doc/latex/refman.pdf; git commit -m "CI Update"; git push
 
