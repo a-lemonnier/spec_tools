@@ -16,7 +16,6 @@ List:
 TODO:
 
  - Fix _msg::_msg(const _msg&)
- - Fix copy constructors
  - **marker**.cpp: NOR in cmd check
  - Make classes in order to clean .cpp
  - Implement boost:: recursive directory copy
