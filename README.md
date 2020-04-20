@@ -1,9 +1,9 @@
 # spec_tools [![Build Status](https://cloud.drone.io/api/badges/a-lemonnier/spec_tools/status.svg)](https://cloud.drone.io/a-lemonnier/spec_tools) ![C/C++ CI](https://github.com/a-lemonnier/spec_tools/workflows/C/C++%20CI/badge.svg)
 
 
-:eight_pointed_black_star: A set of codes for csv and for spectrum manipulation with a py wrapper or not.
+A set of codes for csv and for spectrum manipulation with a py wrapper or not.
 
-:gear: List:
+List:
 
  - **threshold**.cpp: remove lines below a wavelength threshold (multi-threaded)
  - **trim**.cpp: cut a spectrum or more between two wavelengths (multi-threaded)
@@ -13,7 +13,7 @@
  - **gen_rand_spec**.cpp: generate a set of randomized-flux spectra between two wavelengths for test purposes (multi-threaded)
  - **marker**.cpp: highlight lines on spectrum and plot it in matplotlib plots
  
-:wrench: TODO:
+TODO:
 
  - Fix _msg::_msg(const _msg&)
  - Fix copy constructors
@@ -26,7 +26,7 @@
 
 This repo. works on Gentoo 17.0 x64 and Ubuntu x64: bionic and eoan.
 
-:grey_exclamation: Dependencies:
+Dependencies:
 
 - gcc > 7 
 - CMake
@@ -38,7 +38,7 @@ This repo. works on Gentoo 17.0 x64 and Ubuntu x64: bionic and eoan.
 
 ---
 
-:floppy_disk: Get it:
+Get it:
 
 
 ```
