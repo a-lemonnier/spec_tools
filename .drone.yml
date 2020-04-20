@@ -35,11 +35,4 @@ steps:
     - apt-get install -y cmake libboost-all-dev
     - ctest -V
   
-  when:
-  branch:
-    include:
-      - master
-    exclude:
-      - github-pages
-  event:
-  - cron: [daily]
+
