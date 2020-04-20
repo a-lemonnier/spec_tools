@@ -4,6 +4,7 @@
 :eight_pointed_black_star: A set of codes for csv and for spectrum manipulation with a py wrapper or not.
 
 :gear: List:
+
  - **threshold**.cpp: remove lines below a wavelength threshold (multi-threaded)
  - **trim**.cpp: cut a spectrum or more between two wavelengths (multi-threaded)
  - **findncopy**.cpp: find and copy files from a file list
@@ -13,6 +14,7 @@
  - **marker**.cpp: highlight lines on spectrum and plot it in matplotlib plots
  
 :wrench: TODO:
+
  - Fix _msg::_msg(const _msg&)
  - Fix copy constructors
  - **marker**.cpp: NOR in cmd check
@@ -24,6 +26,7 @@
 This repo. works on Gentoo 17.0 x64 and Ubuntu x64: bionic and eoan.
 
 :grey_exclamation: Dependencies:
+
 - gcc > 7 
 - CMake
 - Boost >1.40
@@ -34,6 +37,7 @@ This repo. works on Gentoo 17.0 x64 and Ubuntu x64: bionic and eoan.
 
 ---
 :floppy_disk: Get it:
+
 
 ```
 gentoo - /home/gentoo % git clone https://github.com/a-lemonnier/spec_tools.git 
@@ -50,6 +54,7 @@ gentoo - /home/gentoo % cd spec_tools
 
 ---
 > Compiling:
+
 ```
 gentoo - spec_tools/ % cmake .
 -- The C compiler identification is GNU 9.3.0
@@ -136,6 +141,7 @@ Scanning dependencies of target genrandspec
 
 ---
 > findncopy
+
 ```
 gentoo - spec_tools/ % ./findncopy -h
 Usage:
@@ -170,6 +176,7 @@ CPD-591662
 
 ---
 > trim
+
 ```
 gentoo - spec_tools/ % ./trim -h
 Usage:
@@ -200,6 +207,7 @@ Example:
 
 ---
 > threshold
+
 ```
 gentoo - spec_tools/ % ./threshold -h
 
@@ -232,6 +240,7 @@ Example:
 
 ---
 > der_snr
+
 ```
 gentoo - spec_tools/ % ./der_snr -h
 
@@ -283,6 +292,7 @@ F. Stoehr et al: DER_SNR: A Simple & General Spectroscopic Signal-to-Noise Measu
 
 ---
 > shift
+
 ```
 gentoo - spec_tools/ % ./shift -h
 Usage:
@@ -307,6 +317,7 @@ Example:
 
 ---
 > genrandspec
+
 ```
 gentoo - spec_tools/ % ./genrandspec -h                                                                                                                       
 Usage:
@@ -341,6 +352,7 @@ Example:
 
 ---
 > marker
+
 ```
 gentoo - spec_tools/ % ./marker -h
 Usage:
@@ -390,4 +402,5 @@ Example:
 ⚐ marker  3.052816s wall, 2.760000s user + 0.070000s system = 2.830000s CPU (92.7%)
 
 ```
+
 ![Plot](doc/plot_4518-4526_vsini17.7_A15.2.png)
