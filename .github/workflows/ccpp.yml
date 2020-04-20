@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: upgrade
-      run: sudo apt update; sudo apt install -y tzdata gcc g++ cmake
+      run: sudo apt update; sudo apt install -y tzdata gcc g++ cmake doxygen
     - name: install boost
       run: sudo apt install -y libboost-all-dev libboost-test-dev
     - name: install py
@@ -25,4 +25,10 @@ jobs:
       run: cmake --build build
     - name: test
       run: cd build && ctest
+    - name: doxygen
+      run: cd doc; doxygen Doxyfile; cd latex; make;
+    - name: git conf
+      run: git config --global user.name "a-lemonnier"; git remote set-url origin https://a-lemonnier:${{ secrets.pass }}@github.com/a-lemonnier/crappy-code-covid.git
+    - name: push
+      run: git add doc/latex/refman.pdf; git commit -m "CI Update"; git push
 
