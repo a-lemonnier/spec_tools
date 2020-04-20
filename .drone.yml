@@ -37,6 +37,9 @@ steps:
   
   when:
   branch:
-  - master
+    include:
+      - master
+    exclude:
+      - github-pages
   event:
   - cron: [daily]
