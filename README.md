@@ -23,6 +23,7 @@
  - Add C++11 and C++14 compatibilities
 
 ---
+
 This repo. works on Gentoo 17.0 x64 and Ubuntu x64: bionic and eoan.
 
 :grey_exclamation: Dependencies:
@@ -36,10 +37,12 @@ This repo. works on Gentoo 17.0 x64 and Ubuntu x64: bionic and eoan.
 - Boost::unit_test_framework
 
 ---
+
 :floppy_disk: Get it:
 
 
 ```
+
 gentoo - /home/gentoo % git clone https://github.com/a-lemonnier/spec_tools.git 
 Clonage dans 'spec_tools'...
 remote: Enumerating objects: 29, done.
@@ -50,12 +53,15 @@ Réception d'objets: 100% (384/384), 1.88 Mio | 3.68 Mio/s, fait.
 Résolution des deltas: 100% (226/226), fait.
 
 gentoo - /home/gentoo % cd spec_tools
+
 ```
 
 ---
+
 > Compiling:
 
 ```
+
 gentoo - spec_tools/ % cmake .
 -- The C compiler identification is GNU 9.3.0
 -- The CXX compiler identification is GNU 9.3.0
@@ -140,9 +146,11 @@ Scanning dependencies of target genrandspec
 ```
 
 ---
+
 > findncopy
 
 ```
+
 gentoo - spec_tools/ % ./findncopy -h
 Usage:
   -h [ --help ]                     Display this help message
@@ -172,12 +180,15 @@ CPD-591662
 ⚐ creating folders: done
 ⚐ copying files: 174 files copied
 ⚐ findncopy:  0.176172s wall, 0.130000s user + 0.040000s system = 0.170000s CPU (96.5%)
+
 ```
 
 ---
+
 > trim
 
 ```
+
 gentoo - spec_tools/ % ./trim -h
 Usage:
   -h [ --help ]                         Display this help message
@@ -203,12 +214,15 @@ Example:
 ⚡ trim(2416056): 521 files parsed.
 ⚡ trim(2416057): 524 files parsed.
 ⚐ trim:  52.909230s wall, 296.410000s user + 0.710000s system = 297.120000s CPU (561.6%)
+
 ```
 
 ---
+
 > threshold
 
 ```
+
 gentoo - spec_tools/ % ./threshold -h
 
 Usage:
@@ -236,12 +250,15 @@ Example:
 ⚡ trim(2470789): 521 files parsed.
 ⚡ trim(2470790): 524 files parsed.
 ⚐ threshold:  57.269018s wall, 331.160000s user + 1.350000s system = 332.510000s CPU (580.6%)
+
 ```
 
 ---
+
 > der_snr
 
 ```
+
 gentoo - spec_tools/ % ./der_snr -h
 
 Usage:
@@ -291,9 +308,11 @@ F. Stoehr et al: DER_SNR: A Simple & General Spectroscopic Signal-to-Noise Measu
 ```
 
 ---
+
 > shift
 
 ```
+
 gentoo - spec_tools/ % ./shift -h
 Usage:
   -h [ --help ]                   Display this help message
@@ -316,9 +335,11 @@ Example:
 ```
 
 ---
+
 > genrandspec
 
 ```
+
 gentoo - spec_tools/ % ./genrandspec -h                                                                                                                       
 Usage:
   -h [ --help ]                       Display this help message
@@ -351,9 +372,11 @@ Example:
 ```
 
 ---
+
 > marker
 
 ```
+
 gentoo - spec_tools/ % ./marker -h
 Usage:
   -h [ --help ]                 Display this help message
