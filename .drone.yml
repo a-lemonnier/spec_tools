@@ -35,7 +35,8 @@ steps:
     - apt-get install -y cmake libboost-all-dev
     - ctest -V
   
-  trigger:
+trigger:
   event:
-    - exclude: [ promote ]
+    - push
+    - exclude: [ promote , gh-pages, github-pages]
     - cron: [daily]
