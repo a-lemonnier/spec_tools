@@ -14,6 +14,8 @@ add_executable(marker src/marker.cpp include/msg.cpp)
 
 add_library(msg include/msg.cpp include/msg.h)
 
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
 set_property(TARGET threshold PROPERTY CXX_STANDARD 17)
 set_property(TARGET threshold PROPERTY CXX_STANDARD_REQUIRED ON)
 

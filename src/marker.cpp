@@ -175,7 +175,7 @@ int main(int argc, char** argv) {
         std::vector<std::string>::iterator vsiTmp(std::unique(vsLine.begin(), vsLine.end()));
         vsLine.resize(std::distance(vsLine.begin(), vsiTmp));
 
-        sfFlux.close();
+        sfFlux.close(); // close and reopen
         
         sfFlux=std::fstream(HISTFILE, std::ios::out | std::ios::trunc);
         for(auto sS: vsLine)

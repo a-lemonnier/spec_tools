@@ -11,7 +11,7 @@ List:
  - **der_snr**.cpp: compute the Signal-to-Noise of a spectrum or from a folder containing spectra (multi-threaded)
  - **shift**.cpp: shift whole spectrum by a given wavelength (multi-threaded)
  - **gen_rand_spec**.cpp: generate a set of randomized-flux spectra between two wavelengths for test purposes (multi-threaded)
- - **marker**.cpp: highlight lines on spectrum and plot it in matplotlib plots
+ - **marker**.cpp: highlight lines on spectrum with matplotlib
  
 TODO:
 
