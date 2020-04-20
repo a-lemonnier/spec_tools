@@ -34,6 +34,9 @@ steps:
     - apt update -y
     - apt-get install -y cmake libboost-all-dev
     - ctest -V
-    
-  trigger:
-  cron: [daily]
+  
+  when:
+  branch:
+  - master
+  event:
+  - cron: [daily]
