@@ -7,7 +7,7 @@
 # A. Lemonnier
 # 20/04/2020
 
-
+DIR=merged
 
 #begin
 begin() {
@@ -27,7 +27,7 @@ latex_begin_2="
 \\\usepackage[left=1.9cm,right=1.9cm,top=1.9cm,bottom=1.9cm]{geometry}\n
 \\\begin{document}\n\n
 \\\begin{figure}\n
-\\\centering\n"
+\\\centering"
 }
 
 #end
@@ -43,12 +43,12 @@ LOCAL1=${LOCAL1//_/ }
 
 latex_fig="\\\begin{figure}
 \n\\\centering
-\\\includegraphics[scale=0.7,keepaspectratio=true]{{{"$1"}}}\n
+\\\includegraphics[scale=0.7,keepaspectratio=true]{{"$1"}.pdf}\n
 \\\caption{File "$3" \\\textbf{"$LOCAL1"}}\n
 \\\label{fig:plot"$2$3"}\n
 \\\end{figure}\n\n"
 
-latex_fig_2="\\\includegraphics[scale=0.52,keepaspectratio=true]{{{"$1"}}}"
+latex_fig_2="\\\includegraphics[scale=0.52,keepaspectratio=true]{{"$1"}.pdf}"
 
 }
 
@@ -63,8 +63,8 @@ if [ -z "$1" ]; then
     STR=0
 fi
 
-rm plot_$STR.pdf > /dev/null 2>&1
-rm plot_2_$STR.pdf > /dev/null 2>&1
+
+mkdir merged > /dev/null 2>&1
 
 begin
 end
@@ -96,8 +96,8 @@ done
 echo -e $latex_end >>  plot_$STR.tex
 echo -e $latex_end_2 >>  plot_2_$STR.tex
 
-pdflatex plot_$STR.tex plot_$STR.pdf > /dev/null 2>&1
-pdflatex plot_2_$STR.tex plot_2_$STR.pdf > /dev/null 2>&1
+pdflatex plot_$STR.tex plot_$STR.pdf
+pdflatex plot_2_$STR.tex plot_2_$STR.pdf 
 
 rm plot_$STR.synctex.gz > /dev/null 2>&1
 rm plot_$STR.bbl > /dev/null 2>&1
@@ -110,3 +110,8 @@ rm plot_2_$STR.bbl > /dev/null 2>&1
 rm plot_2_$STR.blg > /dev/null 2>&1
 rm plot_2_$STR.log > /dev/null 2>&1
 rm plot_2_$STR.aux > /dev/null 2>&1
+rm plot_2_$STR.tex > /dev/null 2>&1
+
+mv plot_$STR.tex $DIR
+mv plot_$STR.pdf $DIR
+mv plot_2_$STR.pdf $DIR
