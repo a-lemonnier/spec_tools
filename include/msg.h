@@ -26,7 +26,7 @@
 
 /**
  * \class _msg
- * \brief A class that sends string to std output...
+ * \brief A class that sends string to std output and in a file...
  */
 class _msg
 {
@@ -115,11 +115,18 @@ public:
      */
     bool set_log(const std::string sLog);
     
+    /**
+     * \fn void enable_log(bool bLog)
+     * \brief Enable or disable the log file
+     */
     void enable_log(bool bLog);
     
 
 private:
-    
+    /**
+     * \fn bool write(const std::string& sS)
+     * \brief Write a string in a defined file
+     */
     bool write(const std::string& sS);
     
     std::string sThreadname;
@@ -134,10 +141,10 @@ private:
     
     std::fstream sfFlux;
     
-    std::string sLog;
+    std::string sLog; /**< If sLog is defined, msg write a log  */  
     bool bLog;
     
-    std::mutex mLock;
+    std::mutex mLock; /**< Exclusive file opening  */  
 
 };
 

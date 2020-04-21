@@ -54,41 +54,46 @@ public:
     /**
      * Default constructor
      * \fn _csv()
-     * \brief This is the default constructor without parameters. These parameters must be set after by methods. It will rise lot of errors if something is missing.
+     * \brief Default constructor without parameters. These parameters must be set after by methods. It will rise lot of errors if something is missing.
      */
     _csv();
     
     /**
      * Constructor
-     * \fn _csv(const std::string &sFilename, const char &cSep)
-     * \brief This is the constructor with two parameters such as the name of the working file and the separator character as usual with csv.
+     * \fn explicit _csv(const std::string &sFilename, const char &cSep)
+     * \brief Constructor with two parameters such as the name of the working file and the separator character as usual with csv.
      * \param sFilename string Name of the input or output file with extension
      * \param cSep char Separator char between column
      */
     explicit _csv(const std::string &sFilename, const char &cSep);
     
+    /**
+     * \fn explicit _csv(const std::string &sFilename, const std::string &sSep)
+     * \param sFilename string Name of the input or output file with extension
+     * \param sSep string Separator char between column
+     */
     explicit _csv(const std::string &sFilename, const std::string &sSep);
     
     /**
-     * \fn _csv(const std::vector<std::vector<_T> > &vvData)
-     * \brief This is the constructor fed with external data.
-     * \param vvData The data 
+     * \fn explicit _csv(const std::vector<std::vector<_T> > &vvData)
+     * \brief Constructor fed with external data.
+     * \param vvData the data 
      */
     explicit _csv(const std::vector<std::vector<_T> > &vvData);
     
     /**
-     * \fn _csv(const std::vector<std::string>& vsHeader, const std::vector<std::vector<_T> > &vvData)
-     * \brief This is the constructor fed with external header and data.
+     * \fn explicit _csv(const std::vector<std::string>& vsHeader, const std::vector<std::vector<_T> > &vvData)
+     * \brief Constructor fed with external header and data.
      * \param vsHeader The vector of column name
-     * \param vvData The data 
+     * \param vvData the data 
      */
     explicit _csv(const std::vector<std::string>& vsHeader, const std::vector<std::vector<_T> > &vvData);
     
     /**
-     * \fn _csv(const std::vector<std::string>& vsHeader, const std::vector<std::vector<_T> > &vvData, const char &cSep)
-     * \brief This is the constructor fed with external header and data.
-     * \param vsHeader The vector of column name
-     * \param vvData The data 
+     * \fn explicit _csv(const std::vector<std::string>& vsHeader, const std::vector<std::vector<_T> > &vvData, const char &cSep)
+     * \brief Constructor fed with external header and data.
+     * \param vsHeader the vector of column name
+     * \param vvData the data 
      * \param cSep char Separator char between column
      */
     explicit _csv(const std::vector<std::string>& vsHeader, const std::vector<std::vector<_T> > &vvData, const char &cSep);

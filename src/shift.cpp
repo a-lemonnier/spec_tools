@@ -16,21 +16,26 @@
 #include <boost/range/iterator_range.hpp>
 
 #if __has_include (<boost/timer/timer.hpp>)
-#include <boost/timer/timer.hpp>
-#define HAS_BOOST_TIMER
+#include <boost/timer/timer.hpp> 
+#define HAS_BOOST_TIMER /**< boost::timer availability */
+#endif
+
+#if __has_include (<sys/syscall.h>)
+#include <sys/syscall.h>
+#define HAS_SYSCALL /**< linux syscall availability */
 #endif
 
 #if __has_include (<filesystem>)
 #include <filesystem>
-#define FS_STD
+#define FS_STD /**< std::filesystem availability (C++17) */
 namespace fs = std::filesystem;
 #elif __has_include (<experimental/filesystem>) && !__has_include (<filesystem>)
 #include <experimental/filesystem>
-#define FS_STDEXP
+#define FS_STDEXP /**< std::experimental::filesystem availability */
 namespace fs = std::experimental::filesystem;
 #elif __has_include(<boost/filesystem.hpp>) && !__has_include (<filesystem>) && !__has_include (<experimental/filesystem>)
 #include <boost/filesystem.hpp>
-#define FS_BOOST
+#define FS_BOOST /**< boost::filesystem availability */
 namespace fs = boost::filesystem;
 #else
 #error "No filesystem header found"
@@ -39,10 +44,10 @@ namespace fs = boost::filesystem;
 #include <csv.h>
 #include <msg.h>
 
-#define CLIGHT 299792.458 // km/s
+#define CLIGHT 299792.458 // /**< Speed of light in km/s  */
 
-#define LOGFILE ".shift.log"
-#define HISTFILE ".history"
+#define LOGFILE ".shift.log" /**< Define the default logfile  */
+#define HISTFILE ".history" /**< Define the default histfile (shared)  */
 
 // Prototype
 // ----------------------------------------------------

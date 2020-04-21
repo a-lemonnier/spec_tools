@@ -21,24 +21,30 @@
 #include <functional> 
 #include <thread>
 #include <future>
+
 #include <boost/program_options.hpp>
 
 #if __has_include (<boost/timer/timer.hpp>)
-#include <boost/timer/timer.hpp>
-#define HAS_BOOST_TIMER
+#include <boost/timer/timer.hpp> 
+#define HAS_BOOST_TIMER /**< boost::timer availability */
+#endif
+
+#if __has_include (<sys/syscall.h>)
+#include <sys/syscall.h>
+#define HAS_SYSCALL /**< linux syscall availability */
 #endif
 
 #if __has_include (<filesystem>)
 #include <filesystem>
-#define FS_STD
+#define FS_STD /**< std::filesystem availability (C++17) */
 namespace fs = std::filesystem;
 #elif __has_include (<experimental/filesystem>) && !__has_include (<filesystem>)
 #include <experimental/filesystem>
-#define FS_STDEXP
+#define FS_STDEXP /**< std::experimental::filesystem availability */
 namespace fs = std::experimental::filesystem;
 #elif __has_include(<boost/filesystem.hpp>) && !__has_include (<filesystem>) && !__has_include (<experimental/filesystem>)
 #include <boost/filesystem.hpp>
-#define FS_BOOST
+#define FS_BOOST /**< boost::filesystem availability */
 namespace fs = boost::filesystem;
 #else
 #error "No filesystem header found"
@@ -47,8 +53,8 @@ namespace fs = boost::filesystem;
 #include <csv.h>
 #include <msg.h>
 
-#define LOGFILE ".der_snr.log"
-#define HISTFILE ".history"
+#define LOGFILE ".der_snr.log" /**< Define the default logfile  */
+#define HISTFILE ".history" /**< Define the default histfile (shared)  */
 
 // Reference
 // ----------------------------------------------------
@@ -59,33 +65,52 @@ namespace fs = boost::filesystem;
 
 // Prototype
 // ----------------------------------------------------
-
+/**
+ * \fn void compute(const std::vector<std::string>& list, const std::string& sOutput)
+ * \brief Compute S/N for all the string in the vector of strings. Default sep is tab. Used in the multithreaded mode. 
+ * \param list list of files
+ * \param sOutput output filename
+ */
 void compute(const std::vector<std::string>& list, const std::string& sOutput);
 
 /**
  * \fn void compute_sep(const std::vector<std::string>& list, const std::string& sOutput, const char& cSep)
  * \brief Compute S/N for all the string in the vector of strings. Used in the multithreaded mode.
+ * \param list list of files
+ * \param sOutput output filename
+ * \param cSep char separator
  */
 void compute_sep(const std::vector<std::string>& list, const std::string& sOutput, const char& cSep);
 
 /**
  * \fn bool merge(const std::string &sPattern)
  * \brief Merge files from threads following a filename pattern, i.e. the given output name.
+ * \param sPattern basename without ext
  */
 bool merge(const std::string &sPattern);
 
-
+/**
+ * \fn bool write(std::vector<std::string> vsResults, const std::string& sOutput)
+ * \brief Write on disk results with the default sep.
+ * \param vsResults data to write
+ * \param sOutput output filename
+ */
 bool write(std::vector<std::string> vsResults, const std::string& sOutput);
 
 /**
  * \fn bool write(std::vector<std::string> vsResults, const std::string& sOutput, const char& cSep)
  * \brief Write on disk results
+ * \param vsResults data to write
+ * \param sOutput output filename
+ * \param cSep char separator
  */
 bool write(std::vector<std::string> vsResults, const std::string& sOutput, const char& cSep);
 
 /**
  * \fn float der_snr(const std::vector<float> &vFlux)
  * \brief Compute the S/N with der_snr method.
+ * \param vFlux flux vector
+ * \return -1 if error happens
  */
 float der_snr(const std::vector<float> &vFlux);
 double der_snr(const std::vector<double> &vFlux);
@@ -93,6 +118,8 @@ double der_snr(const std::vector<double> &vFlux);
 /**
  * \fn float median(const std::vector<float> &vFlux)
  * \brief Simple computation of the median
+ * \param vFlux flux vector
+ * \return 0 if error happens
  */
 float median(const std::vector<float> &vFlux);
 double median(const std::vector<double> &vFlux);

@@ -26,6 +26,7 @@
 /**
  * \class _marker
  * \brief A class to plot spectra with line markers using py matplotlib
+ * \todo marker(const _marker<_T>&)
  */
 template<typename _T=float>
 class _marker {
@@ -72,7 +73,7 @@ public:
     
     /**
      * \fn bool set_continuum(const _T TContinuum)
-     * \brief Set the continuum position and therefore ymax
+     * \brief Set the continuum position and therefore ymax. Default is y=1.
      */
     bool set_continuum(const _T TContinuum);
     
@@ -101,6 +102,10 @@ public:
     bool set_titlesize(int iSize);
     bool set_labelsize(int iSize);
     bool set_ticklabelsize(int iSize);
+    /**
+     * \fn bool set_annotatesize(int iSize)
+     * \brief Set the font size of markers
+     */
     bool set_annotatesize(int iSize);
     bool set_legendsize(int iSize);
     bool set_continnumsize(float fWidth);
@@ -108,13 +113,13 @@ public:
     
     /**
      * \fn void set_scriptname(const std::string &sScriptname)
-     * \brief Set the name of the py script. Default: .plot.py
+     * \brief Set the name of the py script. Default is .plot.py
      */
     bool set_scriptname(const std::string &sScriptname);
     
     /**
      * \fn void set_log(const std::string& sLog)
-     * \brief Enable or disable log file
+     * \brief Enable or disable log file. Default is .marker.log
      */
     bool set_log(const std::string& sLog);
     
@@ -182,9 +187,9 @@ protected:
     _msg msgM; /**< Interface to print message to std output */
 
 private:
-    std::string get_ext(const std::string& sS) const;
+    std::string get_ext(const std::string& sS) const; /**< Get the extension of a file path */
     std::string get_cmd() const;
-    void add_cmd(const std::string &sCmd);
+    void add_cmd(const std::string &sCmd); /**< Store a py command to add to py script */
     
     /**
      * \fn bool is_float(const std::string &val) const
@@ -199,7 +204,7 @@ private:
     std::vector<_T> X, Y;
     std::vector<std::vector<std::vector<_T> > > vvvAdddata; /**< Additionnal spectrum */
     
-    std::vector<std::string> vsTitle;
+    std::vector<std::string> vsTitle; /**< Vector of spectrum title*/
     
     vlList vllSet; /**< Set of lines with name of lines */
     
@@ -235,7 +240,7 @@ private:
     
     bool bIsset_fig_size; /**< Indicate whether the figsize is defined or not */
     
-    std::string sLog;
+    std::string sLog; /**< If sLog is defined, log file is enable */
     bool bLog;
     
 };
