@@ -109,7 +109,20 @@ public:
     bool set_annotatesize(int iSize);
     bool set_legendsize(int iSize);
     bool set_continnumsize(float fWidth);
+    
     void set_showgrid(bool bShowgrid);
+    
+    /**
+     * \fn void set_dotted(bool bDotted)
+     * \brief Set secondary curves with dotted-style.
+     */
+    void set_dotted(bool bDotted);
+    
+    /**
+     * \fn void set_dotdashed(bool bDotdashed)
+     * \brief Set secondary curves with dot-dashed-style.
+     */
+    void set_dotdashed(bool bDotdashed);
     
     /**
      * \fn void set_scriptname(const std::string &sScriptname)
@@ -237,6 +250,8 @@ private:
     int iLegendsize;
     float fContinnumsize;
     bool bShowgrid;
+    bool bDotted;
+    bool bDotdashed;
     
     bool bIsset_fig_size; /**< Indicate whether the figsize is defined or not */
     

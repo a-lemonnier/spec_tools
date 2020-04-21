@@ -2,8 +2,8 @@
  * \file marker.cpp
  * \brief Highlight lines on spectrum 
  * \author Audric Lemonnier
- * \version 0.3
- * \date 18/04/2020
+ * \version 0.4
+ * \date 21/04/2020
  */
 
 #include <iostream>
@@ -21,11 +21,6 @@
 #if __has_include (<boost/timer/timer.hpp>)
 #include <boost/timer/timer.hpp> 
 #define HAS_BOOST_TIMER /**< boost::timer availability */
-#endif
-
-#if __has_include (<sys/syscall.h>)
-#include <sys/syscall.h>
-#define HAS_SYSCALL /**< linux syscall availability */
 #endif
 
 #if __has_include (<filesystem>)
@@ -92,6 +87,8 @@ int main(int argc, char** argv) {
     ("fontsize", po::value<int>(), "Set the font size.")
     ("shiftfirst", po::value<float>(), "Shift the first spectrum.")
     ("shift", po::value<float>(), "Shift spectra (except the first).")
+    ("dotted", "Dotted curve.")
+    ("dotdashed", "Dot-dashed curve.")
     ("grid,g","Show the grid.")
     ("nolog","Toggle off log.")
     ("verbose,v","Toggle verbosity.");
@@ -428,6 +425,12 @@ int main(int argc, char** argv) {
         
         if (vm.count("grid"))
             Marker.set_showgrid(true);
+        
+        if (vm.count("dotted"))
+            Marker.set_dotted(true);
+        
+        if (vm.count("dotdashed"))
+            Marker.set_dotdashed(true);
         
         if (vm.count("width"))
             Marker.set_linewidth(abs(vm["width"].as<float>()));

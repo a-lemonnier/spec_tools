@@ -4,7 +4,6 @@
  * F. Stoehr et al: DER_SNR: A Simple & General Spectroscopic Signal-to-Noise Measurement Algorithm,\n
     394, Astronomical Data Analysis Software and Systems (ADASS) XVII\n
     2008ASPC..394..505S
- * This code is multi-threaded or not if not available.
  * \author Audric Lemonnier
  * \version 0.2
  * \date 18/04/2020

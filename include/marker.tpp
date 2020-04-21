@@ -22,6 +22,8 @@ _marker<_T>::_marker():
     iLegendsize(6),
     fContinnumsize(0.6),
     bShowgrid(false),
+    bDotted(false),
+    bDotdashed(false),
     bIsset_fig_size(false),
     sLog(".marker.log"),
     bLog(true)
@@ -376,6 +378,18 @@ void _marker<_T>::set_showgrid(bool bShowgrid) {
 }
 
 template<typename _T>
+void _marker<_T>::set_dotted(bool bDotted) {
+    this->bDotted=bDotted;
+    this->bDotdashed=!bDotted;
+}
+
+template<typename _T>
+void _marker<_T>::set_dotdashed(bool bDotdashed) {
+    this->bDotdashed=bDotdashed;
+    this->bDotted=!bDotdashed;
+}
+
+template<typename _T>
 bool _marker<_T>::set_scriptname(const std::string &sScriptname) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_scriptname(:", this->sScriptname,")");
@@ -647,15 +661,33 @@ bool _marker<_T>::make() {
                 << std::setw(2) << std::setfill('0') << iR  
                 << std::setw(2) << std::setfill('0') << iG
                 << std::setw(2) << std::setfill('0') << iB;
-                        
-            add_cmd("ax0.plot(x"+std::to_string(i)+
-                            ",y"+std::to_string(i)+
-                            ",'--'"+
-                            ", color=\""+ssS.str()+"\""+
-                            ", linewidth="+std::to_string(fLinewidth)+
-                            ", zorder=15, label='"+
-                            this->vsTitle[i]+"')\n");
+                
+            if (!this->bDotted && !this->bDotdashed)          
+                add_cmd("ax0.plot(x"+std::to_string(i)+
+                                ",y"+std::to_string(i)+
+                                ",'--'"+
+                                ", color=\""+ssS.str()+"\""+
+                                ", linewidth="+std::to_string(fLinewidth)+
+                                ", zorder=15, label='"+
+                                this->vsTitle[i]+"')\n");
+            if (this->bDotted)
+                add_cmd("ax0.plot(x"+std::to_string(i)+
+                                ",y"+std::to_string(i)+
+                                ",':'"+
+                                ", color=\""+ssS.str()+"\""+
+                                ", linewidth="+std::to_string(fLinewidth)+
+                                ", zorder=15, label='"+
+                                this->vsTitle[i]+"')\n");
             
+            if (this->bDotdashed)
+                add_cmd("ax0.plot(x"+std::to_string(i)+
+                                ",y"+std::to_string(i)+
+                                ",'-.'"+
+                                ", color=\""+ssS.str()+"\""+
+                                ", linewidth="+std::to_string(fLinewidth)+
+                                ", zorder=15, label='"+
+                                this->vsTitle[i]+"')\n");
+                
             if (iCycle==0)
                 iB+=(0xff-1)/2;
 
@@ -689,11 +721,31 @@ bool _marker<_T>::make() {
                 << std::setw(2) << std::setfill('0') << iG 
                 << std::setw(2) << std::setfill('0') << iB;
 
-            add_cmd("ax0.plot(x"+std::to_string(i)+
-                            ",y"+std::to_string(i)+
-                            ",'--', color='"+ssS.str()+
-                            "', linewidth="+std::to_string(fLinewidth)
-                            +", zorder=15)\n");
+            if (!this->bDotted && !this->bDotdashed)          
+                add_cmd("ax0.plot(x"+std::to_string(i)+
+                                ",y"+std::to_string(i)+
+                                ",'--'"+
+                                ", color=\""+ssS.str()+"\""+
+                                ", linewidth="+std::to_string(fLinewidth)+
+                                ", zorder=15, label='"+
+                                this->vsTitle[i]+"')\n");
+            if (this->bDotted)
+                add_cmd("ax0.plot(x"+std::to_string(i)+
+                                ",y"+std::to_string(i)+
+                                ",':'"+
+                                ", color=\""+ssS.str()+"\""+
+                                ", linewidth="+std::to_string(fLinewidth)+
+                                ", zorder=15, label='"+
+                                this->vsTitle[i]+"')\n");
+            
+            if (this->bDotdashed)
+                add_cmd("ax0.plot(x"+std::to_string(i)+
+                                ",y"+std::to_string(i)+
+                                ",'-.'"+
+                                ", color=\""+ssS.str()+"\""+
+                                ", linewidth="+std::to_string(fLinewidth)+
+                                ", zorder=15, label='"+
+                                this->vsTitle[i]+"')\n");
             
             if (iCycle==0)
                 iB+=(0xff-1)/2;

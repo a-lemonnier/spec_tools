@@ -404,8 +404,10 @@ Usage:
                                 'Element 3', wavelength_3
                                 ...
   -w [ --wavelength ] arg       Set the wavelength of the line.
-  --shiftfirst arg              Shift the first spectrum
-  --shift arg                   Shift spectra (except the first)
+  --shiftfirst arg              Shift the first spectrum.
+  --shift arg                   Shift spectra (except the first).
+  --dotted                      Dotted curve.
+  --dotdashed                   Dot-dashed curve.
   -g [ --grid ]                 Show the grid.
   -v [ --verbose ]              Toggle verbosity.
 
