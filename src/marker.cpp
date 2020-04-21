@@ -232,7 +232,7 @@ int main(int argc, char** argv) {
                     std::string sName;
                     std::string sWl;
                     
-                    if (sLine.find("#")!=std::string::npos && sLine.find("%")!=std::string::npos)  {
+                    if (sLine.find("#")==std::string::npos && sLine.find("%")==std::string::npos)  {
                         sName=sLine.substr(0, sLine.find_first_of(","));
                         sWl=sLine.substr(sLine.find_first_of(",")+1, sLine.size());
                         
@@ -261,6 +261,8 @@ int main(int argc, char** argv) {
                         if (!bExists) 
                             vstLines.emplace_back(std::make_tuple(std::stof(sWl), sName));
                     }
+                    else 
+                        msgM.msg(_msg::eMsg::MID, "skip line ", sLine);
                 }
                 std::sort(vstLines.begin(), vstLines.end());
                 fFlux.close();
