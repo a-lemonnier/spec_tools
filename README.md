@@ -402,6 +402,8 @@ Usage:
                                 'Element 1', wavelength_1
                                 'Element 2', wavelength_2
                                 'Element 3', wavelength_3
+                                #blabla (comment)
+                                %blablabla (comment again)
                                 ...
   -w [ --wavelength ] arg       Set the wavelength of the line.
   --shiftfirst arg              Shift the first spectrum.

@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
     ("contsize", po::value<float>()->default_value(0.6), "Set the continnum width.")
     ("sep,s", po::value<std::vector<std::string> >()->multitoken(), "Set separators. If more than one sep is defined, the number of sep must be equal to the numbers of files.")
     ("element,e",  po::value<std::vector<std::string> >()->multitoken(),"Set the name of an element. Ex: \\$H\\\\\\\\beta\\$.")
-    ("elemlist",po::value<std::string>(),"Set the line list: \n'Element 1', wavelength_1\n'Element 2', wavelength_2\n'Element 3', wavelength_3\n...")
+    ("elemlist",po::value<std::string>(),"Set the line list: \n'Element 1', wavelength_1\n'Element 2', wavelength_2\n'Element 3', wavelength_3\n#blabla (comment)\n%blablabla (comment again)\n...")
     ("wavelength,w",po::value<std::vector<float> >()->multitoken(),"Set the wavelength of the line.")
     ("fontsize", po::value<int>(), "Set the font size.")
     ("shiftfirst", po::value<float>(), "Shift the first spectrum.")
@@ -232,33 +232,35 @@ int main(int argc, char** argv) {
                     std::string sName;
                     std::string sWl;
                     
-                    sName=sLine.substr(0, sLine.find_first_of(","));
-                    sWl=sLine.substr(sLine.find_first_of(",")+1, sLine.size());
-                    
-                    // remove useless char
-                    sName.erase(std::remove(sName.begin(), sName.end(), '"'), sName.end());
-                    sName.erase(std::remove(sName.begin(), sName.end(), '\''), sName.end());
-                    sWl.erase(std::remove(sWl.begin(), sWl.end(), ' '), sWl.end());
-                    sWl.erase(std::remove(sWl.begin(), sWl.end(), '\n'), sWl.end());
-                    sWl.erase(std::remove(sWl.begin(), sWl.end(), '\0'), sWl.end());
-                    
-                    // check if wl is NaN
-                    if (!is_float(sWl)) {
-                        msgM.msg(_msg::eMsg::ERROR, "NaN in line list");
-                        break;
-                    }
-                    
-                    // check duplicates
-                    bool bExists=false;
-                    for(auto stLine: vstLines) {
-                        std::stringstream ssS;
-                        ssS << std::fixed << std::setw(2) << std::setprecision(2) << std::get<0>(stLine);
-                        if (ssS.str()==sWl)
-                            bExists=true;
-                    }
+                    if (sLine.find("#")!=std::string::npos && sLine.find("%")!=std::string::npos)  {
+                        sName=sLine.substr(0, sLine.find_first_of(","));
+                        sWl=sLine.substr(sLine.find_first_of(",")+1, sLine.size());
                         
-                    if (!bExists) 
-                        vstLines.emplace_back(std::make_tuple(std::stof(sWl), sName));
+                        // remove useless char
+                        sName.erase(std::remove(sName.begin(), sName.end(), '"'), sName.end());
+                        sName.erase(std::remove(sName.begin(), sName.end(), '\''), sName.end());
+                        sWl.erase(std::remove(sWl.begin(), sWl.end(), ' '), sWl.end());
+                        sWl.erase(std::remove(sWl.begin(), sWl.end(), '\n'), sWl.end());
+                        sWl.erase(std::remove(sWl.begin(), sWl.end(), '\0'), sWl.end());
+                        
+                        // check if wl is NaN
+                        if (!is_float(sWl)) {
+                            msgM.msg(_msg::eMsg::ERROR, "NaN in line list");
+                            break;
+                        }
+                        
+                        // check duplicates
+                        bool bExists=false;
+                        for(auto stLine: vstLines) {
+                            std::stringstream ssS;
+                            ssS << std::fixed << std::setw(2) << std::setprecision(2) << std::get<0>(stLine);
+                            if (ssS.str()==sWl)
+                                bExists=true;
+                        }
+                            
+                        if (!bExists) 
+                            vstLines.emplace_back(std::make_tuple(std::stof(sWl), sName));
+                    }
                 }
                 std::sort(vstLines.begin(), vstLines.end());
                 fFlux.close();
