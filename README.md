@@ -14,7 +14,8 @@ List:
  - **marker**.cpp: highlight lines on spectrum with matplotlib
  
 TODO:
-
+ 
+ - **marker**.cpp: Add symbol to highlight specific lines in elemlist (!)
  - Fix _msg::_msg(const _msg&)
  - **marker**.cpp: NOR in cmd check
  - Make classes in order to clean .cpp

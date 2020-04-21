@@ -262,7 +262,7 @@ int main(int argc, char** argv) {
                             vstLines.emplace_back(std::make_tuple(std::stof(sWl), sName));
                     }
                     else 
-                        msgM.msg(_msg::eMsg::MID, "skip line ", sLine);
+                        msgM.msg(_msg::eMsg::MID, "ignore ", sLine);
                 }
                 std::sort(vstLines.begin(), vstLines.end());
                 fFlux.close();
