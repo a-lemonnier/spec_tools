@@ -423,7 +423,20 @@ bool _marker<_T>::add_line(_T TWl, const std::string &sName) {
 
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"add_line('",sName,"'", TWl,")");
-    vllSet.push_back({TWl, sName});
+    vllSet.push_back({TWl, sName, false});
+    return true;
+}
+
+template<typename _T>
+bool _marker<_T>::add_line(_T TWl, const std::string &sName, bool bBold) {
+    if (TWl<0 || sName.empty()) {
+        msgM.msg(_msg::eMsg::ERROR,"add_line(): invalid line");
+        return false;
+    }
+
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"add_line('",sName,"'", TWl ,bBold,")");
+    vllSet.push_back({TWl, sName, bBold});
     return true;
 }
 
@@ -834,25 +847,48 @@ bool _marker<_T>::make() {
         msgM.msg(_msg::eMsg::MID,"make(): add markers");
     
     for(auto line: vllSet) {
-        add_cmd("ax0.plot(["+
-        std::to_string(line.TWl) + ", " +
-        std::to_string(line.TWl) + "], [0, " +
-        std::to_string(get_continuum()) +
-        "],  color='grey', linestyle='--', zorder=2, linewidth="+std::to_string(fLinewidth)+")\n");
+        if (!line.bBold) {
+            add_cmd("ax0.plot(["+
+            std::to_string(line.TWl) + ", " +
+            std::to_string(line.TWl) + "], [0, " +
+            std::to_string(get_continuum()) +
+            "],  color='grey', linestyle=':', zorder=2, linewidth="+std::to_string(fLinewidth)+")\n");
+        }
+        else {
+            add_cmd("ax0.plot(["+
+            std::to_string(line.TWl) + ", " +
+            std::to_string(line.TWl) + "], [0, " +
+            std::to_string(get_continuum()) +
+            "],  color='black', linestyle='--', zorder=2, linewidth="+std::to_string(fLinewidth)+")\n"); 
+        }
             
         std::stringstream ssS;
         ssS << std::setprecision(2) << std::fixed << line.TWl;
-
-        add_cmd("ax0.annotate('"+
-                line.sElem+"\\n"+
-                "$\\\\lambda "+ssS.str()+ 
-                "$', xytext=("+
-                std::to_string(line.TWl)+","+
-                std::to_string(iCount*0.077)+"), "+
-                "xy=("+std::to_string(line.TWl)+", "+
-                std::to_string(iCount*0.077)+"), "+
-                "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.01', fc='white', ec='white', lw=2),size='"+
-                std::to_string(iAnnotatesize)+"', ha='center')");
+        
+        if (!line.bBold) {
+            add_cmd("ax0.annotate('"+
+                    line.sElem+"\\n"+
+                    "$\\\\lambda "+ssS.str()+ 
+                    "$', xytext=("+
+                    std::to_string(line.TWl)+","+
+                    std::to_string(iCount*0.077)+"), "+
+                    "xy=("+std::to_string(line.TWl)+", "+
+                    std::to_string(iCount*0.077)+"), "+
+                    "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.01', fc='white', ec='white', lw=2),size='"+
+                    std::to_string(iAnnotatesize)+"', ha='center')");
+        }
+        else {
+            add_cmd("ax0.annotate('$\\\\mathrm{\\\\mathbf{"+
+                    line.sElem+"}}$\\n"+
+                    "$\\\\lambda "+ssS.str()+ 
+                    "$', xytext=("+
+                    std::to_string(line.TWl)+","+
+                    std::to_string(iCount*0.077)+"), "+
+                    "xy=("+std::to_string(line.TWl)+", "+
+                    std::to_string(iCount*0.077)+"), "+
+                    "color = 'black', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.01', fc='white', ec='white', lw=2),size='"+
+                    std::to_string(iAnnotatesize)+"', ha='center')");
+        }
         
         iCount++;
     }
@@ -861,11 +897,7 @@ bool _marker<_T>::make() {
  
 // End of Script ------------------------------------------------
     add_cmd("ax0.legend(loc='best', fontsize="+std::to_string(iLegendsize)+").get_frame().set_linewidth(0.0)\n");
-    
-//     if (bVerbose)
-//         msgM.msg(_msg::eMsg::MID,"make(): write margins");
-//     add_cmd("fig.subplots_adjust(left=0.08, bottom=0.08, right=0.96, top=0.94, wspace=0.16)");
-    
+        
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"make(): write savefig");
     add_cmd("fig.savefig('"+

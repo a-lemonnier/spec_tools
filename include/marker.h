@@ -36,10 +36,12 @@ public:
      * \brief Define a line
      * \var TWl The wavelength
      * \var sElem The name of the element 
+     * \var bBold highlight the line
      */
     typedef struct {
         _T TWl;
         std::string sElem;
+        bool bBold;
     } Line;
     
     typedef std::vector<Line> vlList;
@@ -141,6 +143,12 @@ public:
      * \brief Add a marker with a name on the figure
      */
     bool add_line(_T TWl, const std::string &sName);
+    
+    /**
+     * \fn void add_line(_T TWl, const std::string &sName, bool bBold)
+     * \brief Add a marker with a name on the figure. bBold determines if the line must be highlighted.
+     */
+    bool add_line(_T TWl, const std::string &sName, bool bBold);
     
     /**
      * \fn add_data(const std::vector<_T>& vTX, const std::vector<_T>& vTY)

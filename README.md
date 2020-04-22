@@ -36,114 +36,71 @@ Dependencies:
 - Boost::tokenizer
 - Boost::unit_test_framework
 
----
-
-Get it:
-
-
-```
-
-gentoo - /home/gentoo % git clone https://github.com/a-lemonnier/spec_tools.git 
-Clonage dans 'spec_tools'...
-remote: Enumerating objects: 29, done.
-remote: Counting objects: 100% (29/29), done.
-remote: Compressing objects: 100% (17/17), done.
-remote: Total 384 (delta 10), reused 22 (delta 8), pack-reused 355
-Réception d'objets: 100% (384/384), 1.88 Mio | 3.68 Mio/s, fait.
-Résolution des deltas: 100% (226/226), fait.
-
-gentoo - /home/gentoo % cd spec_tools
-
-```
 
 ---
 
-> Compiling:
+> marker
 
 ```
 
-gentoo - spec_tools/ % cmake .
--- The C compiler identification is GNU 9.3.0
--- The CXX compiler identification is GNU 9.3.0
--- Check for working C compiler: /usr/bin/cc
--- Check for working C compiler: /usr/bin/cc - works
--- Detecting C compiler ABI info
--- Detecting C compiler ABI info - done
--- Detecting C compile features
--- Detecting C compile features - done
--- Check for working CXX compiler: /usr/bin/c++
--- Check for working CXX compiler: /usr/bin/c++ - works
--- Detecting CXX compiler ABI info
--- Detecting CXX compiler ABI info - done
--- Detecting CXX compile features
--- Detecting CXX compile features - done
--- Found Boost: /usr/include (found suitable version "1.72.0", minimum required is "1.40") found components: program_options timer filesystem chrono 
--- Configuring done
--- Generating done
+gentoo - spec_tools/ % ./marker -h
+Usage:
+  -h [ --help ]                 Display this help message
+  -i [ --input ] arg            Set input files.
+  -o [ --output ] arg           Set the output.
+  -t [ --title ] arg            Set the title.
+  -l [ --label ] arg            Set labels. If more than one label is defined, 
+                                the number of labels must be equal to the 
+                                numbers of files.
+  --xmin arg                    Set the min range.
+  --xmax arg                    Set the max range.
+  --xlabel arg                  Set xlabel.
+  --ylabel arg                  Set ylabel.
+  --xunit arg                   Set xunit.
+  --yunit arg                   Set yunit.
+  --dpi arg (=300)              Set the dpi.
+  --width arg (=0.25)           Set the width of curves.
+  --contsize arg (=0.600000024) Set the continnum width.
+  -s [ --sep ] arg              Set separators. If more than one sep is 
+                                defined, the number of sep must be equal to the
+                                numbers of files.
+  -e [ --element ] arg          Set the name of an element. Ex: \$H\\\\beta\$.
+  --elemlist arg                Set the line list: 
+                                            'Elem 1',       wavelength_1
+                                            'Elem 2',       wavelength_2
+                                        !   'Elem 3 bold',  wavelength_3
+                                        @!  'Elem 3 unbold',wavelength_3
+                                        #   blabla          (comment)
+                                        %   blablabla       (comment again)
+                                ...
+  -w [ --wavelength ] arg       Set the wavelength of the line.
+  --fontsize arg                Set the font size.
+  --shiftfirst arg              Shift the first spectrum.
+  --shift arg                   Shift spectra (except the first).
+  --dotted                      Dotted curve.
+  --dotdashed                   Dot-dashed curve.
+  -g [ --grid ]                 Show the grid.
+  --nolog                       Toggle off log.
+  -v [ --verbose ]              Toggle verbosity.
 
-gentoo - spec_tools/ % make -j$(nproc)
--- The C compiler identification is GNU 9.3.0
--- The CXX compiler identification is GNU 9.3.0
--- Check for working C compiler: /usr/bin/cc
--- Check for working C compiler: /usr/bin/cc -- works
--- Detecting C compiler ABI info
--- Detecting C compiler ABI info - done
--- Detecting C compile features
--- Detecting C compile features - done
--- Check for working CXX compiler: /usr/bin/c++
--- Check for working CXX compiler: /usr/bin/c++ -- works
--- Detecting CXX compiler ABI info
--- Detecting CXX compiler ABI info - done
--- Detecting CXX compile features
--- Detecting CXX compile features - done
--- Boost version: 1.72.0
--- Found the following Boost libraries:
---   program_options
---   timer
---   filesystem
---   chrono
---   system
--- Configuring done
--- Generating done
--- Build files have been written to: /drone/src
-+ make -j$(nproc)
-Scanning dependencies of target findncopy
-Scanning dependencies of target der_snr
-Scanning dependencies of target trim
-Scanning dependencies of target threshold
-Scanning dependencies of target shift
-Scanning dependencies of target marker
-Scanning dependencies of target genrandspec
-[  9%] Building CXX object CMakeFiles/findncopy.dir/src/findncopy.cpp.o
-[  9%] Building CXX object CMakeFiles/findncopy.dir/include/msg.cpp.o
-[ 19%] Building CXX object CMakeFiles/der_snr.dir/src/der_snr.cpp.o
-[ 19%] Building CXX object CMakeFiles/threshold.dir/src/threshold.cpp.o
-[ 23%] Building CXX object CMakeFiles/trim.dir/src/trim.cpp.o
-[ 28%] Building CXX object CMakeFiles/shift.dir/src/shift.cpp.o
-[ 33%] Building CXX object CMakeFiles/genrandspec.dir/src/genrandspec.cpp.o
-[ 38%] Building CXX object CMakeFiles/marker.dir/src/marker.cpp.o
-[ 42%] Building CXX object CMakeFiles/marker.dir/include/msg.cpp.o
-[ 47%] Building CXX object CMakeFiles/trim.dir/include/msg.cpp.o
-[ 52%] Building CXX object CMakeFiles/genrandspec.dir/include/msg.cpp.o
-[ 57%] Linking CXX executable findncopy
-[ 57%] Built target findncopy
-[ 61%] Building CXX object CMakeFiles/shift.dir/include/msg.cpp.o
-[ 66%] Building CXX object CMakeFiles/threshold.dir/include/msg.cpp.o
-[ 71%] Building CXX object CMakeFiles/der_snr.dir/include/msg.cpp.o
-[ 76%] Linking CXX executable genrandspec
-[ 76%] Built target genrandspec
-[ 80%] Linking CXX executable threshold
-[ 80%] Built target threshold
-[ 85%] Linking CXX executable trim
-[ 90%] Linking CXX executable shift
-[ 90%] Built target shift
-[ 90%] Built target trim
-[ 95%] Linking CXX executable marker
-[100%] Linking CXX executable der_snr
-[100%] Built target marker
-[100%] Built target der_snr
+
+Example:
+% ./marker -i rand_spectra/0/0.dat -i rand_spectra/0/1.dat -l 0.dat -l 1.dat  -t Spectra -l 'Spectrum 1' -l 'Spectrum 2' -w 4861 -e \$H\\beta\$
+▶ marker 
+⚐ marker write history 
+⚐ marker remove duplicates in history 
+⚐ marker check command line and fill class 
+⚐ marker set input: rand_spectra/0/0.dat with sep:'     ' 
+⚐ marker set input: rand_spectra/0/1.dat with sep:'     ' 
+⚐ marker data read and stored 
+⚐ marker set data to plot 
+⚐ marker set plot options 
+⚐ marker write and run script 
+⚐ marker  3.052816s wall, 2.760000s user + 0.070000s system = 2.830000s CPU (92.7%)
 
 ```
+
+![Plot](doc/plot.png)
 
 ---
 
@@ -373,61 +330,110 @@ Example:
 
 ---
 
-> marker
+> Get it:
+
 
 ```
 
-gentoo - spec_tools/ % ./marker -h
-Usage:
-  -h [ --help ]                 Display this help message
-  -i [ --input ] arg            Set input files.
-  -o [ --output ] arg           Set the output.
-  -t [ --title ] arg            Set the title.
-  -l [ --label ] arg            Set labels. If more than one label is defined, 
-                                the number of labels must be equal to the 
-                                numbers of files.
-  --xmin arg                    Set the min range.
-  --xmax arg                    Set the max range.
-  --xlabel arg                  Set xlabel.
-  --ylabel arg                  Set ylabel.
-  --xunit arg                   Set xunit.
-  --yunit arg                   Set yunit.
-  --dpi arg (=300)              Set the dpi.
-  --width arg (=0.25)           Set the width of curves.
-  --contsize arg (=0.600000024) Set the continnum width.
-  -s [ --sep ] arg              Set separators. If more than one sep is 
-                                defined, the number of sep must be equal to the
-                                numbers of files.
-  -e [ --element ] arg          Set the name of an element. Ex: \$H\\\\beta\$.
-  --elemlist arg                Set the line list: 
-                                'Element 1', wavelength_1
-                                'Element 2', wavelength_2
-                                'Element 3', wavelength_3
-                                #blabla (comment)
-                                %blablabla (comment again)
-                                ...
-  -w [ --wavelength ] arg       Set the wavelength of the line.
-  --shiftfirst arg              Shift the first spectrum.
-  --shift arg                   Shift spectra (except the first).
-  --dotted                      Dotted curve.
-  --dotdashed                   Dot-dashed curve.
-  -g [ --grid ]                 Show the grid.
-  -v [ --verbose ]              Toggle verbosity.
+gentoo - /home/gentoo % git clone https://github.com/a-lemonnier/spec_tools.git 
+Clonage dans 'spec_tools'...
+remote: Enumerating objects: 29, done.
+remote: Counting objects: 100% (29/29), done.
+remote: Compressing objects: 100% (17/17), done.
+remote: Total 384 (delta 10), reused 22 (delta 8), pack-reused 355
+Réception d'objets: 100% (384/384), 1.88 Mio | 3.68 Mio/s, fait.
+Résolution des deltas: 100% (226/226), fait.
 
-Example:
-% ./marker -i rand_spectra/0/0.dat -i rand_spectra/0/1.dat -l 0.dat -l 1.dat  -t Spectra -l 'Spectrum 1' -l 'Spectrum 2' -w 4861 -e \$H\\beta\$
-▶ marker 
-⚐ marker write history 
-⚐ marker remove duplicates in history 
-⚐ marker check command line and fill class 
-⚐ marker set input: rand_spectra/0/0.dat with sep:'     ' 
-⚐ marker set input: rand_spectra/0/1.dat with sep:'     ' 
-⚐ marker data read and stored 
-⚐ marker set data to plot 
-⚐ marker set plot options 
-⚐ marker write and run script 
-⚐ marker  3.052816s wall, 2.760000s user + 0.070000s system = 2.830000s CPU (92.7%)
+gentoo - /home/gentoo % cd spec_tools
 
 ```
 
-![Plot](doc/plot_4518-4526_vsini17.7_A15.2.png)
+---
+
+> Compiling:
+
+```
+
+gentoo - spec_tools/ % cmake .
+-- The C compiler identification is GNU 9.3.0
+-- The CXX compiler identification is GNU 9.3.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc - works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ - works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found Boost: /usr/include (found suitable version "1.72.0", minimum required is "1.40") found components: program_options timer filesystem chrono 
+-- Configuring done
+-- Generating done
+
+gentoo - spec_tools/ % make -j$(nproc)
+-- The C compiler identification is GNU 9.3.0
+-- The CXX compiler identification is GNU 9.3.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Boost version: 1.72.0
+-- Found the following Boost libraries:
+--   program_options
+--   timer
+--   filesystem
+--   chrono
+--   system
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /drone/src
++ make -j$(nproc)
+Scanning dependencies of target findncopy
+Scanning dependencies of target der_snr
+Scanning dependencies of target trim
+Scanning dependencies of target threshold
+Scanning dependencies of target shift
+Scanning dependencies of target marker
+Scanning dependencies of target genrandspec
+[  9%] Building CXX object CMakeFiles/findncopy.dir/src/findncopy.cpp.o
+[  9%] Building CXX object CMakeFiles/findncopy.dir/include/msg.cpp.o
+[ 19%] Building CXX object CMakeFiles/der_snr.dir/src/der_snr.cpp.o
+[ 19%] Building CXX object CMakeFiles/threshold.dir/src/threshold.cpp.o
+[ 23%] Building CXX object CMakeFiles/trim.dir/src/trim.cpp.o
+[ 28%] Building CXX object CMakeFiles/shift.dir/src/shift.cpp.o
+[ 33%] Building CXX object CMakeFiles/genrandspec.dir/src/genrandspec.cpp.o
+[ 38%] Building CXX object CMakeFiles/marker.dir/src/marker.cpp.o
+[ 42%] Building CXX object CMakeFiles/marker.dir/include/msg.cpp.o
+[ 47%] Building CXX object CMakeFiles/trim.dir/include/msg.cpp.o
+[ 52%] Building CXX object CMakeFiles/genrandspec.dir/include/msg.cpp.o
+[ 57%] Linking CXX executable findncopy
+[ 57%] Built target findncopy
+[ 61%] Building CXX object CMakeFiles/shift.dir/include/msg.cpp.o
+[ 66%] Building CXX object CMakeFiles/threshold.dir/include/msg.cpp.o
+[ 71%] Building CXX object CMakeFiles/der_snr.dir/include/msg.cpp.o
+[ 76%] Linking CXX executable genrandspec
+[ 76%] Built target genrandspec
+[ 80%] Linking CXX executable threshold
+[ 80%] Built target threshold
+[ 85%] Linking CXX executable trim
+[ 90%] Linking CXX executable shift
+[ 90%] Built target shift
+[ 90%] Built target trim
+[ 95%] Linking CXX executable marker
+[100%] Linking CXX executable der_snr
+[100%] Built target marker
+[100%] Built target der_snr
+
+```
+

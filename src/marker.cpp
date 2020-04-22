@@ -82,7 +82,14 @@ int main(int argc, char** argv) {
     ("contsize", po::value<float>()->default_value(0.6), "Set the continnum width.")
     ("sep,s", po::value<std::vector<std::string> >()->multitoken(), "Set separators. If more than one sep is defined, the number of sep must be equal to the numbers of files.")
     ("element,e",  po::value<std::vector<std::string> >()->multitoken(),"Set the name of an element. Ex: \\$H\\\\\\\\beta\\$.")
-    ("elemlist",po::value<std::string>(),"Set the line list: \n'Element 1', wavelength_1\n'Element 2', wavelength_2\n'Element 3', wavelength_3\n#blabla (comment)\n%blablabla (comment again)\n...")
+    ("elemlist",po::value<std::string>(),
+            "Set the line list: \n\
+            'Elem 1',       wavelength_1\n\
+            'Elem 2',       wavelength_2\n\
+        !   'Elem 3 bold',  wavelength_3\n\
+        @!  'Elem 3 unbold',wavelength_3\n\
+        #   blabla          (comment)\n\
+        %   blablabla       (comment again)\n...")
     ("wavelength,w",po::value<std::vector<float> >()->multitoken(),"Set the wavelength of the line.")
     ("fontsize", po::value<int>(), "Set the font size.")
     ("shiftfirst", po::value<float>(), "Shift the first spectrum.")
@@ -195,7 +202,7 @@ int main(int argc, char** argv) {
     std::string sXlabel, sYlabel;
     std::string sXunit, sYunit;
     std::vector<std::string> vsLabels;
-    std::vector<std::tuple<float, std::string> > vstLines;
+    std::vector<std::tuple<float, std::string, bool> > vstLines;
     float fXmin, fXmax;
     
     // Add lines from cmd line
@@ -204,7 +211,7 @@ int main(int argc, char** argv) {
             for(int i=0; i<vm["wavelength"].as<std::vector<float> >().size(); i++)
                 vstLines.emplace_back(
                     std::make_tuple(vm["wavelength"].as<std::vector<float> >()[i],
-                                    vm["element"].as<std::vector<std::string> >()[i]));
+                                    vm["element"].as<std::vector<std::string> >()[i], false));
             std::sort(vstLines.begin(), vstLines.end());
         }
         else {
@@ -231,6 +238,20 @@ int main(int argc, char** argv) {
                 while(std::getline(fFlux, sLine)) {
                     std::string sName;
                     std::string sWl;
+                    
+                    // check highlight symbol
+                    bool bBold=false;
+                    if (sLine.find("!")!=std::string::npos && sLine.find("@")==std::string::npos) {
+                        sLine.erase(std::remove(sLine.begin(), sLine.end(), '!'), sLine.end());
+                        msgM.msg(_msg::eMsg::MID, "highlight ", sLine);
+                        bBold=true;                        
+                    }
+                    
+                    // @! or ! !@ unbold the line
+                    if (sLine.find("!")!=std::string::npos && sLine.find("@")!=std::string::npos) {
+                        sLine.erase(std::remove(sLine.begin(), sLine.end(), '!'), sLine.end());
+                        sLine.erase(std::remove(sLine.begin(), sLine.end(), '@'), sLine.end());
+                    }
                     
                     if (sLine.find("#")==std::string::npos && sLine.find("%")==std::string::npos)  {
                         sName=sLine.substr(0, sLine.find_first_of(","));
@@ -259,7 +280,7 @@ int main(int argc, char** argv) {
                         }
                             
                         if (!bExists) 
-                            vstLines.emplace_back(std::make_tuple(std::stof(sWl), sName));
+                            vstLines.emplace_back(std::make_tuple(std::stof(sWl), sName, bBold));
                     }
                     else 
                         msgM.msg(_msg::eMsg::MID, "ignore ", sLine);
@@ -457,7 +478,9 @@ int main(int argc, char** argv) {
                 std::get<0>(tLine) < Marker.get_supp().second) {
             msgM.msg(_msg::eMsg::MID, "add '", std::get<1>(tLine), 
                                       "' at", std::get<0>(tLine));
-            Marker.add_line(std::get<0>(tLine), std::get<1>(tLine));
+            Marker.add_line(std::get<0>(tLine), 
+                            std::get<1>(tLine),
+                            std::get<2>(tLine));
             }
         }
         
