@@ -8,7 +8,7 @@ List:
  - **threshold**.cpp: remove lines below a wavelength threshold (multi-threaded)
  - **trim**.cpp: cut a spectrum or more between two wavelengths (multi-threaded)
  - **findncopy**.cpp: find and copy files from a file list
- - **der_snr**.cpp: compute the Signal-to-Noise of a spectrum or from a folder containing spectra (multi-threaded)
+ - **der_snr**.cpp: compute the Signal-to-Noise of a spectrum or of a set set of spectra from a folder (multi-threaded)
  - **shift**.cpp: shift whole spectrum by a given wavelength (multi-threaded)
  - **gen_rand_spec**.cpp: generate a set of randomized-flux spectra between two wavelengths for test purposes (multi-threaded)
  - **marker**.cpp: highlight lines on spectrum with matplotlib
