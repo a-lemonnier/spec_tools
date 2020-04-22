@@ -48,6 +48,9 @@ gentoo - spec_tools/ % ./marker -h
 Usage:
   -h [ --help ]                 Display this help message
   -i [ --input ] arg            Set input files.
+  -s [ --sep ] arg              Set separators. If more than one sep is 
+                                defined, the number of sep must be equal to the
+                                numbers of files.
   -o [ --output ] arg           Set the output.
   -t [ --title ] arg            Set the title.
   -l [ --label ] arg            Set labels. If more than one label is defined, 
@@ -59,13 +62,15 @@ Usage:
   --ylabel arg                  Set ylabel.
   --xunit arg                   Set xunit.
   --yunit arg                   Set yunit.
-  --dpi arg (=300)              Set the dpi.
   --width arg (=0.25)           Set the width of curves.
+  --rgb arg                     Set the color of the first spectrum as 
+                                RGBalpha: '#rrggbbaa'.
   --contsize arg (=0.600000024) Set the continnum width.
-  -s [ --sep ] arg              Set separators. If more than one sep is 
-                                defined, the number of sep must be equal to the
-                                numbers of files.
+  --dotted                      Dotted curve.
+  --dotdashed                   Dot-dashed curve.
+  --fontsize arg                Set the font size.
   -e [ --element ] arg          Set the name of an element. Ex: \$H\\\\beta\$.
+  -w [ --wavelength ] arg       Set the wavelength of the line.
   --elemlist arg                Set the line list: 
                                             'Elem 1',       wavelength_1
                                             'Elem 2',       wavelength_2
@@ -74,15 +79,10 @@ Usage:
                                         #   blabla          (comment)
                                         %   blablabla       (comment again)
                                 ...
-  -w [ --wavelength ] arg       Set the wavelength of the line.
-  --fontsize arg                Set the font size.
   --shiftfirst arg              Shift the first spectrum.
   --shift arg                   Shift spectra (except the first).
-  --rgb arg                     Set the color of the first spectrum as 
-                                RGBalpha: '#rrggbbaa'.
-  --dotted                      Dotted curve.
-  --dotdashed                   Dot-dashed curve.
   -g [ --grid ]                 Show the grid.
+  --dpi arg (=300)              Set the dpi.
   --nolog                       Toggle off log.
   -v [ --verbose ]              Toggle verbosity.
 
