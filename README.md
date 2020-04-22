@@ -77,6 +77,8 @@ Usage:
   --fontsize arg                Set the font size.
   --shiftfirst arg              Shift the first spectrum.
   --shift arg                   Shift spectra (except the first).
+  --rgb arg                     Set the color of the first spectrum as 
+                                RGBalpha: '#rrggbbaa'.
   --dotted                      Dotted curve.
   --dotdashed                   Dot-dashed curve.
   -g [ --grid ]                 Show the grid.

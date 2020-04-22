@@ -94,6 +94,7 @@ int main(int argc, char** argv) {
     ("fontsize", po::value<int>(), "Set the font size.")
     ("shiftfirst", po::value<float>(), "Shift the first spectrum.")
     ("shift", po::value<float>(), "Shift spectra (except the first).")
+    ("rgb", po::value<std::string>(), "Set the color of the first spectrum as RGBalpha: '#rrggbbaa'.")
     ("dotted", "Dotted curve.")
     ("dotdashed", "Dot-dashed curve.")
     ("grid,g","Show the grid.")
@@ -450,6 +451,9 @@ int main(int argc, char** argv) {
         
         if (vm.count("grid"))
             Marker.set_showgrid(true);
+        
+        if (vm.count("color"))
+            Marker.set_colorline(vm["color"].as<std::string>());
         
         if (vm.count("dotted"))
             Marker.set_dotted(true);
