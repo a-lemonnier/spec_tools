@@ -15,7 +15,6 @@ List:
  
 TODO:
  
- - **marker**.cpp: Add symbol to highlight specific lines in elemlist (!)
  - Fix _msg::_msg(const _msg&)
  - **marker**.cpp: NOR in cmd check
  - Make classes in order to clean .cpp
@@ -40,6 +39,8 @@ Dependencies:
 ---
 
 > marker
+
+![Plot](doc/plot.png)
 
 ```
 
@@ -101,8 +102,6 @@ Example:
 ⚐ marker  3.052816s wall, 2.760000s user + 0.070000s system = 2.830000s CPU (92.7%)
 
 ```
-
-![Plot](doc/plot.png)
 
 ---
 

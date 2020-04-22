@@ -68,20 +68,30 @@ int main(int argc, char** argv) {
     description.add_options()
     ("help,h", "Display this help message")
     ("input,i", po::value<std::vector<std::string> >()->multitoken(),"Set input files.")
+    ("sep,s", po::value<std::vector<std::string> >()->multitoken(), "Set separators. If more than one sep is defined, the number of sep must be equal to the numbers of files.")
+    
     ("output,o", po::value<std::string>(),"Set the output.")
+    
     ("title,t", po::value<std::string>(), "Set the title.")
     ("label,l", po::value<std::vector<std::string> >()->multitoken(),"Set labels. If more than one label is defined, the number of labels must be equal to the numbers of files.")
+    
     ("xmin", po::value<float>(), "Set the min range.")
     ("xmax", po::value<float>(), "Set the max range.")
     ("xlabel", po::value<std::string>(), "Set xlabel.")
     ("ylabel", po::value<std::string>(), "Set ylabel.")
     ("xunit", po::value<std::string>(), "Set xunit.")
     ("yunit", po::value<std::string>(), "Set yunit.")
-    ("dpi", po::value<unsigned int>()->default_value(300), "Set the dpi.")
+
     ("width", po::value<float>()->default_value(0.25), "Set the width of curves.")
+    ("rgb", po::value<std::string>(), "Set the color of the first spectrum as RGBalpha: '#rrggbbaa'.")
     ("contsize", po::value<float>()->default_value(0.6), "Set the continnum width.")
-    ("sep,s", po::value<std::vector<std::string> >()->multitoken(), "Set separators. If more than one sep is defined, the number of sep must be equal to the numbers of files.")
+    
+    ("dotted", "Dotted curve.")
+    ("dotdashed", "Dot-dashed curve.")
+    ("fontsize", po::value<int>(), "Set the font size.")
+    
     ("element,e",  po::value<std::vector<std::string> >()->multitoken(),"Set the name of an element. Ex: \\$H\\\\\\\\beta\\$.")
+    ("wavelength,w",po::value<std::vector<float> >()->multitoken(),"Set the wavelength of the line.")
     ("elemlist",po::value<std::string>(),
             "Set the line list: \n\
             'Elem 1',       wavelength_1\n\
@@ -90,14 +100,14 @@ int main(int argc, char** argv) {
         @!  'Elem 3 unbold',wavelength_3\n\
         #   blabla          (comment)\n\
         %   blablabla       (comment again)\n...")
-    ("wavelength,w",po::value<std::vector<float> >()->multitoken(),"Set the wavelength of the line.")
-    ("fontsize", po::value<int>(), "Set the font size.")
+
+    
     ("shiftfirst", po::value<float>(), "Shift the first spectrum.")
     ("shift", po::value<float>(), "Shift spectra (except the first).")
-    ("rgb", po::value<std::string>(), "Set the color of the first spectrum as RGBalpha: '#rrggbbaa'.")
-    ("dotted", "Dotted curve.")
-    ("dotdashed", "Dot-dashed curve.")
+
+
     ("grid,g","Show the grid.")
+    ("dpi", po::value<unsigned int>()->default_value(300), "Set the dpi.")
     ("nolog","Toggle off log.")
     ("verbose,v","Toggle verbosity.");
     
