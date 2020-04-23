@@ -59,12 +59,6 @@ void trim(const std::vector<std::string> &list, double threshold);
 
 // ----------------------------------------------------
 
-/**
- * \fn int main(int argc, char **argv)
- * \brief This code removes zeros and negative values in csv located in "./data". The maximum of thread has been used to accelerate code.
- * \todo Parsing command line to get folder name and csv separator, for example.
- */
-
 int main(int argc, char **argv) {
     
 #ifdef HAS_BOOST_TIMER    
