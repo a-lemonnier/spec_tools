@@ -40,7 +40,7 @@ Dependencies:
 
 > marker
 
-![Plot](doc/plot.png)
+![marker](doc/plot.png)
 
 ```
 
@@ -296,6 +296,8 @@ Example:
 
 > genrandspec
 
+![genrandspec](plot_genrandspec.png)
+
 ```
 
 gentoo - spec_tools/ % ./genrandspec -h                                                                                                                       
@@ -310,22 +312,22 @@ Usage:
                                       option for \tab.
 
 Example:
-./shift -w -1.0 -f CD-592728.obs
+./genrandspec -l 4500 -u 4600
 ▶ genrandspec 
 ⚐ genrandspec write history 
 ⚐ genrandspec remove duplicates in history 
 ⚐ genrandspec check command line 
-⚐ genrandspec create 8 async threads 
+⚐ genrandspec create 8 folders 
 ⚐ genrandspec start 8 async threads 
-⚡ run(470440): create spectra in rand_spectra/0  
-⚡ run(470440): create spectra in rand_spectra/1  
-⚡ run(470440): create spectra in rand_spectra/2  
-⚡ run(470440): create spectra in rand_spectra/3  
-⚡ run(470440): create spectra in rand_spectra/4  
-⚡ run(470440): create spectra in rand_spectra/5  
-⚡ run(470440): create spectra in rand_spectra/6  
-⚡ run(470440): create spectra in rand_spectra/7  
-⚐ genrandspec  10.694788s wall, 77.990000s user + 3.050000s system = 81.040000s CPU (757.8%) 
+⚡ run(686277): create spectra in rand_spectra/0 
+⚡ run(686278): create spectra in rand_spectra/1 
+⚡ run(686279): create spectra in rand_spectra/2 
+⚡ run(686280): create spectra in rand_spectra/3 
+⚡ run(686281): create spectra in rand_spectra/4 
+⚡ run(686282): create spectra in rand_spectra/5 
+⚡ run(686283): create spectra in rand_spectra/6 
+⚡ run(686284): create spectra in rand_spectra/7 
+⚐ genrandspec  0.160590s wall, 1.070000s user + 0.000000s system = 1.070000s CPU (666.
 
 ```
 
