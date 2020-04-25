@@ -327,7 +327,7 @@ Example:
 ⚡ run(686282): create spectra in rand_spectra/5 
 ⚡ run(686283): create spectra in rand_spectra/6 
 ⚡ run(686284): create spectra in rand_spectra/7 
-⚐ genrandspec  0.160590s wall, 1.070000s user + 0.000000s system = 1.070000s CPU (666.
+⚐ genrandspec  0.160590s wall, 1.070000s user + 0.000000s system = 1.070000s CPU (666.5%)
 
 ```
 
