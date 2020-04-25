@@ -19,7 +19,6 @@ TODO:
  - **marker**.cpp: NOR in cmd check
  - Make classes in order to clean .cpp
  - Implement boost:: recursive directory copy
- - Add C++11 and C++14 compatibilities
 
 ---
 
