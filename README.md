@@ -296,7 +296,7 @@ Example:
 
 > genrandspec
 
-![genrandspec](plot_genrandspec.png)
+![genrandspec](doc/plot_genrandspec.png)
 
 ```
 
