@@ -11,4 +11,6 @@
 --ylabel "Normalized flux" \
 -o "plot_"$1"-"$2".pdf" \
 --width 0.4 \
---elemlist line.list
+--elemlist line.list \
+$3 \
+$4

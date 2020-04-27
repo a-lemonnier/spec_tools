@@ -40,4 +40,4 @@ CMD=$SUBCMD1$SUBCMD2$SUBCMD3$SUBCMD0
 
 #fityk  -c "$CMD" 2>&1 &
 
-./mark.sh $1 $2 $3 "stars"/$NAME/$NAME"_"$PART".synspec" "stars"/$NAME/$NAME"_"$PART".obs.norm" "stars"/$NAME/$NAME"_"$PART".sub.obs.norm" "$NAME" "$NAME sub" $4 && okular plot_$1-$2.pdf
+./mark.sh $1 $2 $3 "stars"/$NAME/$NAME"_"$PART".synspec" "stars"/$NAME/$NAME"_"$PART".obs.norm" "stars"/$NAME/$NAME"_"$PART".sub.obs.norm" "$NAME" "$NAME sub" $4 $5 && okular plot_$1-$2.pdf
