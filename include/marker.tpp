@@ -854,7 +854,7 @@ bool _marker<_T>::make() {
     // Line -----------------------------------------------------
     int iSign=1; // positions triangulaires
     float fNorm=0.077; // espacement des annotations
-    int iWidesize=5;
+    int iWidesize=3;
     for(auto line: vllSet) {
         if (!line.bBold) {
             add_cmd("ax0.plot(["+
@@ -887,7 +887,7 @@ bool _marker<_T>::make() {
                         std::to_string(iCount*fNorm)+"), "+
                         "xy=("+std::to_string(line.TWl)+", "+
                         std::to_string(iCount*fNorm)+"), "+
-                        "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.01', fc='white', ec='white', lw=2),size='"+
+                        "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.15), bbox=dict(boxstyle='round,pad=0.01', fc='white', ec='white', lw=2),size='"+
                         std::to_string(iWidesize)+"', ha='center')");
             }
             else {
@@ -899,7 +899,7 @@ bool _marker<_T>::make() {
                         std::to_string(iCount*fNorm)+"), "+
                         "xy=("+std::to_string(line.TWl)+", "+
                         std::to_string(iCount*fNorm)+"), "+
-                        "color = 'black', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.01', fc='white', ec='white', lw=2),size='"+
+                        "color = 'black', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.15), bbox=dict(boxstyle='round,pad=0.01', fc='white', ec='white', lw=2),size='"+
                         std::to_string(iWidesize)+"', ha='center')");
             }
         }
