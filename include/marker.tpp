@@ -24,6 +24,7 @@ _marker<_T>::_marker():
     bShowgrid(false),
     bDotted(false),
     bDotdashed(false),
+    bWide(false),
     bIsset_fig_size(false),
     sLog(".marker.log"),
     bLog(true)
@@ -387,6 +388,11 @@ template<typename _T>
 void _marker<_T>::set_dotdashed(bool bDotdashed) {
     this->bDotdashed=bDotdashed;
     this->bDotted=!bDotdashed;
+}
+
+template<typename _T>
+void _marker<_T>::set_wide(bool bWide) {
+    this->bWide=bWide;
 }
 
 template<typename _T>
@@ -845,7 +851,10 @@ bool _marker<_T>::make() {
 // Markers ------------------------------------------------------
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"make(): add markers");
-    
+    // Line -----------------------------------------------------
+    int iSign=1; // positions triangulaires
+    float fNorm=0.077; // espacement des annotations
+    int iWidesize=5;
     for(auto line: vllSet) {
         if (!line.bBold) {
             add_cmd("ax0.plot(["+
@@ -865,32 +874,68 @@ bool _marker<_T>::make() {
         std::stringstream ssS;
         ssS << std::setprecision(2) << std::fixed << line.TWl;
         
-        if (!line.bBold) {
-            add_cmd("ax0.annotate('"+
-                    line.sElem+"\\n"+
-                    "$\\\\lambda "+ssS.str()+ 
-                    "$', xytext=("+
-                    std::to_string(line.TWl)+","+
-                    std::to_string(iCount*0.077)+"), "+
-                    "xy=("+std::to_string(line.TWl)+", "+
-                    std::to_string(iCount*0.077)+"), "+
-                    "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.01', fc='white', ec='white', lw=2),size='"+
-                    std::to_string(iAnnotatesize)+"', ha='center')");
+        // Text -----------------------------------------------------
+        // iCount n'est utilise qu'ici
+        // 0 < iCount 0.5
+        if (bWide) {
+            if (!line.bBold) {
+                add_cmd("ax0.annotate('"+
+                        line.sElem+"\\n"+
+                        "$\\\\lambda "+ssS.str()+ 
+                        "$', xytext=("+
+                        std::to_string(line.TWl)+","+
+                        std::to_string(iCount*fNorm)+"), "+
+                        "xy=("+std::to_string(line.TWl)+", "+
+                        std::to_string(iCount*fNorm)+"), "+
+                        "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.01', fc='white', ec='white', lw=2),size='"+
+                        std::to_string(iWidesize)+"', ha='center')");
+            }
+            else {
+                add_cmd("ax0.annotate('$\\\\mathrm{\\\\mathbf{"+
+                        line.sElem+"}}$\\n"+
+                        "$\\\\lambda "+ssS.str()+ 
+                        "$', xytext=("+
+                        std::to_string(line.TWl)+","+
+                        std::to_string(iCount*fNorm)+"), "+
+                        "xy=("+std::to_string(line.TWl)+", "+
+                        std::to_string(iCount*fNorm)+"), "+
+                        "color = 'black', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.01', fc='white', ec='white', lw=2),size='"+
+                        std::to_string(iWidesize)+"', ha='center')");
+            }
         }
         else {
-            add_cmd("ax0.annotate('$\\\\mathrm{\\\\mathbf{"+
-                    line.sElem+"}}$\\n"+
-                    "$\\\\lambda "+ssS.str()+ 
-                    "$', xytext=("+
-                    std::to_string(line.TWl)+","+
-                    std::to_string(iCount*0.077)+"), "+
-                    "xy=("+std::to_string(line.TWl)+", "+
-                    std::to_string(iCount*0.077)+"), "+
-                    "color = 'black', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.01', fc='white', ec='white', lw=2),size='"+
-                    std::to_string(iAnnotatesize)+"', ha='center')");
+            if (!line.bBold) {
+                add_cmd("ax0.annotate('"+
+                        line.sElem+"\\n"+
+                        "$\\\\lambda "+ssS.str()+ 
+                        "$', xytext=("+
+                        std::to_string(line.TWl)+","+
+                        std::to_string(iCount*fNorm)+"), "+
+                        "xy=("+std::to_string(line.TWl)+", "+
+                        std::to_string(iCount*fNorm)+"), "+
+                        "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.01', fc='white', ec='white', lw=2),size='"+
+                        std::to_string(iAnnotatesize)+"', ha='center')");
+            }
+            else {
+                add_cmd("ax0.annotate('$\\\\mathrm{\\\\mathbf{"+
+                        line.sElem+"}}$\\n"+
+                        "$\\\\lambda "+ssS.str()+ 
+                        "$', xytext=("+
+                        std::to_string(line.TWl)+","+
+                        std::to_string(iCount*fNorm)+"), "+
+                        "xy=("+std::to_string(line.TWl)+", "+
+                        std::to_string(iCount*fNorm)+"), "+
+                        "color = 'black', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.01', fc='white', ec='white', lw=2),size='"+
+                        std::to_string(iAnnotatesize)+"', ha='center')");
+            }
+        }   
+        iCount+=iSign;
+        if (iCount*fNorm>0.5)
+            iSign=-1;
+        if (iCount*fNorm<0) {
+            iSign=1;
+            iCount=0;
         }
-        
-        iCount++;
     }
     
     add_cmd(" ");

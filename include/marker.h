@@ -6,6 +6,8 @@
 
 #include <fstream>
 
+#include <cmath>
+
 #include <string>
 #include <sstream>
 #include <iomanip>
@@ -125,6 +127,12 @@ public:
      * \brief Set secondary curves with dot-dashed-style.
      */
     void set_dotdashed(bool bDotdashed);
+    
+    /**
+     * \fn void set_wide(bool bWide)
+     * \brief Define if the spectrum range is wide in order to reduce marker size with no overlaps
+     */
+    void set_wide(bool bWide);
     
     /**
      * \fn void set_scriptname(const std::string &sScriptname)
@@ -260,6 +268,7 @@ private:
     bool bShowgrid;
     bool bDotted;
     bool bDotdashed;
+    bool bWide;
     
     bool bIsset_fig_size; /**< Indicate whether the figsize is defined or not */
     

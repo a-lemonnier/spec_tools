@@ -14,7 +14,6 @@ List:
  - **marker**.cpp: highlight lines on spectrum with matplotlib
  
 TODO:
- - **marker**.cpp: Add --wide mode to plot wide wl range
  - **marker**.cpp: Add a sort function to sort elemlist which is painfully readable
  - **msg**.h: Fix _msg::_msg(const _msg&)
  - **marker**.cpp: NOR in cmd check

@@ -89,6 +89,7 @@ int main(int argc, char** argv) {
     ("dotted", "Dotted curve.")
     ("dotdashed", "Dot-dashed curve.")
     ("fontsize", po::value<int>(), "Set the font size.")
+    ("wide", "Indicate if markers have to be adapted to the spectrum size.")
     
     ("element,e",  po::value<std::vector<std::string> >()->multitoken(),"Set the name of an element. Ex: \\$H\\\\\\\\beta\\$.")
     ("wavelength,w",po::value<std::vector<float> >()->multitoken(),"Set the wavelength of the line.")
@@ -470,6 +471,9 @@ int main(int argc, char** argv) {
         
         if (vm.count("dotdashed"))
             Marker.set_dotdashed(true);
+        
+        if (vm.count("wide"))
+            Marker.set_wide(true);
         
         if (vm.count("width"))
             Marker.set_linewidth(abs(vm["width"].as<float>()));
