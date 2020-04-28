@@ -393,7 +393,7 @@ int main(int argc, char** argv) {
                 vCsv[i].shift(vm["shift"].as<float>());
         }
             
-        _marker Marker;
+        _marker<> Marker;
         
         if (vm.count("verbose"))
             Marker.set_verbose(true);

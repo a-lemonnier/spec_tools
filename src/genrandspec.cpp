@@ -207,7 +207,7 @@ int main(int argc, char** argv) {
     float fMax, fMin;
     float fStep=vm["step"].as<float>();
     
-    if (abs(vm["maxw"].as<float>()-vm["minw"].as<float>()<1e-35) ) {
+    if (abs(vm["maxw"].as<float>()-vm["minw"].as<float>())<1e-35) {
         msgM.msg(_msg::eMsg::ERROR, "invalid boundaries");
         return EXIT_FAILURE;
     }
