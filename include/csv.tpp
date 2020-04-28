@@ -870,13 +870,13 @@ void _csv<_T>::clear() {
 
 template<typename _T> 
 _csv<_T>& _csv<_T>::operator=(const _csv<_T>& other) const {
-        bStatus=true;
+        this->bStatus=true;
    
         debug("copying");
         if (other.sFilename.empty()) {
             error("copy: empty sFilename");
             this->set_filename("error.csv");
-            bStatus=false;
+            this->bStatus=false;
         }
         else 
             this->set_filename(other.get_filename());
@@ -884,7 +884,7 @@ _csv<_T>& _csv<_T>::operator=(const _csv<_T>& other) const {
         if (other.cSeparator=='\0') {
             error("copy: empty cSeparator");
             this->set_separator('\t');
-            bStatus=false;
+            this->bStatus=false;
         }
         else
             this->set_separator(other.get_separator());

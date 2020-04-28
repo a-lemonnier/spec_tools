@@ -19,16 +19,16 @@ TODO:
  - **marker**.cpp: NOR in cmd check
  - Make classes in order to clean .cpp
  - Implement boost:: recursive directory copy
-
+ 
 ---
 
 This repo. works on Gentoo 17.0 x64 and Ubuntu x64: bionic and eoan.
 
 Dependencies:
 
-- gcc > 7 
+- gcc >= 7 or clang >= 5 (smaller and slower (?) binary)
 - CMake
-- Boost >1.40
+- Boost >= 1.40
 - Boost::program_options
 - Boost::spirit
 - Boost::tokenizer
@@ -354,6 +354,12 @@ gentoo - /home/gentoo % cd spec_tools
 
 > Compiling:
 
+Toggle compiler in CMakeLists.txt:
+
+- set(COMPILER gcc) -> gcc
+- set(COMPILER clang) -> Clang
+- set(COMPILER intel) -> Intel compiler
+
 ```
 
 gentoo - spec_tools/ % cmake .
@@ -439,3 +445,22 @@ Scanning dependencies of target genrandspec
 
 ```
 
+> BUG:
+
+ - **marker**.cpp with Intel compiler: std::tuple
+ 
+```
+/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include/g++-v9/tuple(553): error: pack "_UElements" does not have the same number of elements as "_Elements"
+  	    __and_<is_nothrow_assignable<_Elements&, _UElements>...>::value;
+  	                                             ^
+          detected during:
+            instantiation of "bool std::tuple<_Elements...>::__nothrow_assignable<_UElements...>() [with _Elements=<float, std::string, bool>, _UElements=<>]" at line 225 of "/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include/g++-v9/bits/stl_heap.h"
+            instantiation of "void std::__adjust_heap(_RandomAccessIterator, _Distance, _Distance, _Tp, _Compare) [with _RandomAccessIterator=__gnu_cxx::__normal_iterator<std::tuple<float, std::string, bool> *, std::vector<std::tuple<float, std::string, bool>, std::allocator<std::tuple<float, std::string, bool>>>>, _Distance=std::ptrdiff_t={long}, _Tp=std::tuple<float, std::string, bool>, _Compare=__gnu_cxx::__ops::_Iter_less_iter]" at line 343 of
+                      "/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include/g++-v9/bits/stl_heap.h"
+            instantiation of "void std::__make_heap(_RandomAccessIterator, _RandomAccessIterator, _Compare &) [with _RandomAccessIterator=__gnu_cxx::__normal_iterator<std::tuple<float, std::string, bool> *, std::vector<std::tuple<float, std::string, bool>, std::allocator<std::tuple<float, std::string, bool>>>>, _Compare=__gnu_cxx::__ops::_Iter_less_iter]" at line 1671 of "/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include/g++-v9/bits/stl_algo.h"
+            instantiation of "void std::__heap_select(_RandomAccessIterator, _RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator=__gnu_cxx::__normal_iterator<std::tuple<float, std::string, bool> *, std::vector<std::tuple<float, std::string, bool>, std::allocator<std::tuple<float, std::string, bool>>>>, _Compare=__gnu_cxx::__ops::_Iter_less_iter]" at line 1932 of "/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include/g++-v9/bits/stl_algo.h"
+            instantiation of "void std::__partial_sort(_RandomAccessIterator, _RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator=__gnu_cxx::__normal_iterator<std::tuple<float, std::string, bool> *, std::vector<std::tuple<float, std::string, bool>, std::allocator<std::tuple<float, std::string, bool>>>>, _Compare=__gnu_cxx::__ops::_Iter_less_iter]" at line 1947 of "/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include/g++-v9/bits/stl_algo.h"
+            instantiation of "void std::__introsort_loop(_RandomAccessIterator, _RandomAccessIterator, _Size, _Compare) [with _RandomAccessIterator=__gnu_cxx::__normal_iterator<std::tuple<float, std::string, bool> *, std::vector<std::tuple<float, std::string, bool>, std::allocator<std::tuple<float, std::string, bool>>>>, _Size=long, _Compare=__gnu_cxx::__ops::_Iter_less_iter]" at line 1969 of "/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include/g++-v9/bits/stl_algo.h"
+            instantiation of "void std::__sort(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator=__gnu_cxx::__normal_iterator<std::tuple<float, std::string, bool> *, std::vector<std::tuple<float, std::string, bool>, std::allocator<std::tuple<float, std::string, bool>>>>, _Compare=__gnu_cxx::__ops::_Iter_less_iter]" at line 4867 of "/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include/g++-v9/bits/stl_algo.h"
+            instantiation of "void std::sort(_RAIter, _RAIter) [with _RAIter=__gnu_cxx::__normal_iterator<std::tuple<float, std::string, bool> *, std::vector<std::tuple<float, std::string, bool>, std::allocator<std::tuple<float, std::string, bool>>>>]" at line 227 of "/home/gentoo/Prog/cpp/spec_tools/src/marker.cpp"
+```

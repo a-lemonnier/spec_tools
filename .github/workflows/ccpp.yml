@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: upgrade
-      run: sudo apt update; sudo apt install -y tzdata gcc g++ cmake doxygen doxygen-latex graphviz
+      run: sudo apt update; sudo apt install -y tzdata gcc g++ clang cmake doxygen doxygen-latex graphviz
     - name: install boost
       run: sudo apt install -y libboost-all-dev libboost-test-dev
     - name: install py

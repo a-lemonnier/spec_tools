@@ -446,7 +446,7 @@ BOOST_AUTO_TEST_CASE(MinThres_int_double_long) {
 // Misc. functions
 
 float norm_rand() {
-    return static_cast<float>(rand())/RAND_MAX;
+    return static_cast<float>(rand()/RAND_MAX);
 }
 
 template<typename _T>

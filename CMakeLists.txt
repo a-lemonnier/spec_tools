@@ -2,6 +2,26 @@ cmake_minimum_required(VERSION 3.0)
 
 project(spec_tools)
 
+set(COMPILER clang)
+
+if (COMPILER STREQUAL "gcc")
+  set(CMAKE_CC_COMPILER "gcc")
+  set(CMAKE_CXX_COMPILER "g++")
+  message("CC: clang")
+  message("CXX: clang++")
+elseif (COMPILER STREQUAL "clang")
+  set(CMAKE_CC_COMPILER "clang")
+  set(CMAKE_CXX_COMPILER "clang++")
+  message("CC: gcc")
+  message("CXX: g++")
+elseif (COMPILER STREQUAL "intel") #does not work atm
+  set(INTEL_DIR  /opt/intel/sw_dev_tools/bin)
+  set(CMAKE_CC_COMPILER ${INTEL_DIR}/icc)
+  set(CMAKE_CXX_COMPILER ${INTEL_DIR}/icpc)
+  message("CC: icc")
+  message("CXX: icpc")
+endif()
+
 include_directories(./src ./include ${Boost_INCLUDE_DIRS} ./test)
 
 add_executable(threshold src/threshold.cpp include/msg.cpp)

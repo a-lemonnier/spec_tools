@@ -12,7 +12,7 @@ steps:
     - apt update -y
     - export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
     - apt-get install -y tzdata
-    - apt-get install -y make gcc g++ cmake perl
+    - apt-get install -y make gcc g++ clang cmake perl
     - apt-get install -y libboost-all-dev libboost-test-dev
     - apt-get install -y python3-matplotlib python3-numpy 
     - cmake .
