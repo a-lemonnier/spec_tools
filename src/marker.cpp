@@ -2,8 +2,8 @@
  * \file marker.cpp
  * \brief Highlight lines on spectrum 
  * \author Audric Lemonnier
- * \version 0.4
- * \date 21/04/2020
+ * \version 0.5
+ * \date 28/04/2020
  */
 
 #include <iostream>
