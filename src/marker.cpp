@@ -272,7 +272,7 @@ int main(int argc, char** argv) {
                     if (sLine.find("!")!=std::string::npos && sLine.find("@")!=std::string::npos) {
                         sLine.erase(std::remove(sLine.begin(), sLine.end(), '!'), sLine.end());
                         sLine.erase(std::remove(sLine.begin(), sLine.end(), '@'), sLine.end());
-                        sSymbol="!@";
+                        sSymbol="@!";
                     }
                     
                     if (sLine.find("#")!=std::string::npos ) {

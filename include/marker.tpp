@@ -855,22 +855,41 @@ bool _marker<_T>::make() {
     int iSign=1; // positions triangulaires
     float fNorm=0.077; // espacement des annotations
     int iWidesize=3;
+    float fAlt=-0.03;
     for(auto line: vllSet) {
-        if (!line.bBold) {
-            add_cmd("ax0.plot(["+
-            std::to_string(line.TWl) + ", " +
-            std::to_string(line.TWl) + "], [0, " +
-            std::to_string(get_continuum()) +
-            "],  color='grey', linestyle=':', zorder=2, linewidth="+std::to_string(fLinewidth)+")\n");
+        if (!bWide) {
+            if (!line.bBold) {
+                add_cmd("ax0.plot(["+
+                std::to_string(line.TWl) + ", " +
+                std::to_string(line.TWl) + "], [0, " +
+                std::to_string(get_continuum()) +
+                "],  color='grey', linestyle=':', zorder=2, linewidth="+std::to_string(fLinewidth)+")\n");
+            }
+            else {
+                add_cmd("ax0.plot(["+
+                std::to_string(line.TWl) + ", " +
+                std::to_string(line.TWl) + "], [0, " +
+                std::to_string(get_continuum()) +
+                "],  color='black', linestyle='--', zorder=2, linewidth="+std::to_string(fLinewidth)+")\n"); 
+            }
         }
         else {
-            add_cmd("ax0.plot(["+
-            std::to_string(line.TWl) + ", " +
-            std::to_string(line.TWl) + "], [0, " +
-            std::to_string(get_continuum()) +
-            "],  color='black', linestyle='--', zorder=2, linewidth="+std::to_string(fLinewidth)+")\n"); 
+            this->set_linewidth(0.1);
+            if (!line.bBold) {
+                add_cmd("ax0.plot(["+
+                std::to_string(line.TWl) + ", " +
+                std::to_string(line.TWl) + "], [0, " +
+                std::to_string(get_continuum()) +
+                "],  color='grey', linestyle=':', zorder=2, linewidth="+std::to_string(this->fLinewidth)+")\n");
+            }
+            else {
+                add_cmd("ax0.plot(["+
+                std::to_string(line.TWl) + ", " +
+                std::to_string(line.TWl) + "], [0, " +
+                std::to_string(get_continuum()) +
+                "],  color='black', linestyle='--', zorder=2, linewidth="+std::to_string(this->fLinewidth)+")\n"); 
+            }
         }
-            
         std::stringstream ssS;
         ssS << std::setprecision(2) << std::fixed << line.TWl;
         
@@ -884,11 +903,11 @@ bool _marker<_T>::make() {
                         "$\\\\lambda "+ssS.str()+ 
                         "$', xytext=("+
                         std::to_string(line.TWl)+","+
-                        std::to_string(iCount*fNorm)+"), "+
+                        std::to_string(iCount*fNorm+fAlt)+"), "+
                         "xy=("+std::to_string(line.TWl)+", "+
-                        std::to_string(iCount*fNorm)+"), "+
-                        "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.15), bbox=dict(boxstyle='round,pad=0.01', fc='white', ec='white', lw=2),size='"+
-                        std::to_string(iWidesize)+"', ha='center')");
+                        std::to_string(iCount*fNorm+fAlt)+"), "+
+                        "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.15), bbox=dict(boxstyle='round,pad=0.25', fc='white', ec='white', lw=2),size='"+
+                        std::to_string(iWidesize)+"', ha='center', va='center')");
             }
             else {
                 add_cmd("ax0.annotate('$\\\\mathrm{\\\\mathbf{"+
@@ -896,11 +915,11 @@ bool _marker<_T>::make() {
                         "$\\\\lambda "+ssS.str()+ 
                         "$', xytext=("+
                         std::to_string(line.TWl)+","+
-                        std::to_string(iCount*fNorm)+"), "+
+                        std::to_string(iCount*fNorm+fAlt)+"), "+
                         "xy=("+std::to_string(line.TWl)+", "+
-                        std::to_string(iCount*fNorm)+"), "+
-                        "color = 'black', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.15), bbox=dict(boxstyle='round,pad=0.01', fc='white', ec='white', lw=2),size='"+
-                        std::to_string(iWidesize)+"', ha='center')");
+                        std::to_string(iCount*fNorm+fAlt)+"), "+
+                        "color = 'black', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.15), bbox=dict(boxstyle='round,pad=0.25', fc='white', ec='white', lw=2),size='"+
+                        std::to_string(iWidesize)+"', ha='center', va='center')");
             }
         }
         else {
@@ -913,8 +932,8 @@ bool _marker<_T>::make() {
                         std::to_string(iCount*fNorm)+"), "+
                         "xy=("+std::to_string(line.TWl)+", "+
                         std::to_string(iCount*fNorm)+"), "+
-                        "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.01', fc='white', ec='white', lw=2),size='"+
-                        std::to_string(iAnnotatesize)+"', ha='center')");
+                        "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.02', fc='white', ec='white', lw=2),size='"+
+                        std::to_string(iAnnotatesize)+"', ha='center', va='center')");
             }
             else {
                 add_cmd("ax0.annotate('$\\\\mathrm{\\\\mathbf{"+
@@ -925,16 +944,19 @@ bool _marker<_T>::make() {
                         std::to_string(iCount*fNorm)+"), "+
                         "xy=("+std::to_string(line.TWl)+", "+
                         std::to_string(iCount*fNorm)+"), "+
-                        "color = 'black', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.01', fc='white', ec='white', lw=2),size='"+
-                        std::to_string(iAnnotatesize)+"', ha='center')");
+                        "color = 'black', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.02', fc='white', ec='white', lw=2),size='"+
+                        std::to_string(iAnnotatesize)+"', ha='center', va='center')");
             }
         }   
         iCount+=iSign;
-        if (iCount*fNorm>0.5)
+        if (iCount*fNorm>0.5) {
             iSign=-1;
+            fAlt=0;
+        }
         if (iCount*fNorm<0) {
             iSign=1;
             iCount=0;
+            fAlt=-0.03;
         }
     }
     

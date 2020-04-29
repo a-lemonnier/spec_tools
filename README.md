@@ -42,6 +42,8 @@ Dependencies:
 
 ![marker](doc/plot.png)
 
+![marker](doc/plot_wide.png)
+
 ```
 
 gentoo - spec_tools/ % ./marker -h
@@ -69,6 +71,8 @@ Usage:
   --dotted                      Dotted curve.
   --dotdashed                   Dot-dashed curve.
   --fontsize arg                Set the font size.
+  --wide                        Indicate if markers have to be adapted to the 
+                                spectrum size.
   -e [ --element ] arg          Set the name of an element. Ex: \$H\\\\beta\$.
   -w [ --wavelength ] arg       Set the wavelength of the line.
   --elemlist arg                Set the line list: 
