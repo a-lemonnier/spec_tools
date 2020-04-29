@@ -60,6 +60,7 @@ Usage:
                                 numbers of files.
   --xmin arg                    Set the min range.
   --xmax arg                    Set the max range.
+  --ymin arg                    Set ymin...
   --xlabel arg                  Set xlabel.
   --ylabel arg                  Set ylabel.
   --xunit arg                   Set xunit.

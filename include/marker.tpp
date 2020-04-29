@@ -795,6 +795,7 @@ bool _marker<_T>::make() {
 // Axis ---------------------------------------------------------
     add_cmd("ax0.set_xlim("+std::to_string(get_supp().first)+
             ", "+std::to_string(get_supp().second)+")");
+    add_cmd("ax0.set_ylim("+std::to_string(this->TYmin)+")");
     
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"add title and labels");
@@ -903,9 +904,9 @@ bool _marker<_T>::make() {
                         "$\\\\lambda "+ssS.str()+ 
                         "$', xytext=("+
                         std::to_string(line.TWl)+","+
-                        std::to_string(iCount*fNorm+fAlt)+"), "+
+                        std::to_string(iCount*fNorm+fAlt+this->TYmin-0.1)+"), "+
                         "xy=("+std::to_string(line.TWl)+", "+
-                        std::to_string(iCount*fNorm+fAlt)+"), "+
+                        std::to_string(iCount*fNorm+fAlt+this->TYmin-0.1)+"), "+
                         "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.15), bbox=dict(boxstyle='round,pad=0.25', fc='white', ec='white', lw=2),size='"+
                         std::to_string(iWidesize)+"', ha='center', va='center')");
             }
@@ -915,9 +916,9 @@ bool _marker<_T>::make() {
                         "$\\\\lambda "+ssS.str()+ 
                         "$', xytext=("+
                         std::to_string(line.TWl)+","+
-                        std::to_string(iCount*fNorm+fAlt)+"), "+
+                        std::to_string(iCount*fNorm+fAlt+this->TYmin-0.1)+"), "+
                         "xy=("+std::to_string(line.TWl)+", "+
-                        std::to_string(iCount*fNorm+fAlt)+"), "+
+                        std::to_string(iCount*fNorm+fAlt+this->TYmin-0.1)+"), "+
                         "color = 'black', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.15), bbox=dict(boxstyle='round,pad=0.25', fc='white', ec='white', lw=2),size='"+
                         std::to_string(iWidesize)+"', ha='center', va='center')");
             }
@@ -929,9 +930,9 @@ bool _marker<_T>::make() {
                         "$\\\\lambda "+ssS.str()+ 
                         "$', xytext=("+
                         std::to_string(line.TWl)+","+
-                        std::to_string(iCount*fNorm)+"), "+
+                        std::to_string(iCount*fNorm+this->TYmin-0.1)+"), "+
                         "xy=("+std::to_string(line.TWl)+", "+
-                        std::to_string(iCount*fNorm)+"), "+
+                        std::to_string(iCount*fNorm+this->TYmin-0.1)+"), "+
                         "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.02', fc='white', ec='white', lw=2),size='"+
                         std::to_string(iAnnotatesize)+"', ha='center', va='center')");
             }
@@ -941,13 +942,14 @@ bool _marker<_T>::make() {
                         "$\\\\lambda "+ssS.str()+ 
                         "$', xytext=("+
                         std::to_string(line.TWl)+","+
-                        std::to_string(iCount*fNorm)+"), "+
+                        std::to_string(iCount*fNorm+this->TYmin-0.1)+"), "+
                         "xy=("+std::to_string(line.TWl)+", "+
-                        std::to_string(iCount*fNorm)+"), "+
+                        std::to_string(iCount*fNorm+this->TYmin-0.1)+"), "+
                         "color = 'black', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.02', fc='white', ec='white', lw=2),size='"+
                         std::to_string(iAnnotatesize)+"', ha='center', va='center')");
             }
         }   
+
         iCount+=iSign;
         if (iCount*fNorm>0.5) {
             iSign=-1;
@@ -955,7 +957,7 @@ bool _marker<_T>::make() {
         }
         if (iCount*fNorm<0) {
             iSign=1;
-            iCount=0;
+            iCount=2;
             fAlt=-0.03;
         }
     }

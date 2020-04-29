@@ -78,6 +78,7 @@ int main(int argc, char** argv) {
     
     ("xmin", po::value<float>(), "Set the min range.")
     ("xmax", po::value<float>(), "Set the max range.")
+    ("ymin", po::value<float>(), "Set ymin...")
     ("xlabel", po::value<std::string>(), "Set xlabel.")
     ("ylabel", po::value<std::string>(), "Set ylabel.")
     ("xunit", po::value<std::string>(), "Set xunit.")
@@ -586,6 +587,9 @@ int main(int argc, char** argv) {
             Marker.set_xmin(fXmin);
         if (vm.count("xmax"))
             Marker.set_xmax(fXmax);
+        
+        if (vm.count("ymin"))
+            Marker.set_ymin(vm["ymin"].as<float>());
         
         Marker.set_colorline("red");
         
