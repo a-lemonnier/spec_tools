@@ -14,6 +14,7 @@ List:
  - **marker**.cpp: highlight lines on spectrum with matplotlib
  
 TODO:
+ - **marker**.cpp: Fix duplicates remover
  - Decrease thread numbers as function of the CPU utilization
  - **msg**.h: Fix _msg::_msg(const _msg&)
  - **marker**.cpp: NOR in cmd check

@@ -246,7 +246,7 @@ int main(int argc, char** argv) {
             std::fstream fFlux(vm["elemlist"].as<std::string>(), std::ios::in);
             if (fFlux) {
                 std::string sLine;
-                std::vector<std::tuple<std::string, float, std::string> > vtEntry;
+                std::vector<std::tuple<std::string, float, std::string, std::string> > vtEntry;
                 std::vector<std::tuple<std::string, int> > vtComm;
                 
                 auto is_float=[](const std::string &sVal) {
@@ -312,14 +312,12 @@ int main(int argc, char** argv) {
                         // check duplicates
                         bool bExists=false;
                         for(auto tEntry: vtEntry) {
-                            std::stringstream ssS;
-                            ssS << std::get<2>(tEntry) << std::get<0>(tEntry) << ", "  << std::fixed << std::setw(2) << std::setprecision(2) << std::get<1>(tEntry);
-                            if (ssS.str()==sWl)
+                            if (std::get<3>(tEntry)==sWl)
                                 bExists=true;
                         }
                             
                         if (!bExists) 
-                            vtEntry.emplace_back(std::make_tuple( sName, std::stod(sWl), sSymbol));
+                            vtEntry.emplace_back(std::make_tuple( sName, std::stod(sWl), sSymbol, sWl));
                         
                     }
                     else 
@@ -337,9 +335,12 @@ int main(int argc, char** argv) {
                 if (sfFlux) {
                     std::stringstream ssS;
                     for(auto tLine: vtEntry)
-                        ssS << std::get<2>(tLine) << std::setprecision(std::numeric_limits<float>::max_digits10) << std::get<0>(tLine) << ", "  << std::get<1>(tLine) << "\n";
+                        ssS << std::get<2>(tLine) << "\"" 
+                            << std::get<0>(tLine) << "\", " 
+                            << std::get<3>(tLine) << "\n";
+                            
                     for(auto tComm: vtComm)
-                        ssS << "# " << std::get<0>(tComm) << "\n";
+                        ssS << "#" << std::get<0>(tComm) << "\n";
                     
                     sfFlux << ssS.str();
                     
@@ -382,7 +383,8 @@ int main(int argc, char** argv) {
                     bool bBold=false;
                     if (sLine.find("!")!=std::string::npos && sLine.find("@")==std::string::npos) {
                         sLine.erase(std::remove(sLine.begin(), sLine.end(), '!'), sLine.end());
-                        msgM.msg(_msg::eMsg::MID, "highlight ", sLine);
+                        if (vm.count("verbose")) 
+                            msgM.msg(_msg::eMsg::MID, "highlight ", sLine);
                         bBold=true;                        
                     }
                     
@@ -421,8 +423,9 @@ int main(int argc, char** argv) {
                         if (!bExists) 
                             vstLines.emplace_back(std::make_tuple(std::stod(sWl), sName, bBold));
                     }
-                    else 
-                        msgM.msg(_msg::eMsg::MID, "ignore ", sLine);
+                    else
+                        if (vm.count("verbose")) 
+                            msgM.msg(_msg::eMsg::MID, "ignore ", sLine);
                 }
                 std::sort(vstLines.begin(), vstLines.end());
                 fFlux.close();
