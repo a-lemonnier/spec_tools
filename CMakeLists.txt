@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 project(spec_tools)
 
-set(COMPILER clang)
+set(COMPILER gcc)
 
 if (COMPILER STREQUAL "gcc")
   set(CMAKE_CC_COMPILER "gcc")
