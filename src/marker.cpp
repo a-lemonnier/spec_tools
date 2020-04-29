@@ -348,8 +348,6 @@ int main(int argc, char** argv) {
                 }
                 else
                     msgM.msg(_msg::eMsg::ERROR, "error while rewriting", vm["elemlist"].as<std::string>()); 
-                
-                exit(0);
             }
             else
                 msgM.msg(_msg::eMsg::ERROR, "error while opening", vm["elemlist"].as<std::string>()); 
