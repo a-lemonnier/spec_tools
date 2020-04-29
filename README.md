@@ -15,7 +15,6 @@ List:
  
 TODO:
  - Decrease thread numbers as function of the CPU utilization
- - **marker**.cpp: Add a sort function to sort elemlist which is painfully readable
  - **msg**.h: Fix _msg::_msg(const _msg&)
  - **marker**.cpp: NOR in cmd check
  - Make classes in order to clean .cpp
@@ -162,6 +161,7 @@ Example:
 ▶ trim
 ⚐ trim write history 
 ⚐ trim remove duplicates in history 
+⚐ trim CPU utilization: 3 % 
 ⚐ trim: starting 8 async threads
 ⚡ trim(2416052): 521 files parsed.
 ⚡ trim(2416051): 521 files parsed.
@@ -198,6 +198,7 @@ Example:
 ▶ threshold
 ⚐ threshold write history 
 ⚐ threshold remove duplicates in history 
+⚐ genrandspec CPU utilization: 0 % 
 ⚐ threshold: starting 8 async threads
 ⚡ trim(2470785): 521 files parsed.
 ⚡ trim(2470786): 521 files parsed.
@@ -237,6 +238,7 @@ Examples:
 ⚐ der_snr write history 
 ⚐ der_snr remove duplicates in history 
 ⚐ der_snr check command line 
+⚐ genrandspec CPU utilization: 1 % 
 ⚐ der_snr starting 8  async threads 
 ⚡ compute(321893): compute S/N for 521 files 
 ⚡ compute(321894): compute S/N for 521 files 
@@ -316,7 +318,8 @@ Example:
 ▶ genrandspec 
 ⚐ genrandspec write history 
 ⚐ genrandspec remove duplicates in history 
-⚐ genrandspec check command line 
+⚐ genrandspec check command line
+⚐ genrandspec CPU utilization: 3 % 
 ⚐ genrandspec create 8 folders 
 ⚐ genrandspec start 8 async threads 
 ⚡ run(686277): create spectra in rand_spectra/0 

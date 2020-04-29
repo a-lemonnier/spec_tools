@@ -121,6 +121,7 @@ int main(int argc, char** argv) {
         msgM.msg(_msg::eMsg::MID, "write history");
         msgM.msg(_msg::eMsg::MID, "remove duplicates in history");
         msgM.msg(_msg::eMsg::MID, "check command line");
+        msgM.msg(_msg::eMsg::MID, "CPU utilization: 3 %"); 
         msgM.msg(_msg::eMsg::MID, "create 8 async threads");
         msgM.msg(_msg::eMsg::MID, "start 8 async threads");
         msgM.msg(_msg::eMsg::THREADS, "create spectra in rand_spectra/0 ");

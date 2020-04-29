@@ -179,6 +179,7 @@ int main(int argc, char** argv) {
         std::cout << "./der_snr -d data\n";
         msgM.msg(_msg::eMsg::START);
         msgM.msg(_msg::eMsg::MID, "check command line");
+        msgM.msg(_msg::eMsg::MID, "CPU utilization: 0 %");
         msgM.msg(_msg::eMsg::MID, "starting 8 async threads");
         msgM.set_threadname("compute");
         msgM.msg(_msg::eMsg::THREADS, "S/N for 521 files");
