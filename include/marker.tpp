@@ -855,9 +855,9 @@ bool _marker<_T>::make() {
         msgM.msg(_msg::eMsg::MID,"make(): add markers");
     // Line -----------------------------------------------------
     int iSign=1; // positions triangulaires
-    float fNorm=0.077; // espacement des annotations
+    float fNorm=0.08; // espacement des annotations
     int iWidesize=3;
-    float fAlt=-0.03;
+    float fAlt=-0.1;
     iCount++;
     for(auto line: vllSet) {
         if (!bWide) {
@@ -953,14 +953,14 @@ bool _marker<_T>::make() {
         }   
 
         iCount+=iSign;
-        if (iCount*fNorm>0.55) {
+        if (iCount*fNorm+this->TYmin>0.6) {
             iSign=-1;
             fAlt=0;
         }
-        if (iCount*fNorm-this->TYmin<0) {
+        if (iCount*fNorm-this->TYmin-0.1<0) {
             iSign=1;
-            iCount=2;
-            fAlt=-0.03;
+            iCount=6;
+            fAlt=-0.1;
         }
     }
     
