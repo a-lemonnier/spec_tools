@@ -189,8 +189,7 @@ int main(int argc, char** argv) {
             std::string sSymbol; 
             
             std::cout << "Type an element to add: ";
-            std::cin >> sElem;
-            sElem="\""+sElem+"\"";
+            std::getline(std::cin, sElem);
             
             std::cout << "wavelength: ";
             std::cin >> sWl;
