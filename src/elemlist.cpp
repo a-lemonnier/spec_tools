@@ -183,15 +183,31 @@ int main(int argc, char** argv) {
         bool bEnd=true;
         
         while(bEnd) {
-            
+                        
             std::string sElem;
+            std::string sIon;
             std::string sWl;
             std::string sSymbol; 
             
             std::cout << "Type an element to add: ";
-            std::getline(std::cin, sElem);
+            std::cin >> sElem;
+            sElem[0]=std::toupper(sElem[0]);
             
-            std::cout << "wavelength: ";
+            std::cin.sync();
+            std::cin.clear();
+            
+            std::cout << "Ionization ? ";
+            std::cin >> sIon;
+            for(auto &cC: sIon)
+                cC=std::toupper(cC);
+            
+            std::cin.sync();
+            std::cin.clear();
+            
+            sElem+=" "+sIon;            
+            sElem.erase(std::remove(sElem.begin(), sElem.end(), '\n'), sElem.end());
+            
+            std::cout << "Wavelength = ";
             std::cin >> sWl;
 
             if (!is_float(sWl)) {
@@ -199,8 +215,8 @@ int main(int argc, char** argv) {
                 sWl="-1";
             }
             
-            std::cout << "Enter indicator:\n"; 
-            std::cout << "bold: ! - temp: % - temp bold: @! - mask: # - q or s: skip \n";
+            std::cout << "Indicator "; 
+            std::cout << "(bold: ! - temp: % - temp bold: @! - mask: # - q or s: skip) ?\n";
             
             std::string sS;
             std::cin >> sS;
