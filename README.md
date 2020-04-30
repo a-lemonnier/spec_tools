@@ -12,6 +12,7 @@ List:
  - **shift**.cpp: shift whole spectrum by a given wavelength (multi-threaded)
  - **gen_rand_spec**.cpp: generate a set of randomized-flux spectra between two wavelengths for test purposes (multi-threaded)
  - **marker**.cpp: highlight lines on spectrum with matplotlib
+ - **elemlist**.cpp: fill elemlist interactively
  
 TODO:
  - **marker**.cpp: Fix duplicates remover
@@ -337,6 +338,23 @@ Example:
 ⚡ run(686283): create spectra in rand_spectra/6 
 ⚡ run(686284): create spectra in rand_spectra/7 
 ⚐ genrandspec  0.160590s wall, 1.070000s user + 0.000000s system = 1.070000s CPU (666.5%)
+
+```
+
+---
+
+> elemlist
+
+```
+./elemlist -h
+Usage:
+  -h [ --help ]                  Display this help message
+  -l [ --list ] arg (=line.list) Filename of elemlist
+  -e [ --elem ] arg              The element.
+  -w [ --wavelength ] arg        The wavelength.
+  -M [ --Mask ]                  Comment the line: #
+  -B [ --Bold ]                  Highlight the line: !
+  -T [ --Temp ]                  Temporary comment: % or @!
 
 ```
 
