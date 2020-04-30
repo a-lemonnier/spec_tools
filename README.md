@@ -356,6 +356,13 @@ Usage:
   -B [ --Bold ]                  Highlight the line: !
   -T [ --Temp ]                  Temporary comment: % or @!
 
+./elemlist  -e "Fe II" -w 5001.59 -B
+▶ elemlist 
+⚐ elemlist write history 
+⚐ elemlist remove duplicates in history 
+⚐ elemlist add: Fe II 5001.59 
+⚐ elemlist  0.001048s wall, 0.000000s user + 0.000000s system = 0.000000s CPU (n/a%)
+
 ```
 
 ---
@@ -435,41 +442,61 @@ gentoo - spec_tools/ % make -j$(nproc)
 -- Generating done
 -- Build files have been written to: /drone/src
 + make -j$(nproc)
-Scanning dependencies of target findncopy
+Scanning dependencies of target msg
 Scanning dependencies of target der_snr
 Scanning dependencies of target trim
 Scanning dependencies of target threshold
 Scanning dependencies of target shift
+Scanning dependencies of target findncopy
 Scanning dependencies of target marker
 Scanning dependencies of target genrandspec
+[  3%] Building CXX object CMakeFiles/msg.dir/include/msg.cpp.o
 [  9%] Building CXX object CMakeFiles/findncopy.dir/src/findncopy.cpp.o
-[  9%] Building CXX object CMakeFiles/findncopy.dir/include/msg.cpp.o
-[ 19%] Building CXX object CMakeFiles/der_snr.dir/src/der_snr.cpp.o
-[ 19%] Building CXX object CMakeFiles/threshold.dir/src/threshold.cpp.o
-[ 23%] Building CXX object CMakeFiles/trim.dir/src/trim.cpp.o
-[ 28%] Building CXX object CMakeFiles/shift.dir/src/shift.cpp.o
-[ 33%] Building CXX object CMakeFiles/genrandspec.dir/src/genrandspec.cpp.o
-[ 38%] Building CXX object CMakeFiles/marker.dir/src/marker.cpp.o
-[ 42%] Building CXX object CMakeFiles/marker.dir/include/msg.cpp.o
-[ 47%] Building CXX object CMakeFiles/trim.dir/include/msg.cpp.o
-[ 52%] Building CXX object CMakeFiles/genrandspec.dir/include/msg.cpp.o
-[ 57%] Linking CXX executable findncopy
-[ 57%] Built target findncopy
-[ 61%] Building CXX object CMakeFiles/shift.dir/include/msg.cpp.o
-[ 66%] Building CXX object CMakeFiles/threshold.dir/include/msg.cpp.o
-[ 71%] Building CXX object CMakeFiles/der_snr.dir/include/msg.cpp.o
-[ 76%] Linking CXX executable genrandspec
-[ 76%] Built target genrandspec
-[ 80%] Linking CXX executable threshold
-[ 80%] Built target threshold
-[ 85%] Linking CXX executable trim
-[ 90%] Linking CXX executable shift
-[ 90%] Built target shift
-[ 90%] Built target trim
-[ 95%] Linking CXX executable marker
-[100%] Linking CXX executable der_snr
-[100%] Built target marker
-[100%] Built target der_snr
+[  9%] Building CXX object CMakeFiles/trim.dir/src/trim.cpp.o
+[ 12%] Building CXX object CMakeFiles/der_snr.dir/src/der_snr.cpp.o
+[ 15%] Building CXX object CMakeFiles/genrandspec.dir/src/genrandspec.cpp.o
+[ 18%] Building CXX object CMakeFiles/threshold.dir/src/threshold.cpp.o
+[ 21%] Building CXX object CMakeFiles/marker.dir/src/marker.cpp.o
+[ 25%] Building CXX object CMakeFiles/shift.dir/src/shift.cpp.o
+[ 28%] Linking CXX static library libmsg.a
+[ 28%] Built target msg
+[ 31%] Building CXX object CMakeFiles/shift.dir/include/msg.cpp.o
+[ 34%] Building CXX object CMakeFiles/marker.dir/include/msg.cpp.o
+[ 37%] Building CXX object CMakeFiles/findncopy.dir/include/msg.cpp.o
+[ 40%] Building CXX object CMakeFiles/der_snr.dir/include/msg.cpp.o
+[ 43%] Linking CXX executable findncopy
+[ 43%] Built target findncopy
+[ 46%] Building CXX object CMakeFiles/trim.dir/include/msg.cpp.o
+Scanning dependencies of target elemlist
+[ 50%] Building CXX object CMakeFiles/elemlist.dir/src/elemlist.cpp.o
+Scanning dependencies of target test_csv
+[ 53%] Building CXX object CMakeFiles/test_csv.dir/test/test_csv.cpp.o
+[ 59%] Linking CXX executable genrandspec
+[ 59%] Built target genrandspec
+[ 62%] Building CXX object CMakeFiles/elemlist.dir/include/msg.cpp.o
+Scanning dependencies of target test_msg
+[ 65%] Building CXX object CMakeFiles/test_msg.dir/test/test_msg.cpp.o
+[ 68%] Building CXX object CMakeFiles/threshold.dir/include/msg.cpp.o
+[ 71%] Linking CXX executable trim
+[ 75%] Linking CXX executable elemlist
+[ 75%] Built target elemlist
+Scanning dependencies of target test_marker
+[ 78%] Building CXX object CMakeFiles/test_marker.dir/test/test_marker.cpp.o
+[ 78%] Built target trim
+[ 81%] Linking CXX executable shift
+[ 81%] Built target shift
+[ 84%] Linking CXX executable threshold
+[ 87%] Linking CXX executable der_snr
+[ 90%] Linking CXX executable marker
+[ 90%] Built target threshold
+[ 90%] Built target der_snr
+[ 90%] Built target marker
+[ 93%] Linking CXX executable test_msg
+[ 93%] Built target test_msg
+[ 96%] Linking CXX executable test_csv
+[ 96%] Built target test_csv
+[100%] Linking CXX executable test_marker
+[100%] Built target test_marker
 
 ```
 
