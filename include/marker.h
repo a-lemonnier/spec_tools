@@ -7,6 +7,7 @@
 #include <fstream>
 
 #include <cmath>
+#include <limits>
 
 #include <string>
 #include <sstream>

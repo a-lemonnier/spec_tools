@@ -795,7 +795,8 @@ bool _marker<_T>::make() {
 // Axis ---------------------------------------------------------
     add_cmd("ax0.set_xlim("+std::to_string(get_supp().first)+
             ", "+std::to_string(get_supp().second)+")");
-    add_cmd("ax0.set_ylim("+std::to_string(this->TYmin)+")");
+    if (this->TYmin>std::numeric_limits<float>::min())
+        add_cmd("ax0.set_ylim("+std::to_string(this->TYmin)+")");
     
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"add title and labels");
@@ -857,6 +858,7 @@ bool _marker<_T>::make() {
     float fNorm=0.077; // espacement des annotations
     int iWidesize=3;
     float fAlt=-0.03;
+    iCount++;
     for(auto line: vllSet) {
         if (!bWide) {
             if (!line.bBold) {
@@ -951,11 +953,11 @@ bool _marker<_T>::make() {
         }   
 
         iCount+=iSign;
-        if (iCount*fNorm>0.5) {
+        if (iCount*fNorm>0.55) {
             iSign=-1;
             fAlt=0;
         }
-        if (iCount*fNorm<0) {
+        if (iCount*fNorm-this->TYmin<0) {
             iSign=1;
             iCount=2;
             fAlt=-0.03;

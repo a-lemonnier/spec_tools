@@ -103,6 +103,7 @@ int main(int argc, char** argv) {
     if (vm.count("help") || vm.size()<1) {
         msgM.enable_log(false);
         std::cout << description;
+        std::cout << "\nCtrl + C to exit.\n";
         return EXIT_SUCCESS;
     }
 
@@ -244,13 +245,7 @@ int main(int argc, char** argv) {
             sSymbol+=sS;
             
             add_elem<>(sSymbol, sElem, sWl, vm["list"].as<std::string>());
-            
-            std::string sAns;
-            
-            std::cout << "Quit ? [y/n] ";
-            std::cin >> sAns;
-            
-            bEnd = (sAns=="n" || sAns== "N");
+
         }
     }
     else {
