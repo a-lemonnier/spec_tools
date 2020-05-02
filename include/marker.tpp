@@ -11,9 +11,9 @@ _marker<_T>::_marker():
     sScriptname(".plot.py"),
     sXlabel("x"), sYlabel("y"),
     TYcontinuum(1),
-    TYmin(0), TYmax(1),
-    bIsymindef(true),
-    bIsymaxdef(true),
+//TYmin(0), TYmax(1),
+    bIsymindef(false),
+    bIsymaxdef(false),
     iDpi(150),
     sColorline("black"),
     fLinewidth(0.3),
@@ -242,7 +242,7 @@ template<typename _T>
 bool _marker<_T>::set_ymin(const _T TYmin) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_ymin(", TYmin,")");
-    if (TYmin>TYmax) {
+    if (bIsymaxdef && TYmin>TYmax) {
         msgM.msg(_msg::eMsg::ERROR,"set_ymin(): invalid boundary");
         return false;
     }
@@ -255,7 +255,7 @@ template<typename _T>
 bool _marker<_T>::set_ymax(const _T TYmax) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_ymax(", TYmax,")");
-    if (TYmax<TYmin) {
+    if (bIsymindef && TYmax<TYmin) {
         msgM.msg(_msg::eMsg::ERROR,"set_ymax(): invalid boundary");
         return false;
     }
