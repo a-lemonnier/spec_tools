@@ -481,9 +481,8 @@ bool _marker<_T>::add_data(const std::vector<_T>& vTX,
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"add_data()");
     
-    if (X.empty() || Y.empty()) {
+    if (X.empty() || Y.empty()) 
         return set_data(vTX, vTY);
-    }
 
     std::vector<std::vector<_T> > vData;
     vData.emplace_back(vTX);
@@ -700,7 +699,6 @@ bool _marker<_T>::make() {
                                 ", linewidth="+std::to_string(fLinewidth)+
                                 ", zorder=15, label='"+
                                 this->vsTitle[i]+"')\n");
-            
             if (this->bDotdashed)
                 add_cmd("ax0.plot(x"+std::to_string(i)+
                                 ",y"+std::to_string(i)+
@@ -712,7 +710,6 @@ bool _marker<_T>::make() {
                 
             if (iCycle==0)
                 iB+=(0xff-1)/2;
-
             if (iB>=0xff) {
                 iCycle=1;
                 iR=0; iG+=(0xff-1)/2; iB=0xff;
@@ -751,7 +748,6 @@ bool _marker<_T>::make() {
                                 ", linewidth="+std::to_string(fLinewidth)+
                                 ", zorder=15, label='"+
                                 this->vsTitle[i]+"')\n");
-            
             if (this->bDotdashed)
                 add_cmd("ax0.plot(x"+std::to_string(i)+
                                 ",y"+std::to_string(i)+
@@ -763,26 +759,17 @@ bool _marker<_T>::make() {
             
             if (iCycle==0)
                 iB+=(0xff-1)/2;
-
             if (iB>=0xff) {
                 iCycle=1;
-                iR=0;
-                iB=0xff;
-                iG+=(0xff-1)/2;
+                iR=0; iB=0xff; iG+=(0xff-1)/2;
             }
-            
             if (iG>=0xff) {
                 iCycle=2;
-                iG=0xff;
-                iB=0;
-                iR+=(0xff-1)/2;
+                iR+=(0xff-1)/2; iG=0xff; iB=0;
             }
-            
             if (iR>=0xff) {
                 iCycle=0;
-                iR=0;
-                iG=0;
-                iB=(0xff-1)/2;
+                iR=0; iG=0; iB=(0xff-1)/2;
             }
         }
     }
@@ -870,37 +857,33 @@ bool _marker<_T>::make() {
     iCount++;
     for(auto line: vllSet) {
         if (!bWide) {
-            if (!line.bBold) {
+            if (!line.bBold)
                 add_cmd("ax0.plot(["+
                 std::to_string(line.TWl) + ", " +
                 std::to_string(line.TWl) + "], [0, " +
                 std::to_string(get_continuum()) +
                 "],  color='grey', linestyle=':', zorder=2, linewidth="+std::to_string(fLinewidth)+")\n");
-            }
-            else {
+            else
                 add_cmd("ax0.plot(["+
                 std::to_string(line.TWl) + ", " +
                 std::to_string(line.TWl) + "], [0, " +
                 std::to_string(get_continuum()) +
                 "],  color='black', linestyle='--', zorder=2, linewidth="+std::to_string(fLinewidth)+")\n"); 
-            }
         }
         else {
             this->set_linewidth(0.1);
-            if (!line.bBold) {
+            if (!line.bBold)
                 add_cmd("ax0.plot(["+
                 std::to_string(line.TWl) + ", " +
                 std::to_string(line.TWl) + "], [0, " +
                 std::to_string(get_continuum()) +
                 "],  color='grey', linestyle=':', zorder=2, linewidth="+std::to_string(this->fLinewidth)+")\n");
-            }
-            else {
+            else 
                 add_cmd("ax0.plot(["+
                 std::to_string(line.TWl) + ", " +
                 std::to_string(line.TWl) + "], [0, " +
                 std::to_string(get_continuum()) +
                 "],  color='black', linestyle='--', zorder=2, linewidth="+std::to_string(this->fLinewidth)+")\n"); 
-            }
         }
         std::stringstream ssS;
         ssS << std::setprecision(2) << std::fixed << line.TWl;
@@ -908,7 +891,7 @@ bool _marker<_T>::make() {
         // Text -----------------------------------------------------
         // iCount n'est utilise qu'ici
         if (bWide) {
-            if (!line.bBold) {
+            if (!line.bBold)
                 add_cmd("ax0.annotate('"+
                         line.sElem+"\\n"+
                         "$\\\\lambda "+ssS.str()+ 
@@ -919,8 +902,7 @@ bool _marker<_T>::make() {
                         std::to_string(iCount*fNorm+fAlt+this->TYmin-0.1+fAlt)+"), "+
                         "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.15), bbox=dict(boxstyle='round,pad=0.25', fc='white', ec='white', lw=2),size='"+
                         std::to_string(iWidesize)+"', ha='center', va='center')");
-            }
-            else {
+            else 
                 add_cmd("ax0.annotate('$\\\\mathrm{\\\\mathbf{"+
                         line.sElem+"}}$\\n"+
                         "$\\\\lambda "+ssS.str()+ 
@@ -931,10 +913,9 @@ bool _marker<_T>::make() {
                         std::to_string(iCount*fNorm+fAlt+this->TYmin-0.1+fAlt)+"), "+
                         "color = 'black', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.15), bbox=dict(boxstyle='round,pad=0.25', fc='white', ec='white', lw=2),size='"+
                         std::to_string(iWidesize)+"', ha='center', va='center')");
-            }
         }
         else {
-            if (!line.bBold) {
+            if (!line.bBold)
                 add_cmd("ax0.annotate('"+
                         line.sElem+"\\n"+
                         "$\\\\lambda "+ssS.str()+ 
@@ -945,8 +926,7 @@ bool _marker<_T>::make() {
                         std::to_string(iCount*fNorm+this->TYmin-0.1+fAlt)+"), "+
                         "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.02', fc='white', ec='white', lw=2),size='"+
                         std::to_string(iAnnotatesize)+"', ha='center', va='center')");
-            }
-            else {
+            else
                 add_cmd("ax0.annotate('$\\\\mathrm{\\\\mathbf{"+
                         line.sElem+"}}$\\n"+
                         "$\\\\lambda "+ssS.str()+ 
@@ -957,7 +937,6 @@ bool _marker<_T>::make() {
                         std::to_string(iCount*fNorm+this->TYmin-0.1+fAlt)+"), "+
                         "color = 'black', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.02', fc='white', ec='white', lw=2),size='"+
                         std::to_string(iAnnotatesize)+"', ha='center', va='center')");
-            }
         }   
 
         iCount+=iSign;
@@ -966,7 +945,7 @@ bool _marker<_T>::make() {
                 iSign=-1;
                 fAlt=-fNorm/2.0;
             }
-            if (iCount*fNorm+this->TYmin-0.1+fAlt<0) {
+            if (iCount*fNorm+this->TYmin-0.1+fAlt<this->TYmin) {
                 iSign=1;
                 fAlt=0;
             }
@@ -974,11 +953,9 @@ bool _marker<_T>::make() {
         else {
             if (iCount*fNorm+this->TYmin-0.1+fAlt>0.5) {
                 iSign=-1;
-                //iCount+=iSign;
-                //fAlt=-fNorm/2.0;
                 fAlt=-0.1;
             }
-            if (iCount*fNorm+this->TYmin-0.1+fAlt<0.15) {
+            if (iCount*fNorm+this->TYmin-0.1+fAlt<0.15+this->TYmin) {
                 iSign=1;
                 fAlt=0;
             }
@@ -1020,21 +997,16 @@ int _marker<_T>::plot(){
     return iRes;
 }
 
-
 template<typename _T>
 std::string _marker<_T>::get_ext(const std::string& sS) const {
     return sS.substr(sS.find_last_of(".")+1);
 }
 
 template<typename _T>
-std::string _marker<_T>::get_cmd() const {
-    return this->sExec;
-}
+std::string _marker<_T>::get_cmd() const { return this->sExec; }
 
 template<typename _T>
-void _marker<_T>::add_cmd(const std::string &sCmd) {
-    this->sExec+=sCmd+"\n";
-}
+void _marker<_T>::add_cmd(const std::string &sCmd) { this->sExec+=sCmd+"\n"; }
 
 template<typename _T> 
 bool _marker<_T>::is_float(const std::string &val) const {
