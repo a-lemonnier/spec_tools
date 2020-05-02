@@ -12,6 +12,8 @@ _marker<_T>::_marker():
     sXlabel("x"), sYlabel("y"),
     TYcontinuum(1),
     TYmin(0), TYmax(1),
+    bIsymindef(true),
+    bIsymaxdef(true),
     iDpi(150),
     sColorline("black"),
     fLinewidth(0.3),
@@ -25,6 +27,8 @@ _marker<_T>::_marker():
     bDotted(false),
     bDotdashed(false),
     bWide(false),
+    bLegend(true),
+    bHalfbox(false),
     bIsset_fig_size(false),
     sLog(".marker.log"),
     bLog(true)
@@ -33,14 +37,10 @@ _marker<_T>::_marker():
     msgM.set_log(".marker.log");
 }
 
-// template<typename _T>
-// _marker<_T>::_marker(const _marker<_T>& other) { }
-
 template<typename _T>
 _marker<_T>::~_marker() {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"destroy");
-    
     this->X.clear();
     this->Y.clear();
     this->vllSet.clear();
@@ -66,8 +66,8 @@ bool _marker<_T>::set_data(const std::vector<_T>& vTX,
         this->X=vTX;
         this->Y=vTY;
                 
-        set_xmin(*std::min_element(vTX.begin(), vTX.end()));
-        set_xmax(*std::max_element(vTX.begin(), vTX.end()));
+        set_supp(*std::min_element(vTX.begin(), vTX.end()),
+                 *std::max_element(vTX.begin(), vTX.end()));
         return true;
     }
     return false;
@@ -186,7 +186,6 @@ bool _marker<_T>::set_output(const std::string& sFilename,
     }
     else
         this->iDpi=iDpi;
-    
     return set_output(sFilename);    
 }
 
@@ -219,7 +218,7 @@ template<typename _T>
 bool _marker<_T>::set_xmin(const _T TXmin) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_xmin(", TXmin,")");
-    if (TXmin<0) {
+    if (TXmin>TXmax) {
          msgM.msg(_msg::eMsg::ERROR,"set_xmin(): invalid boundary");
          return false;
     }
@@ -231,7 +230,7 @@ template<typename _T>
 bool _marker<_T>::set_xmax(const _T TXmax) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_xmax(", TXmax,")");
-    if (TXmax<0) {
+    if (TXmax<TXmin) {
          msgM.msg(_msg::eMsg::ERROR,"set_xmax(): invalid boundary");
          return false;
     }
@@ -243,10 +242,11 @@ template<typename _T>
 bool _marker<_T>::set_ymin(const _T TYmin) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_ymin(", TYmin,")");
-    if (TYmin<0) {
+    if (TYmin>TYmax) {
         msgM.msg(_msg::eMsg::ERROR,"set_ymin(): invalid boundary");
         return false;
     }
+    bIsymindef=true;
     this->TYmin=TYmin;
     return true;
 }
@@ -255,10 +255,11 @@ template<typename _T>
 bool _marker<_T>::set_ymax(const _T TYmax) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_ymax(", TYmax,")");
-    if (TYmax<0) {
+    if (TYmax<TYmin) {
         msgM.msg(_msg::eMsg::ERROR,"set_ymax(): invalid boundary");
         return false;
     }
+    bIsymaxdef=true;
     this->TYmax=TYmax;
     return true;
 }
@@ -359,6 +360,20 @@ bool _marker<_T>::set_legendsize(int iSize) {
 }
 
 template<typename _T>
+void _marker<_T>::set_legend(bool bLegend) {
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"set_legend(",bLegend,")");
+    this->bLegend=bLegend;
+}
+
+template<typename _T>
+void _marker<_T>::set_halfbox(bool bHalfbox) {
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"set_halfbox(",bHalfbox,")");
+    this->bHalfbox=bHalfbox;
+}
+
+template<typename _T>
 bool _marker<_T>::set_continnumsize(float fWidth) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_continnumsize(", fWidth,")");
@@ -374,25 +389,30 @@ template<typename _T>
 void _marker<_T>::set_showgrid(bool bShowgrid) {
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"set_showgrid(",bShowgrid,")");
-
     this->bShowgrid=bShowgrid;    
 }
 
 template<typename _T>
 void _marker<_T>::set_dotted(bool bDotted) {
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"set_dotted(",bDotted,")");
     this->bDotted=bDotted;
     this->bDotdashed=!bDotted;
 }
 
 template<typename _T>
 void _marker<_T>::set_dotdashed(bool bDotdashed) {
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"set_dotdashed(",bDotdashed,")");
     this->bDotdashed=bDotdashed;
     this->bDotted=!bDotdashed;
 }
 
 template<typename _T>
-void _marker<_T>::set_wide(bool bWide) {
-    this->bWide=bWide;
+void _marker<_T>::set_wide(bool bWide) { 
+    if (bVerbose)
+        msgM.msg(_msg::eMsg::MID,"set_wide(",bWide,")");
+    this->bWide=bWide; 
 }
 
 template<typename _T>
@@ -500,9 +520,7 @@ bool _marker<_T>::add_data(const std::vector<_T>& vTX,
 }
 
 template<typename _T>
-_T _marker<_T>::get_continuum() const {
-    return this->TYcontinuum;
-}
+_T _marker<_T>::get_continuum() const { return this->TYcontinuum; }
 
 template<typename _T>
 const std::pair<_T,_T> _marker<_T>::get_supp() {
@@ -528,34 +546,22 @@ const std::string& _marker<_T>::get_output() {
 }
 
 template<typename _T>
-const std::string& _marker<_T>::get_title() const {
-    return this->sTitle;
-}
+const std::string& _marker<_T>::get_title() const { return this->sTitle; }
 
 template<typename _T>
-const std::string& _marker<_T>::get_label() const {
-    return this->sLabel;
-}
+const std::string& _marker<_T>::get_label() const { return this->sLabel; }
 
 template<typename _T>
-const std::string& _marker<_T>::get_xlabel() const {
-    return this->sXlabel;
-}
+const std::string& _marker<_T>::get_xlabel() const { return this->sXlabel; }
 
 template<typename _T>
-const std::string& _marker<_T>::get_xunit() const {
-    return this->sXunit;
-}
+const std::string& _marker<_T>::get_xunit() const { return this->sXunit; }
 
 template<typename _T>
-const std::string& _marker<_T>::get_ylabel() const {
-    return this->sYlabel;
-}
+const std::string& _marker<_T>::get_ylabel() const { return this->sYlabel; }
 
 template<typename _T>
-const std::string& _marker<_T>::get_yunit() const {
-    return this->sYunit;
-}
+const std::string& _marker<_T>::get_yunit() const { return this->sYunit; }
 
 template<typename _T>
 const std::pair<int, int> _marker<_T>::get_figsize() const {
@@ -583,11 +589,9 @@ bool _marker<_T>::make() {
     
     std::fstream sfFlux_d(".data.csv", std::ios::out | 
                                        std::ios::trunc);
-    
     if (sfFlux_d) {
         if (bVerbose)
             msgM.msg(_msg::eMsg::MID,"make(): write data");
-        
         int iSize=this->X.size();
         for(int i=0; i<iSize; i++) 
             sfFlux_d << this->X[i] << " " << this->Y[i] << "\n";
@@ -668,10 +672,9 @@ bool _marker<_T>::make() {
             ", zorder=10, label='"+get_label()+"')\n");
 
 // Curve color --------------------------------------------------
-    int iR=0x00;
-    int iG=0x00;
-    int iB=0xff;
-    int iCycle=0;
+// Bleu puis vert
+        int iCycle=0;
+    int iR=0x00, iG=0x00, iB=0xff;
     if (!this->vsTitle.empty())
         for(int i=0; i< vsAddfilename.size(); i++) {
                         
@@ -712,23 +715,15 @@ bool _marker<_T>::make() {
 
             if (iB>=0xff) {
                 iCycle=1;
-                iR=0;
-                iB=0xff;
-                iG+=(0xff-1)/2;
+                iR=0; iG+=(0xff-1)/2; iB=0xff;
             }
-            
             if (iG>=0xff) {
                 iCycle=2;
-                iG=0xff;
-                iB=0;
-                iR+=(0xff-1)/2;
+                iR+=(0xff-1)/2; iG=0xff; iB=0;
             }
-            
             if (iR>=0xff) {
                 iCycle=0;
-                iR=0;
-                iG=0;
-                iB=(0xff-1)/2;
+                iR=0; iG=0; iB=(0xff-1)/2;
             }
         }
     else {
@@ -793,18 +788,24 @@ bool _marker<_T>::make() {
     }
 
 // Axis ---------------------------------------------------------
+    // bornes definies ?
     add_cmd("ax0.set_xlim("+std::to_string(get_supp().first)+
             ", "+std::to_string(get_supp().second)+")");
-    if (this->TYmin>std::numeric_limits<float>::min())
-        add_cmd("ax0.set_ylim("+std::to_string(this->TYmin)+")");
-    
+
+    if (bIsymindef && bIsymaxdef)
+        add_cmd("ax0.set_ylim("+std::to_string(this->TYmin)+
+            ", "+std::to_string(this->TYmax)+")");
+    if (bIsymindef && !bIsymindef)
+        add_cmd("ax0.set_ylim(bottom="+std::to_string(this->TYmin)+")");
+    if (!bIsymindef && bIsymindef)
+        add_cmd("ax0.set_ylim(top="+std::to_string(this->TYmax)+")");
+        
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"add title and labels");
     if (!this->sTitle.empty())
         add_cmd("plt.title('"+
             get_title()+ "', size="+
             std::to_string(iTitlesize)+")");
-        
     if (!this->sXunit.empty())
         add_cmd("ax0.set_xlabel('"+
                 get_xlabel()+" ("+
@@ -824,6 +825,12 @@ bool _marker<_T>::make() {
         add_cmd("ax0.set_ylabel('"+
                 get_ylabel()+"', size="+
                 std::to_string(iLabelsize)+")");
+        
+    if (this->bHalfbox) {
+        add_cmd("ax0.spines['right'].set_visible(False)");
+        add_cmd("ax0.spines['top'].set_visible(False)");
+    }
+    
 // Grid and ticks -----------------------------------------------    
     add_cmd("ax0.tick_params(direction='out', labelsize="+
              std::to_string(iTicklabelsize)+
@@ -855,9 +862,11 @@ bool _marker<_T>::make() {
         msgM.msg(_msg::eMsg::MID,"make(): add markers");
     // Line -----------------------------------------------------
     int iSign=1; // positions triangulaires
-    float fNorm=0.08; // espacement des annotations
-    int iWidesize=3;
-    float fAlt=-0.1;
+    float fNorm=0.14; // espacement des annotations
+    if (bWide)
+        fNorm=0.08;
+    int iWidesize=3; // taille des annotations --wide
+    float fAlt=0; // positions alternees
     iCount++;
     for(auto line: vllSet) {
         if (!bWide) {
@@ -898,7 +907,6 @@ bool _marker<_T>::make() {
         
         // Text -----------------------------------------------------
         // iCount n'est utilise qu'ici
-        // 0 < iCount 0.5
         if (bWide) {
             if (!line.bBold) {
                 add_cmd("ax0.annotate('"+
@@ -906,9 +914,9 @@ bool _marker<_T>::make() {
                         "$\\\\lambda "+ssS.str()+ 
                         "$', xytext=("+
                         std::to_string(line.TWl)+","+
-                        std::to_string(iCount*fNorm+fAlt+this->TYmin-0.1)+"), "+
+                        std::to_string(iCount*fNorm+fAlt+this->TYmin-0.1+fAlt)+"), "+
                         "xy=("+std::to_string(line.TWl)+", "+
-                        std::to_string(iCount*fNorm+fAlt+this->TYmin-0.1)+"), "+
+                        std::to_string(iCount*fNorm+fAlt+this->TYmin-0.1+fAlt)+"), "+
                         "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.15), bbox=dict(boxstyle='round,pad=0.25', fc='white', ec='white', lw=2),size='"+
                         std::to_string(iWidesize)+"', ha='center', va='center')");
             }
@@ -918,9 +926,9 @@ bool _marker<_T>::make() {
                         "$\\\\lambda "+ssS.str()+ 
                         "$', xytext=("+
                         std::to_string(line.TWl)+","+
-                        std::to_string(iCount*fNorm+fAlt+this->TYmin-0.1)+"), "+
+                        std::to_string(iCount*fNorm+fAlt+this->TYmin-0.1+fAlt)+"), "+
                         "xy=("+std::to_string(line.TWl)+", "+
-                        std::to_string(iCount*fNorm+fAlt+this->TYmin-0.1)+"), "+
+                        std::to_string(iCount*fNorm+fAlt+this->TYmin-0.1+fAlt)+"), "+
                         "color = 'black', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.15), bbox=dict(boxstyle='round,pad=0.25', fc='white', ec='white', lw=2),size='"+
                         std::to_string(iWidesize)+"', ha='center', va='center')");
             }
@@ -932,9 +940,9 @@ bool _marker<_T>::make() {
                         "$\\\\lambda "+ssS.str()+ 
                         "$', xytext=("+
                         std::to_string(line.TWl)+","+
-                        std::to_string(iCount*fNorm+this->TYmin-0.1)+"), "+
+                        std::to_string(iCount*fNorm+this->TYmin-0.1+fAlt)+"), "+
                         "xy=("+std::to_string(line.TWl)+", "+
-                        std::to_string(iCount*fNorm+this->TYmin-0.1)+"), "+
+                        std::to_string(iCount*fNorm+this->TYmin-0.1+fAlt)+"), "+
                         "color = 'grey', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.02', fc='white', ec='white', lw=2),size='"+
                         std::to_string(iAnnotatesize)+"', ha='center', va='center')");
             }
@@ -944,30 +952,43 @@ bool _marker<_T>::make() {
                         "$\\\\lambda "+ssS.str()+ 
                         "$', xytext=("+
                         std::to_string(line.TWl)+","+
-                        std::to_string(iCount*fNorm+this->TYmin-0.1)+"), "+
+                        std::to_string(iCount*fNorm+this->TYmin-0.1+fAlt)+"), "+
                         "xy=("+std::to_string(line.TWl)+", "+
-                        std::to_string(iCount*fNorm+this->TYmin-0.1)+"), "+
+                        std::to_string(iCount*fNorm+this->TYmin-0.1+fAlt)+"), "+
                         "color = 'black', arrowprops=dict(arrowstyle='->', connectionstyle='arc3', linewidth=0.30), bbox=dict(boxstyle='round,pad=0.02', fc='white', ec='white', lw=2),size='"+
                         std::to_string(iAnnotatesize)+"', ha='center', va='center')");
             }
         }   
 
         iCount+=iSign;
-        if (iCount*fNorm+this->TYmin>0.6) {
-            iSign=-1;
-            fAlt=0;
+        if (!bWide) {
+            if (iCount*fNorm+this->TYmin-0.1+fAlt>0.6) {
+                iSign=-1;
+                fAlt=-fNorm/2.0;
+            }
+            if (iCount*fNorm+this->TYmin-0.1+fAlt<0) {
+                iSign=1;
+                fAlt=0;
+            }
         }
-        if (iCount*fNorm-this->TYmin-0.1<0) {
-            iSign=1;
-            iCount=6;
-            fAlt=-0.1;
+        else {
+            if (iCount*fNorm+this->TYmin-0.1+fAlt>0.5) {
+                iSign=-1;
+                //iCount+=iSign;
+                //fAlt=-fNorm/2.0;
+                fAlt=-0.1;
+            }
+            if (iCount*fNorm+this->TYmin-0.1+fAlt<0.15) {
+                iSign=1;
+                fAlt=0;
+            }
         }
     }
-    
     add_cmd(" ");
  
 // End of Script ------------------------------------------------
-    add_cmd("ax0.legend(loc='best', fontsize="+std::to_string(iLegendsize)+").get_frame().set_linewidth(0.0)\n");
+    if (this->bLegend) 
+        add_cmd("ax0.legend(loc='best', fontsize="+std::to_string(iLegendsize)+").get_frame().set_linewidth(0.0)\n");
         
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"make(): write savefig");

@@ -35,6 +35,7 @@ Dependencies:
 - Boost::spirit
 - Boost::tokenizer
 - Boost::unit_test_framework
+- python: matplotlib, numpy, csv
 
 
 ---
@@ -61,7 +62,8 @@ Usage:
                                 numbers of files.
   --xmin arg                    Set the min range.
   --xmax arg                    Set the max range.
-  --ymin arg                    Set ymin...
+  --ymin arg                    Set ymin.
+  --ymax arg                    Set ymax...
   --xlabel arg                  Set xlabel.
   --ylabel arg                  Set ylabel.
   --xunit arg                   Set xunit.
@@ -70,6 +72,8 @@ Usage:
   --rgb arg                     Set the color of the first spectrum as 
                                 RGBalpha: '#rrggbbaa'.
   --contsize arg (=0.600000024) Set the continnum width.
+  --nolegend                    Disable the legend.
+  --halfbox                     Show only left and bottom axis.
   --dotted                      Dotted curve.
   --dotdashed                   Dot-dashed curve.
   --fontsize arg                Set the font size.
@@ -92,9 +96,8 @@ Usage:
   --nolog                       Toggle off log.
   -v [ --verbose ]              Toggle verbosity.
 
-
 Example:
-% ./marker -i rand_spectra/0/0.dat -i rand_spectra/0/1.dat -l 0.dat -l 1.dat  -t Spectra -l 'Spectrum 1' -l 'Spectrum 2' -w 4861 -e \$H\\beta\$
+./marker -i rand_spectra/0/0.dat -i rand_spectra/0/1.dat -l 0.dat -l 1.dat  -t Spectra -l 'Spectrum 1' -l 'Spectrum 2' -w 4861 -e \$H\\beta\$ --nolog
 ▶ marker 
 ⚐ marker write history 
 ⚐ marker remove duplicates in history 

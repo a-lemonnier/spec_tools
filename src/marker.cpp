@@ -78,7 +78,8 @@ int main(int argc, char** argv) {
     
     ("xmin", po::value<float>(), "Set the min range.")
     ("xmax", po::value<float>(), "Set the max range.")
-    ("ymin", po::value<float>(), "Set ymin...")
+    ("ymin", po::value<float>(), "Set ymin.")
+    ("ymax", po::value<float>(), "Set ymax...")
     ("xlabel", po::value<std::string>(), "Set xlabel.")
     ("ylabel", po::value<std::string>(), "Set ylabel.")
     ("xunit", po::value<std::string>(), "Set xunit.")
@@ -87,7 +88,8 @@ int main(int argc, char** argv) {
     ("width", po::value<float>()->default_value(0.25), "Set the width of curves.")
     ("rgb", po::value<std::string>(), "Set the color of the first spectrum as RGBalpha: '#rrggbbaa'.")
     ("contsize", po::value<float>()->default_value(0.6), "Set the continnum width.")
-    
+    ("nolegend", "Disable the legend.")
+    ("halfbox", "Show only left and bottom axis.")
     ("dotted", "Dotted curve.")
     ("dotdashed", "Dot-dashed curve.")
     ("fontsize", po::value<int>(), "Set the font size.")
@@ -108,9 +110,9 @@ int main(int argc, char** argv) {
     ("shiftfirst", po::value<float>(), "Shift the first spectrum.")
     ("shift", po::value<float>(), "Shift spectra (except the first).")
 
-
     ("grid,g","Show the grid.")
     ("dpi", po::value<unsigned int>()->default_value(300), "Set the dpi.")
+
     ("nolog","Toggle off log.")
     ("verbose,v","Toggle verbosity.");
     
@@ -319,7 +321,6 @@ int main(int argc, char** argv) {
                             
                         if (!bExists) 
                             vtEntry.emplace_back(std::make_tuple( sName, std::stod(sWl), sSymbol, sWl));
-                        
                     }
                     else 
                         vtComm.emplace_back(std::make_tuple(sLine, iCount));
@@ -332,7 +333,6 @@ int main(int argc, char** argv) {
                 
                 sfFlux=std::fstream(vm["elemlist"].as<std::string>(), std::ios::out | 
                                                                      std::ios::trunc);
-                
                 if (sfFlux) {
                     std::stringstream ssS;
                     for(auto tLine: vtEntry)
@@ -387,10 +387,19 @@ int main(int argc, char** argv) {
                         bBold=true;                        
                     }
                     
-                    // @! or ! !@ unbold the line
-                    if (sLine.find("!")!=std::string::npos && sLine.find("@")!=std::string::npos) {
-                        sLine.erase(std::remove(sLine.begin(), sLine.end(), '!'), sLine.end());
-                        sLine.erase(std::remove(sLine.begin(), sLine.end(), '@'), sLine.end());
+                    if (!vm.count("wide")) {
+                        // @! or !, !@ unbold the line
+                        if (sLine.find("!")!=std::string::npos && sLine.find("@")!=std::string::npos) {
+                            sLine.erase(std::remove(sLine.begin(), sLine.end(), '!'), sLine.end());
+                            sLine.erase(std::remove(sLine.begin(), sLine.end(), '@'), sLine.end());
+                        }
+                    }
+                    else {
+                        if (sLine.find("!")!=std::string::npos && sLine.find("@")!=std::string::npos) {
+                            sLine.erase(std::remove(sLine.begin(), sLine.end(), '!'), sLine.end());
+                            sLine.erase(std::remove(sLine.begin(), sLine.end(), '@'), sLine.end());
+                            bBold=true;
+                        }
                     }
                     
                     if (sLine.find("#")==std::string::npos && sLine.find("%")==std::string::npos)  {
@@ -590,6 +599,8 @@ int main(int argc, char** argv) {
         
         if (vm.count("ymin"))
             Marker.set_ymin(vm["ymin"].as<float>());
+        if (vm.count("ymax"))
+            Marker.set_ymax(vm["ymax"].as<float>());
         
         Marker.set_colorline("red");
         
@@ -607,6 +618,12 @@ int main(int argc, char** argv) {
         
         if (vm.count("wide"))
             Marker.set_wide(true);
+        
+        if (vm.count("nolegend"))
+            Marker.set_legend(false);
+        
+        if (vm.count("halfbox"))
+            Marker.set_halfbox(true);
         
         if (vm.count("width"))
             Marker.set_linewidth(abs(vm["width"].as<float>()));

@@ -108,11 +108,21 @@ public:
     bool set_labelsize(int iSize);
     bool set_ticklabelsize(int iSize);
     /**
-     * \fn bool set_annotatesize(int iSize)
+     * \fn bool set_annotatesize(int iSe)
      * \brief Set the font size of markers
      */
     bool set_annotatesize(int iSize);
     bool set_legendsize(int iSize);
+    /**
+     * \fn void set_legend(bool bLegend)
+     * \brief Enable or disable the legend.
+     */
+    void set_legend(bool bLegend);
+    /**
+     * \fn set_halfbox(bool bHalfbox)
+     * \brief Show only left and bottom axis.
+     */
+    void set_halfbox(bool bHalfbox);
     bool set_continnumsize(float fWidth);
     
     void set_showgrid(bool bShowgrid);
@@ -253,6 +263,7 @@ private:
     _T TYcontinuum;
     _T TXmin, TXmax;
     _T TYmin, TYmax;
+    bool bIsymindef, bIsymaxdef; 
 
     int iDpi;
     
@@ -270,6 +281,8 @@ private:
     bool bDotted;
     bool bDotdashed;
     bool bWide;
+    bool bLegend;
+    bool bHalfbox;
     
     bool bIsset_fig_size; /**< Indicate whether the figsize is defined or not */
     
