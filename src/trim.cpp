@@ -46,6 +46,7 @@ namespace fs = boost::filesystem;
 
 #include <csv.h>
 #include <msg.h>
+#include <log.h>
 
 #define LOGFILE ".trim.log" /**< Define the default logfile  */
 #define HISTFILE ".history" /**< Define the default histfile (shared)  */
@@ -115,7 +116,6 @@ int main(int argc, char** argv) {
         msgM.msg(_msg::eMsg::THREADS, "521 files parsed");
         msgM.msg(_msg::eMsg::THREADS, "524 files parsed");
         msgM.msg(_msg::eMsg::END, " 52.909230s wall, 296.410000s user + 0.710000s system = 297.120000s CPU (561.6%)\n");
-
         return EXIT_SUCCESS;
     }   
     
@@ -134,72 +134,25 @@ int main(int argc, char** argv) {
     fs::path path_out(vm["input_folder"].as<std::string>());
      
     // ----------------------------------------------------  
-
     msgM.msg(_msg::eMsg::START);
+    
+    _log log;
+    log.set_execname(argv);
+    log.set_historyname(HISTFILE);
+    log.set_logname(LOGFILE);
     
     // Write history
     // ----------------------------------------------------  
-    
-    std::fstream sfFlux(HISTFILE, std::ios::app);
-    if (sfFlux) {
-        
-        std::stringstream ssS;
-        ssS << argv[0];
-        for(const auto &arg: vm) {
-            if (arg.second.value().type()==typeid(std::string))
-                ssS << " --" << arg.first.c_str() << " \""<< arg.second.as<std::string>() << "\"";
-            if (arg.second.value().type()==typeid(int))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<int>();
-            if (arg.second.value().type()==typeid(unsigned int))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<unsigned int>();
-            if (arg.second.value().type()==typeid(float))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<float>();
-            if (arg.second.value().type()==typeid(char))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<char>();
-            if (arg.second.value().type()==typeid(std::vector<std::string>)) {
-                for(auto sS: arg.second.as<std::vector<std::string>>())
-                    ssS << " --" << arg.first.c_str() << " \""<< sS << "\"";
-            }
-        }
-        ssS << std::endl;
-    
-        sfFlux.close();
-    }
-    else
+    msgM.msg(_msg::eMsg::MID, "write history");
+    if (!log.write_history(vm))
         msgM.msg(_msg::eMsg::ERROR, "cannot open history");
-    
-    // ----------------------------------------------------
+    // ----------------------------------------------------    
     
     // Remove duplicates
     // ----------------------------------------------------
-    
     msgM.msg(_msg::eMsg::MID, "remove duplicates in history");
-    
-    sfFlux=std::fstream(HISTFILE, std::ios::in);
-    if (sfFlux) {
-
-        std::hash<std::string> hH;
-        std::vector<size_t> vIndex;
-        std::vector<std::string> vsLine;
-        
-        std::string sLine;
-                
-        while(std::getline(sfFlux,sLine)) 
-            vsLine.emplace_back(sLine);
-    
-        std::vector<std::string>::iterator vsiTmp(std::unique(vsLine.begin(), vsLine.end()));
-        vsLine.resize(std::distance(vsLine.begin(), vsiTmp));
-
-        sfFlux.close();
-        
-        sfFlux=std::fstream(HISTFILE, std::ios::out | std::ios::trunc);
-        for(auto sS: vsLine)
-            sfFlux << sS << std::endl;
-        sfFlux.close();
-    }
-    else
+    if (!log.remove_duplicate())
         msgM.msg(_msg::eMsg::ERROR, "cannot open history");
-    
     // ----------------------------------------------------
 
     msgM.msg(_msg::eMsg::MID, "check command line");
@@ -229,10 +182,8 @@ int main(int argc, char** argv) {
     }
         
      if (fs::is_directory(path)) {
-        
         fs::recursive_directory_iterator step0(path);
         std::vector<std::string> list;
-        
         for(auto &file: boost::make_iterator_range(step0,{}) ) {
             // csv<> unable to parse non csv file
             if (!fs::is_directory(file) && 
@@ -245,7 +196,6 @@ int main(int argc, char** argv) {
                 file.path().filename().string().find(std::string(".directory"))==std::string::npos )
                 list.emplace_back(file.path().relative_path().string());
         }
-        
         int max_thread=std::thread::hardware_concurrency();
         
 // Limit CPU usage -------------------------------------
@@ -297,26 +247,19 @@ int main(int argc, char** argv) {
 // ----------------------------------------------------
 
 void trim(const std::vector<std::string> &list, float min, float max) {
-    
     _msg msgM;
     msgM.set_threadname("trim");
     msgM.set_name("trim()");
     msgM.set_log(LOGFILE);
     
     for(auto file: list ) {
-        
         _csv<float> csv; 
-        
         csv.set_filename(file);
         csv.set_separator('\t');
-        
         if (csv.read()) {
-            
             csv.set_verbose(_csv<float>::eVerbose::QUIET);
-            
             csv.apply_min_threshold(min,0);
             csv.apply_max_threshold(max,0);
-            
             csv.write();
         }
     }
@@ -334,11 +277,8 @@ double long CPU_utilization() {
     msgM.set_log(LOGFILE);
         
     auto [fTime_A, fIdle_A]=get_stat();
-    
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
     auto [fTime_B, fIdle_B]=get_stat();
-    
     return 100.*(1.-((fIdle_B-fIdle_A)/(fTime_B-fTime_A)));
 }
 
@@ -384,6 +324,5 @@ std::tuple<double long, double long>  get_stat() {
     }
     else 
         msgM.msg(_msg::eMsg::ERROR, "cannot open /proc/stat");
-    
     return {-1,1};
 }

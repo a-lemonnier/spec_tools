@@ -18,8 +18,6 @@ TODO:
  - **marker**.cpp: Fix duplicates remover
  - Decrease thread numbers as function of the CPU utilization
  - **msg**.h: Fix _msg::_msg(const _msg&)
- - **marker**.cpp: NOR in cmd check
- - Make classes in order to clean .cpp
  - Implement boost:: recursive directory copy
  
 ---

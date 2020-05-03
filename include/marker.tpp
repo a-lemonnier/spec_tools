@@ -1006,6 +1006,134 @@ int _marker<_T>::plot(){
     return iRes;
 }
 
+
+template<typename _T>
+bool _marker<_T>::sort_elemlist(const std::string &sElemlist) {
+    _msg msgM;
+    msgM.set_name("marker");
+    
+    fs::path pElemlist(sElemlist);
+    if (fs::exists(fs::path(sElemlist+".old")))
+        fs::remove(fs::path(sElemlist+".old"));
+    fs::copy(sElemlist, sElemlist+".old");
+    
+    if (fs::exists(pElemlist)) {
+        std::fstream sfFlux(sElemlist, std::ios::in);
+        if (sfFlux) {
+            std::string sLine;
+            std::vector<std::tuple<std::string, float, std::string, std::string> > vtEntry;
+            std::vector<std::tuple<std::string, int> > vtComm;
+            
+            auto is_float=[](const std::string &sVal) {
+                std::string::const_iterator first(sVal.begin()), last(sVal.end());
+                return boost::spirit::qi::parse(first, last, boost::spirit::double_) && 
+                first == last;
+            };
+            
+            int iCount=0; // replace comment to the same place
+            while(std::getline(sfFlux, sLine)) {
+                std::string sName;
+                std::string sWl;
+                std::string sSymbol;
+                bool bIscomm=false;
+                
+                // check highlight symbol
+                
+                if (sLine.find("!")!=std::string::npos && sLine.find("@")==std::string::npos) {
+                    sLine.erase(std::remove(sLine.begin(), sLine.end(), '!'), sLine.end());
+                    sSymbol="!";
+                }
+                
+                if (sLine.find("!")!=std::string::npos && sLine.find("@")!=std::string::npos) {
+                    sLine.erase(std::remove(sLine.begin(), sLine.end(), '!'), sLine.end());
+                    sLine.erase(std::remove(sLine.begin(), sLine.end(), '@'), sLine.end());
+                    sSymbol="@!";
+                }
+                
+                if (sLine.find("#")!=std::string::npos ) {
+                    sLine.erase(std::remove(sLine.begin(), sLine.end(), '#'), sLine.end());
+                    sSymbol="#";
+                    bIscomm=true;
+                }
+                
+                if (sLine.find("%")!=std::string::npos && sLine.find("!")==std::string::npos ) {
+                    sLine.erase(std::remove(sLine.begin(), sLine.end(), '%'), sLine.end());
+                    sSymbol="%";
+                }
+                
+                if (sLine.find("%")!=std::string::npos && sLine.find("!")!=std::string::npos ) {
+                    sLine.erase(std::remove(sLine.begin(), sLine.end(), '%'), sLine.end());
+                    sLine.erase(std::remove(sLine.begin(), sLine.end(), '!'), sLine.end());
+                    sSymbol="%!";
+                }
+                
+                if (! bIscomm) {
+                    sName=sLine.substr(0, sLine.find_first_of(","));
+                    sWl=sLine.substr(sLine.find_first_of(",")+1, sLine.size());
+                    
+                    // remove useless char
+                    sName.erase(std::remove(sName.begin(), sName.end(), '"'), sName.end());
+                    sName.erase(std::remove(sName.begin(), sName.end(), '\''), sName.end());
+                    sWl.erase(std::remove(sWl.begin(), sWl.end(), ' '), sWl.end());
+                    sWl.erase(std::remove(sWl.begin(), sWl.end(), '\n'), sWl.end());
+                    sWl.erase(std::remove(sWl.begin(), sWl.end(), '\0'), sWl.end());
+                    
+                    // check if wl is NaN
+                    if (!is_float(sWl)) {
+                        msgM.msg(_msg::eMsg::ERROR, "NaN in line list");
+                        break;
+                    }
+                    
+                    // check duplicates
+                    bool bExists=false;
+                    for(auto tEntry: vtEntry) {
+                        if (std::get<3>(tEntry)==sWl)
+                            bExists=true;
+                    }
+                    
+                    if (!bExists) 
+                        vtEntry.emplace_back(std::make_tuple( sName, std::stod(sWl), sSymbol, sWl));
+                }
+                else 
+                    vtComm.emplace_back(std::make_tuple(sLine, iCount));
+                iCount++;
+            }
+            
+            sfFlux.close();
+            
+            std::sort(vtEntry.begin(), vtEntry.end());
+            
+            sfFlux=std::fstream(sElemlist, std::ios::out | 
+            std::ios::trunc);
+            if (sfFlux) {
+                std::stringstream ssS;
+                for(auto tLine: vtEntry)
+                    ssS << std::get<2>(tLine) << "\"" 
+                    << std::get<0>(tLine) << "\", " 
+                    << std::get<3>(tLine) << "\n";
+                
+                for(auto tComm: vtComm)
+                    ssS << "#" << std::get<0>(tComm) << "\n";
+                
+                sfFlux << ssS.str();
+                sfFlux.close();
+                
+                return true;
+            }
+            else 
+                msgM.msg(_msg::eMsg::ERROR, "error while rewriting", sElemlist); 
+        }
+        else 
+            msgM.msg(_msg::eMsg::ERROR, "error while opening", sElemlist); 
+    }
+    msgM.msg(_msg::eMsg::ERROR, sElemlist, "does not exist");
+    return false;
+}
+
+
+// ----------------------------------------------------
+
+
 template<typename _T>
 std::string _marker<_T>::get_ext(const std::string& sS) const {
     return sS.substr(sS.find_last_of(".")+1);

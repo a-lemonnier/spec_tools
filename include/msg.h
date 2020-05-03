@@ -24,6 +24,8 @@
 #define HAS_SYSCALL
 #endif
 
+#include <log.h>
+
 /**
  * \class _msg
  * \brief A class that sends string to std output and in a file...
@@ -119,8 +121,7 @@ public:
      * \fn void enable_log(bool bLog)
      * \brief Enable or disable the log file
      */
-    void enable_log(bool bLog);
-    
+    void enable_log(bool bLog);    
 
 private:
     /**

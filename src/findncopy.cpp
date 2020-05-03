@@ -44,61 +44,11 @@ namespace fs = boost::filesystem;
 #endif
 
 #include <msg.h>
+#include <log.h>
+#include <findncopy.h>
 
 #define LOGFILE ".findncopy.log" /**< Define the default logfile  */
 #define HISTFILE ".history" /**< Define the default histfile (shared)  */
-
-// Prototype
-// ----------------------------------------------------
-/**
- * \fn std::vector<std::string> parse_filelist(std::fstream &flux)
- * \brief Create a vector of strings from the filelist
- */
-std::vector<std::string> parse_filelist(std::fstream &flux);
-
-/**
- * \fn std::vector<std::string> get_fullrpath(std::vector<std::string>& vsFilelist, const fs::path &fspPidir)
- * \brief Get the full relative path of all file
- */
-std::vector<std::string> get_fullrpath(std::vector<std::string>& vsFilelist, 
-                                        const fs::path &fspPidir);
-
-/**
- * \fn std::vector<std::string> get_fullrpath(std::vector<std::string>& vsFilelist, const fs::path &fspPidir, const std::string &sExclude)
- * \brief Get the full relative path of all file and exclude a string in paths
- */
-std::vector<std::string> get_fullrpath(std::vector<std::string>& vsFilelist, 
-                                        const fs::path &fspPidir,
-                                        const std::string &sExclude);
-
-/**
- * \fn void erase_string(std::vector<std::string> &vsFullrpath, const std::string &sToerase)
- * \brief Erase a string pattern in the path list
- */
-void erase_string(std::vector<std::string> &vsFullrpath, 
-                  const std::string &sToerase);
-
-/**
- * \fn std::vector<std::string> make_dir_list(const fs::path &fspPath, const std::string &sDirbase)
- * \brief Make a list of the folder structure
- */
-std::vector<std::string> make_dir_list(const fs::path &fspPath, 
-                                        const std::string &sDirbase);
-/**
- * \fn void make_dir(const std::vector<std::string> &vsBaserpath, const std::string &sOfolder)
- * \brief Recreate the folder structure
- */
-void make_dir(const std::vector<std::string> &vsBaserpath,  
-              const std::string &sOfolder);
-
-/**
- * \fn void copy_file(std::vector<std::string> &vsFullrpath, const std::string &sOfolder, const std::string &sIfolder)
- * \brief Copy the found files
- */
-void copy_file(std::vector<std::string> &vsFullrpath,
-               const std::string &sOfolder,
-               const std::string &sIfolder);
-// ----------------------------------------------------
 
 int main(int argc, char** argv) {
 
@@ -148,91 +98,36 @@ int main(int argc, char** argv) {
         msgM.msg(_msg::eMsg::MID, "creating folders: done");
         msgM.msg(_msg::eMsg::MID, "copying files: 174 files copied");
         msgM.msg(_msg::eMsg::END, " 0.176172s wall, 0.130000s user + 0.040000s system = 0.170000s CPU (96.5%)\n");
-
         return EXIT_SUCCESS;
     }
 
     // ----------------------------------------------------  
-    
     msgM.msg(_msg::eMsg::START);
+    
+    _log log;
+    log.set_execname(argv);
+    log.set_historyname(HISTFILE);
+    log.set_logname(LOGFILE);
     
     // Write history
     // ----------------------------------------------------  
-    
     msgM.msg(_msg::eMsg::MID, "write history");
-    
-    std::fstream sfFlux(HISTFILE, std::ios::app);
-    if (sfFlux) {
-        
-        std::stringstream ssS;
-        ssS << argv[0];
-        for(const auto &arg: vm) {
-            if (arg.second.value().type()==typeid(std::string))
-                ssS << " --" << arg.first.c_str() << " \""<< arg.second.as<std::string>() << "\"";
-            if (arg.second.value().type()==typeid(int))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<int>();
-            if (arg.second.value().type()==typeid(unsigned int))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<unsigned int>();
-            if (arg.second.value().type()==typeid(float))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<float>();
-            if (arg.second.value().type()==typeid(char))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<char>();
-            if (arg.second.value().type()==typeid(std::vector<std::string>)) {
-                for(auto sS: arg.second.as<std::vector<std::string>>())
-                    ssS << " --" << arg.first.c_str() << " \""<< sS << "\"";
-            }
-        }
-        ssS << std::endl;
-    
-        sfFlux << ssS.str();
-        
-        sfFlux.close();
-    }
-    else
+    if (!log.write_history(vm))
         msgM.msg(_msg::eMsg::ERROR, "cannot open history");
-    
-    // ----------------------------------------------------
+    // ----------------------------------------------------    
     
     // Remove duplicates
     // ----------------------------------------------------
-    
     msgM.msg(_msg::eMsg::MID, "remove duplicates in history");
-    
-    sfFlux=std::fstream(HISTFILE, std::ios::in);
-    if (sfFlux) {
-
-        std::hash<std::string> hH;
-        std::vector<size_t> vIndex;
-        std::vector<std::string> vsLine;
-        
-        std::string sLine;
-                
-        while(std::getline(sfFlux,sLine)) 
-            vsLine.emplace_back(sLine);
-    
-        std::vector<std::string>::iterator vsiTmp(std::unique(vsLine.begin(), vsLine.end()));
-        vsLine.resize(std::distance(vsLine.begin(), vsiTmp));
-
-        sfFlux.close();
-        
-        sfFlux=std::fstream(HISTFILE, std::ios::out | std::ios::trunc);
-        for(auto sS: vsLine)
-            sfFlux << sS << std::endl;
-        sfFlux.close();
-    }
-    else
+    if (!log.remove_duplicate())
         msgM.msg(_msg::eMsg::ERROR, "cannot open history");
-
     // ----------------------------------------------------
     
     std::string sListname = vm["namelist"].as<std::string>();
-    
     std::vector<std::string> vsFilelist;
     
     std::fstream flux0(sListname, std::ios::in);
-    
     if (flux0) {
-       
         std::vector<std::string> vsFullrpath;
         std::vector<std::string> vsBaserpath;
         
@@ -274,131 +169,3 @@ int main(int argc, char** argv) {
 #endif
     return EXIT_SUCCESS;
 }
-
-
-// ----------------------------------------------------
-// ----------------------------------------------------
-
-std::vector<std::string> parse_filelist(std::fstream &flux) {
-    
-    _msg msgM;
-    msgM.set_name("findncopy");
-    msgM.set_log(LOGFILE);
-    
-    std::vector<std::string> vsFilelist;
-    std::string sS;
-    while(std::getline(flux,sS)) {
-        try { vsFilelist.emplace_back(sS); } 
-        catch(std::bad_alloc &ba) { msgM.msg(_msg::eMsg::ERROR, "bad alloc"); }
-    }
-    msgM.msg(_msg::eMsg::MID, "parsing files:", vsFilelist.size(), "lines");
-    return vsFilelist;
-}
-
-std::vector<std::string> get_fullrpath(std::vector<std::string>& vsFilelist, 
-                                        const fs::path &fspPidir) {
-     _msg msgM;
-    msgM.set_name("findncopy");
-    msgM.set_log(LOGFILE);
-    
-    std::vector<std::string> vsFullrpath;
-    for(auto isF: vsFilelist) 
-            for(auto ibsd_itr: fs::recursive_directory_iterator(fspPidir)) {
-                std::string sName(ibsd_itr.path().filename().string());
-                if (sName.find(isF)!=std::string::npos) 
-                    vsFullrpath.emplace_back(ibsd_itr.path().string());
-            }
-        
-    msgM.msg(_msg::eMsg::MID, "searching files:", vsFullrpath.size(), "files found");
-    return vsFullrpath;
-}
-
-std::vector<std::string> get_fullrpath(std::vector<std::string>& vsFilelist, 
-                                        const fs::path &fspPidir,
-                                        const std::string &sExclude) {
-    _msg msgM;
-    msgM.set_name("findncopy");
-    msgM.set_log(LOGFILE);
-    
-    std::vector<std::string> vsFullrpath;
-    for(auto isF: vsFilelist) 
-            for(auto ibsd_itr: fs::recursive_directory_iterator(fspPidir)) {
-                std::string sName(ibsd_itr.path().filename().string());
-                if (sName.find(isF)!=std::string::npos && sName.find(sExclude)==std::string::npos) 
-                    vsFullrpath.emplace_back(ibsd_itr.path().string());
-            }
-        
-    msgM.msg(_msg::eMsg::MID, "searching files:", vsFullrpath.size(), "files found");
-    return vsFullrpath;
-}
-
-void erase_string(std::vector<std::string> &vsFullrpath, 
-                  const std::string &sToerase) {
-    _msg msgM;
-    msgM.set_name("findncopy");
-    msgM.set_log(LOGFILE);
-    
-    msgM.msg(_msg::eMsg::MID, "erasing string:", sToerase);
- 
-    std::for_each(vsFullrpath.begin(), vsFullrpath.end(), [&](std::string &sS) {
-            size_t stPos = sS.find(sToerase);
-            if (stPos!=std::string::npos)
-                sS.erase(stPos, sToerase.length());
-        });
-}
-
-std::vector<std::string> make_dir_list(const fs::path &fspPath, 
-                                        const std::string &sDirbase) {
-    _msg msgM;
-    msgM.set_name("findncopy");
-    msgM.set_log(LOGFILE);
-    
-    msgM.msg(_msg::eMsg::MID, "creating directory lists");
-    
-    std::vector<std::string> vsDirlist;//=new std::vector<std::string>;
-    
-    for(auto bsd_itr: fs::recursive_directory_iterator(fspPath)) {
-        if (bsd_itr.path()!=fspPath) {
-            std::string sPath(bsd_itr.path().string());
-            std::string sFilename(bsd_itr.path().filename().string());
-            
-            sPath.erase(sPath.find(sDirbase), sDirbase.length());
-            sPath.erase(sPath.find(sFilename), sFilename.length());
-            
-            vsDirlist.emplace_back(sPath);
-        }
-    }
-    return vsDirlist;
-}
-
-void make_dir(const std::vector<std::string> &vsBaserpath, 
-              const std::string &sOfolder) {
-    _msg msgM;
-    msgM.set_name("findncopy");
-    msgM.set_log(LOGFILE);
-    
-    msgM.msg(_msg::eMsg::MID, "creating folders");
-
-    for(auto sP: vsBaserpath) 
-        if (!fs::exists((fs::path(sOfolder+sP))))
-            fs::create_directories(fs::path(sOfolder+sP));
-}
-
-void copy_file(std::vector<std::string> &vsFullrpath,
-               const std::string &sOfolder,
-               const std::string &sIfolder) {
-    _msg msgM;
-    msgM.set_name("findncopy");
-    msgM.set_log(LOGFILE);
-    
-    int iCount=0;
-    for(auto sF: vsFullrpath) 
-        if (!fs::exists(fs::path(sOfolder+"/"+sF))) {
-            fs::copy(fs::path(sIfolder+"/"+sF),fs::path(sOfolder+"/"+sF));
-            iCount++;
-        }
-        
-    msgM.msg(_msg::eMsg::MID, "copying files:", iCount , "files copied");
-}
-               
-// ----------------------------------------------------

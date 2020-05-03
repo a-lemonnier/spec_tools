@@ -53,6 +53,7 @@ namespace fs = boost::filesystem;
 
 #include <csv.h>
 #include <msg.h>
+#include <log.h>
 
 #define LOGFILE ".genrandspec.log" /**< Define the default logfile  */
 #define HISTFILE ".history" /**< Define the default histfile (shared)  */
@@ -133,85 +134,38 @@ int main(int argc, char** argv) {
         msgM.msg(_msg::eMsg::THREADS, "create spectra in rand_spectra/6 ");
         msgM.msg(_msg::eMsg::THREADS, "create spectra in rand_spectra/7 ");
         msgM.msg(_msg::eMsg::END," 10.694788s wall, 77.990000s user + 3.050000s system = 81.040000s CPU (757.8%)");
-        
         return EXIT_SUCCESS;
     }
    
     std::string sOutput=vm["output"].as<std::string>();
     
     char cSep=vm["separator"].as<char>();
-
+    
     fs::path pOutput(vm["output"].as<std::string>());
-    
-    // ----------------------------------------------------
-    
+
+    // ----------------------------------------------------    
     msgM.msg(_msg::eMsg::START);
         
+        
+    std::fstream sfFlux;
+    
+    _log log;
+    log.set_execname(argv);
+    log.set_historyname(HISTFILE);
+    log.set_logname(LOGFILE);
+    
     // Write history
     // ----------------------------------------------------  
-    
     msgM.msg(_msg::eMsg::MID, "write history");
-    
-    std::fstream sfFlux(HISTFILE, std::ios::app);
-    if (sfFlux) {
-        
-        std::stringstream ssS;
-        ssS << argv[0];
-        for(const auto &arg: vm) {
-            if (arg.second.value().type()==typeid(std::string))
-                ssS << " --" << arg.first.c_str() << " \""<< arg.second.as<std::string>() << "\"";
-            if (arg.second.value().type()==typeid(int))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<int>();
-            if (arg.second.value().type()==typeid(unsigned int))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<unsigned int>();
-            if (arg.second.value().type()==typeid(float))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<float>();
-            if (arg.second.value().type()==typeid(char))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<char>();
-            if (arg.second.value().type()==typeid(std::vector<std::string>)) {
-                for(auto sS: arg.second.as<std::vector<std::string>>())
-                    ssS << " --" << arg.first.c_str() << " \""<< sS << "\"";
-            }
-        }
-        ssS << std::endl;
-    
-        sfFlux.close();
-    }
-    else
+    if (!log.write_history(vm))
         msgM.msg(_msg::eMsg::ERROR, "cannot open history");
-    
-    // ----------------------------------------------------
+    // ----------------------------------------------------    
     
     // Remove duplicates
     // ----------------------------------------------------
-    
     msgM.msg(_msg::eMsg::MID, "remove duplicates in history");
-    
-    sfFlux=std::fstream(HISTFILE, std::ios::in);
-    if (sfFlux) {
-
-        std::hash<std::string> hH;
-        std::vector<size_t> vIndex;
-        std::vector<std::string> vsLine;
-        
-        std::string sLine;
-                
-        while(std::getline(sfFlux,sLine)) 
-            vsLine.emplace_back(sLine);
-    
-        std::vector<std::string>::iterator vsiTmp(std::unique(vsLine.begin(), vsLine.end()));
-        vsLine.resize(std::distance(vsLine.begin(), vsiTmp));
-
-        sfFlux.close();
-        
-        sfFlux=std::fstream(HISTFILE, std::ios::out | std::ios::trunc);
-        for(auto sS: vsLine)
-            sfFlux << sS << std::endl;
-        sfFlux.close();
-    }
-    else
+    if (!log.remove_duplicate())
         msgM.msg(_msg::eMsg::ERROR, "cannot open history");
-
     // ----------------------------------------------------
     
     msgM.msg(_msg::eMsg::MID, "check command line");
@@ -223,7 +177,6 @@ int main(int argc, char** argv) {
         msgM.msg(_msg::eMsg::ERROR, "invalid boundaries");
         return EXIT_FAILURE;
     }
-    
     if (vm["maxw"].as<float>() < vm["minw"].as<float>()) {
         fMax=vm["minw"].as<float>();
         fMin=vm["maxw"].as<float>();
@@ -232,12 +185,10 @@ int main(int argc, char** argv) {
         fMax=vm["maxw"].as<float>();
         fMin=vm["minw"].as<float>();
     }
-    
     if (fStep<0) {
         msgM.msg(_msg::eMsg::ERROR, "bad step:",fStep);
         return EXIT_FAILURE;
     }
-    
     if (fs::exists(pOutput)) {
         msgM.msg(_msg::eMsg::ERROR, "directory",sOutput,"exists");
         return EXIT_FAILURE;
@@ -259,7 +210,6 @@ int main(int argc, char** argv) {
     
     if (iMax_thread>1) {
         msgM.msg(_msg::eMsg::MID, "start", iMax_thread, "async threads");
-        
         if (fs::create_directory(pOutput)) {
             std::vector<std::string> vsList;
             for(int i=0; i<iMax_thread; i++)
@@ -268,13 +218,11 @@ int main(int argc, char** argv) {
             std::launch flag=std::launch::async | std::launch::deferred;
             
             std::vector<std::future<void> > vfThread;
-            
             for(auto sFile: vsList) 
                 if (fs::create_directory(fs::path(sFile)))
                     vfThread.emplace_back(std::async(flag, run, sFile, cSep, fMin, fMax, fStep));
             
             std::for_each(vfThread.begin(), vfThread.end(), [](std::future<void> &th) { th.get(); });
-            
         }
         else {
             msgM.msg(_msg::eMsg::ERROR, "cannot mkdir",sOutput);
@@ -288,16 +236,12 @@ int main(int argc, char** argv) {
         _csv<float> csv;
         
         csv.set_verbose(_csv<float>::eVerbose::QUIET);
-        
         csv.set_filename_out(sOutput);
         csv.set_separator(cSep);
-        
         csv.genrandspec(fMin,fMax,fStep);
-        
         csv.write();
         
         msgM.msg(_msg::eMsg::MID, "output:", sOutput);   
-        
     }
     
 #ifdef HAS_BOOST_TIMER

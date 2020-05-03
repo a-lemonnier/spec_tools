@@ -41,6 +41,7 @@ namespace fs = boost::filesystem;
 #endif
 
 #include <msg.h>
+#include <log.h>
 
 #define LOGFILE ".elemlist.log" /**< Define the default logfile  */
 #define HISTFILE ".history" /**< Define the default histfile (shared)  */
@@ -82,7 +83,6 @@ int main(int argc, char** argv) {
         
 // Parse cmd line
 // ----------------------------------------------------  
-    
     namespace po = boost::program_options;
     po::options_description description("Usage");
     
@@ -95,7 +95,6 @@ int main(int argc, char** argv) {
     ("Bold,B",  "Highlight the line: !")
     ("Temp,T",  "Temporary comment: % or @!");
     
-    
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(description).run(), vm);
     po::notify(vm);
@@ -106,89 +105,36 @@ int main(int argc, char** argv) {
         std::cout << "\nCtrl + C to exit.\n";
         return EXIT_SUCCESS;
     }
-
-    // ----------------------------------------------------  
     
+    // ----------------------------------------------------  
     msgM.msg(_msg::eMsg::START);
+    
+    _log log;
+    log.set_execname(argv);
+    log.set_historyname(HISTFILE);
+    log.set_logname(LOGFILE);
     
     // Write history
     // ----------------------------------------------------  
-    
     msgM.msg(_msg::eMsg::MID, "write history");
-    
-    std::fstream sfFlux(HISTFILE, std::ios::app);
-    if (sfFlux) {
-        
-        std::stringstream ssS;
-        ssS << argv[0];
-        for(const auto &arg: vm) {
-            if (arg.second.value().type()==typeid(std::string))
-                ssS << " --" << arg.first.c_str() << " \""<< arg.second.as<std::string>() << "\"";
-            if (arg.second.value().type()==typeid(int))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<int>();
-            if (arg.second.value().type()==typeid(unsigned int))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<unsigned int>();
-            if (arg.second.value().type()==typeid(float))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<float>();
-            if (arg.second.value().type()==typeid(char))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<char>();
-            if (arg.second.value().type()==typeid(std::vector<std::string>)) {
-                for(auto sS: arg.second.as<std::vector<std::string>>())
-                    ssS << " --" << arg.first.c_str() << " \""<< sS << "\"";
-            }
-        }
-        ssS << "\n";
-    
-        sfFlux << ssS.str();
-        
-        sfFlux.close();
-    }
-    else
+    if (!log.write_history(vm))
         msgM.msg(_msg::eMsg::ERROR, "cannot open history");
-    
-    // ----------------------------------------------------
+    // ----------------------------------------------------    
     
     // Remove duplicates
     // ----------------------------------------------------
-    
     msgM.msg(_msg::eMsg::MID, "remove duplicates in history");
-    
-    sfFlux=std::fstream(HISTFILE, std::ios::in);
-    if (sfFlux) {
-
-        std::hash<std::string> hH;
-        std::vector<size_t> vIndex;
-        std::vector<std::string> vsLine;
-        
-        std::string sLine;
-                
-        while(std::getline(sfFlux,sLine)) 
-            vsLine.emplace_back(sLine);
-    
-        std::vector<std::string>::iterator vsiTmp(std::unique(vsLine.begin(), vsLine.end()));
-        vsLine.resize(std::distance(vsLine.begin(), vsiTmp));
-
-        sfFlux.close();
-        
-        sfFlux=std::fstream(HISTFILE, std::ios::out | std::ios::trunc);
-        for(auto sS: vsLine)
-            sfFlux << sS << "\n";
-        sfFlux.close();
-    }
-    else
+    if (!log.remove_duplicate())
         msgM.msg(_msg::eMsg::ERROR, "cannot open history");
-
     // ----------------------------------------------------
+    
+    msgM.msg(_msg::eMsg::MID, "check command line");
     
     if (!(vm.count("elem") && vm.count("wavelength"))) {
         bool bEnd=true;
         
         while(bEnd) {
-                        
-            std::string sElem;
-            std::string sIon;
-            std::string sWl;
-            std::string sSymbol; 
+            std::string sElem, sIon, sWl, sSymbol; 
             
             std::cout << "Type an element to add: ";
             std::cin >> sElem;
@@ -199,8 +145,7 @@ int main(int argc, char** argv) {
             
             std::cout << "Ionization ? ";
             std::cin >> sIon;
-            for(auto &cC: sIon)
-                cC=std::toupper(cC);
+            for(auto &cC: sIon) cC=std::toupper(cC);
             
             std::cin.sync();
             std::cin.clear();
@@ -216,23 +161,15 @@ int main(int argc, char** argv) {
                 sWl="-1";
             }
             
-            std::cout << "Indicator "; 
-            std::cout << "(bold: ! - temp: % - temp bold: @! - mask: # - q or s: skip) ?\n";
+            std::cout << "Indicator: "; 
+            std::cout << "(bold: ! - temp: % - temp bold: @! - mask: # - q or s: skip) ?" << std::endl;
             
             std::string sS;
             std::cin >> sS;
                 
-            if (sS!="#" && sS!="!" 
-                            && sS!="@"
-                            && sS!="%"
-                            && sS!="#!"
-                            && sS!="%!"
-                            && sS!="@!"
-                            && sS!="%"
-                            && sS!="q"
-                            && sS!="Q"
-                            && sS!="s"
-                            && sS!="S") {
+            if (sS!="#" && sS!="!" && sS!="@" && sS!="%" && sS!="#!"
+                        && sS!="%!"&& sS!="@!"&& sS!="%" && sS!="q"
+                        && sS!="Q" && sS!="s" && sS!="S") {
                     msgM.msg(_msg::eMsg::ERROR, "bad char: '", sS, "'");
                     sS=" ";
             }
@@ -243,25 +180,16 @@ int main(int argc, char** argv) {
             sS.erase(std::remove(sS.begin(), sS.end(), 'S'), sS.end());
             
             sSymbol+=sS;
-            
             add_elem<>(sSymbol, sElem, sWl, vm["list"].as<std::string>());
-
         }
     }
     else {
         std::stringstream ssS;
         
-        if (vm.count("Mask"))
-            ssS << "#";
-        
-        if (vm.count("Bold"))
-            ssS << "!";
-        
-        if (vm.count("Temp") && !vm.count("Bold"))
-            ssS << "%";
-        
-        if (vm.count("Temp") && vm.count("Bold"))
-            ssS << "@!";
+        if (vm.count("Mask"))  ssS << "#";
+        if (vm.count("Bold"))  ssS << "!";
+        if (vm.count("Temp") && !vm.count("Bold")) ssS << "%";
+        if (vm.count("Temp") && vm.count("Bold"))  ssS << "@!";
             
         add_elem<>(ssS.str(), 
                    vm["elem"].as<std::string>(), 
@@ -275,23 +203,17 @@ int main(int argc, char** argv) {
     return EXIT_SUCCESS;
 }
 
-
 template<typename _T>
 bool add_elem(const std::string& sElem, _T TWl, const std::string& sFilename) {
-    
     _msg msgM;
     msgM.set_name("elemlist");
     msgM.set_threadname("add_elem");
     msgM.set_log(LOGFILE);
     
     std::fstream sfFlux(sFilename, std::ios::out | std::ios::app);
-    
     if (sfFlux) {
-        
         msgM.msg(_msg::eMsg::MID, "add:", sElem, TWl);
-        
         sfFlux << "\"" << sElem << "\", " << TWl << "\n";
-        
         sfFlux.close();
         return true;
     }
@@ -303,7 +225,6 @@ bool add_elem(const std::string& sElem, _T TWl, const std::string& sFilename) {
 
 template<typename _T>
 bool add_elem(const std::string& sSymbol, const std::string& sElem, _T TWl, const std::string& sFilename) {
-    
     _msg msgM;
     msgM.set_name("elemlist");
     msgM.set_threadname("add_elem");
@@ -312,17 +233,13 @@ bool add_elem(const std::string& sSymbol, const std::string& sElem, _T TWl, cons
     std::fstream sfFlux(sFilename, std::ios::out | std::ios::app);
     
     if (sfFlux) {
-        
         msgM.msg(_msg::eMsg::MID, "add:", sElem, TWl);
-        
         sfFlux << sSymbol << "\"" << sElem << "\", " << TWl << "\n";
-        
         sfFlux.close();
         return true;
     }
     else
         msgM.msg(_msg::eMsg::ERROR, "cannot open file");
-    
     return false;
 }
 

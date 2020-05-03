@@ -45,41 +45,13 @@ namespace fs = boost::filesystem;
 
 #include <csv.h>
 #include <msg.h>
+#include <log.h>
+#include <shift.h>
 
 #define CLIGHT 299792.458 // /**< Speed of light in km/s  */
 
 #define LOGFILE ".shift.log" /**< Define the default logfile  */
 #define HISTFILE ".history" /**< Define the default histfile (shared)  */
-
-// Prototype
-// ----------------------------------------------------
-/**
- * \fn void add(const std::vector<std::string> &vsList, float fWavelength)
- * \brief Add the defined wavelength to the first column of spectra. Default sep is '\\t'.
- */
-void add(const std::vector<std::string> &vsList, float fWavelength);
-
-/**
- * \fn void add_sep(const std::vector<std::string> &vsList, char cSep , float fWavelength)
- * \brief Add the defined wavelength to the first column of spectra.
- */
-void add_sep(const std::vector<std::string> &vsList, char cSep , float fWavelength);
-
-/**
- * \fn void transform_sep(const std::vector<std::string> &vsList, char cSep , float fVr)
- * \brief Correct the radial velocity effect on spectra. Perform a linear transformation.
- * \param fVr Radial Velocity
- */
-void transform_sep(const std::vector<std::string> &vsList, char cSep , float fVr);
-
-/**
- * \fn double long CPU_utilization()
- * \brief Get the CPU usage (%)
- */
-double long CPU_utilization();
-
-std::tuple<double long, double long> get_stat();
-// ----------------------------------------------------
 
 int main(int argc, char** argv) {
         
@@ -130,69 +102,26 @@ int main(int argc, char** argv) {
     
     msgM.msg(_msg::eMsg::START);
     
+        
+    std::fstream sfFlux;
+    
+    _log log;
+    log.set_execname(argv);
+    log.set_historyname(HISTFILE);
+    log.set_logname(LOGFILE);
+    
     // Write history
     // ----------------------------------------------------  
-    
-    std::fstream sfFlux(HISTFILE, std::ios::app);
-    if (sfFlux) {
-        
-        std::stringstream ssS;
-        ssS << argv[0];
-        for(const auto &arg: vm) {
-            if (arg.second.value().type()==typeid(std::string))
-                ssS << " --" << arg.first.c_str() << " \""<< arg.second.as<std::string>() << "\"";
-            if (arg.second.value().type()==typeid(int))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<int>();
-            if (arg.second.value().type()==typeid(unsigned int))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<unsigned int>();
-            if (arg.second.value().type()==typeid(float))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<float>();
-            if (arg.second.value().type()==typeid(char))
-                ssS << " --" << arg.first.c_str() << " "<< arg.second.as<char>();
-            if (arg.second.value().type()==typeid(std::vector<std::string>)) {
-                for(auto sS: arg.second.as<std::vector<std::string>>())
-                    ssS << " --" << arg.first.c_str() << " \""<< sS << "\"";
-            }
-        }
-        ssS << std::endl;
-    
-        sfFlux.close();
-    }
-    else
+    msgM.msg(_msg::eMsg::MID, "write history");
+    if (!log.write_history(vm))
         msgM.msg(_msg::eMsg::ERROR, "cannot open history");
-    
-    // ----------------------------------------------------
+    // ----------------------------------------------------    
     
     // Remove duplicates
     // ----------------------------------------------------
-    
     msgM.msg(_msg::eMsg::MID, "remove duplicates in history");
-    
-    sfFlux=std::fstream(HISTFILE, std::ios::in);
-    if (sfFlux) {
-
-        std::hash<std::string> hH;
-        std::vector<size_t> vIndex;
-        std::vector<std::string> vsLine;
-        
-        std::string sLine;
-                
-        while(std::getline(sfFlux,sLine)) 
-            vsLine.emplace_back(sLine);
-    
-        std::vector<std::string>::iterator vsiTmp(std::unique(vsLine.begin(), vsLine.end()));
-        vsLine.resize(std::distance(vsLine.begin(), vsiTmp));
-
-        sfFlux.close();
-        
-        sfFlux=std::fstream(HISTFILE, std::ios::out | std::ios::trunc);
-        for(auto sS: vsLine)
-            sfFlux << sS << std::endl;
-        sfFlux.close();
-    }
-    else
+    if (!log.remove_duplicate())
         msgM.msg(_msg::eMsg::ERROR, "cannot open history");
-
     // ----------------------------------------------------
     
     msgM.msg(_msg::eMsg::MID, "check command line");
@@ -208,7 +137,6 @@ int main(int argc, char** argv) {
     }
     else 
         fWavelength=vm["wavelength"].as<float>();
-    
     
     std::string sFilename;
     std::string sOutput=vm["output"].as<std::string>();
@@ -275,7 +203,6 @@ int main(int argc, char** argv) {
                 file.path().filename().string().find(std::string(".directory"))==std::string::npos )
                 list.emplace_back(file.path().relative_path().string());
         }
-        
         int max_thread=std::thread::hardware_concurrency();
         
 // Limit CPU usage -------------------------------------
@@ -330,11 +257,9 @@ int main(int argc, char** argv) {
             msgM.msg(_msg::eMsg::MID, "correct radial velocity vr =", fVr, "and 1/(\u03B2+1) =", 1/(1+fVr/CLIGHT));
         
         _csv<float> csv(sFilename, cSep);
-        
         csv.set_filename_out(sOutput);
         
         if (csv.read()) {
-            
             csv.set_verbose(_csv<float>::eVerbose::QUIET);
             
             if (!bDefVr)
@@ -343,9 +268,7 @@ int main(int argc, char** argv) {
                 float fBeta=1/(1+fVr/CLIGHT);
                 csv.transform_lin(fBeta, 0., 0);
             }
-            
             csv.write();
-            
         }
     }
     
@@ -356,155 +279,4 @@ int main(int argc, char** argv) {
 #endif
     
     return EXIT_SUCCESS;
-}
-
-// ----------------------------------------------------
-// ----------------------------------------------------
-
-
-void add(const std::vector<std::string> &vsList, float fWavelength) {    
-    _msg msgM;
-    msgM.set_threadname("add");
-    msgM.set_name("add");
-    msgM.set_log(LOGFILE);
-    
-     for(auto sFile: vsList) {
-        
-        _csv<float> csv(sFile, '\t');
-        
-        if(csv.read()) {
-            
-            csv.set_verbose(_csv<float>::eVerbose::QUIET);
-            
-            csv.shift(fWavelength);
-            
-            csv.write();
-            
-        }
-     }
-    
-#ifdef HAS_SYSCALL   
-    msgM.msg(_msg::eMsg::THREADS, vsList.size(), "files parsed.");
-#else
-    msgM.msg(_msg::eMsg::MID, vsList.size(), " files parsed.");
-#endif
-}
-
-void add_sep(const std::vector<std::string> &vsList, char cSep , float fWavelength) {    
-    _msg msgM;
-    msgM.set_threadname("add");
-    msgM.set_name("add");
-    msgM.set_log(LOGFILE);
-    
-     for(auto sFile: vsList) {
-        
-        _csv<float> csv(sFile, cSep);
-        
-        if(csv.read()) {
-            
-            csv.set_verbose(_csv<float>::eVerbose::QUIET);
-            
-            csv.shift(fWavelength);
-            
-            csv.write();
-            
-        }    
-    }
-    
-#ifdef HAS_SYSCALL   
-    msgM.msg(_msg::eMsg::THREADS, vsList.size(), "files parsed.");
-#else
-    msgM.msg(_msg::eMsg::MID, vsList.size(), " files parsed.");
-#endif
-}
-
-void transform_sep(const std::vector<std::string> &vsList, char cSep , float fVr) {
-    _msg msgM;
-    msgM.set_threadname("transform");
-    msgM.set_name("transform");
-    msgM.set_log(LOGFILE);
-    
-     for(auto sFile: vsList) {
-        
-        _csv<float> csv(sFile, cSep);
-        
-        if(csv.read()) {
-            
-            csv.set_verbose(_csv<float>::eVerbose::QUIET);
-            
-            float fBeta=1/(1+fVr/CLIGHT);
-            
-            csv.transform_lin(fBeta, 0, 0);
-            
-            csv.write();
-            
-        }    
-    }
-    
-#ifdef HAS_SYSCALL   
-    msgM.msg(_msg::eMsg::THREADS, vsList.size(), "files parsed.");
-#else
-    msgM.msg(_msg::eMsg::MID, vsList.size(), " files parsed.");
-#endif
-}
-
-double long CPU_utilization() {
-     _msg msgM;
-    msgM.set_name("genrandspec");
-    msgM.set_threadname("CPU_utilization");
-    msgM.set_log(LOGFILE);
-        
-    auto [fTime_A, fIdle_A]=get_stat();
-    
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
-    auto [fTime_B, fIdle_B]=get_stat();
-    
-    return 100.*(1.-((fIdle_B-fIdle_A)/(fTime_B-fTime_A)));
-}
-
-std::tuple<double long, double long>  get_stat() {
-    _msg msgM;
-    msgM.set_name("genrandspec");
-    msgM.set_threadname("get_stat");
-    msgM.set_log(LOGFILE);
-    
-    std::fstream sfCpu("/proc/stat", std::ios::in);
-    
-    if (sfCpu) {
-
-        std::string sLine;
-        std::getline(sfCpu, sLine);
-        
-        // erase "cpu"
-        sLine.erase(sLine.begin(), sLine.begin()+sLine.find_first_of("0123456789")); 
-        
-        // locate " " and push position into vec
-        std::vector<int> vPos;
-        std::vector<double long> vCol;
-        
-        vPos.push_back(0); 
-        
-        int iCount=0;
-        for(auto cC: sLine) {
-            if (cC==' ')
-                vPos.push_back(iCount);
-            iCount++;  
-        }
-        
-        // slice
-        for(int i=0; i<4; i++) {
-            std::string sVal=sLine.substr(vPos[i], vPos[i+1]-vPos[i]);
-            sVal.erase(std::remove(sVal.begin(), sVal.end(), ' '), sVal.end()); 
-            vCol.push_back(std::stod(sVal));
-        }
-        
-        sfCpu.close();
-                
-        return {static_cast<double long>(vCol[0]+vCol[1]+vCol[2]+vCol[3]), static_cast<double long>(vCol[3])};
-    }
-    else 
-        msgM.msg(_msg::eMsg::ERROR, "cannot open /proc/stat");
-    
-    return {-1,1};
 }

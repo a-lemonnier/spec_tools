@@ -24,16 +24,17 @@ endif()
 
 include_directories(./src ./include ${Boost_INCLUDE_DIRS} ./test)
 
-add_executable(threshold src/threshold.cpp include/msg.cpp)
-add_executable(findncopy src/findncopy.cpp include/msg.cpp)
-add_executable(trim src/trim.cpp include/msg.cpp)
-add_executable(der_snr src/der_snr.cpp include/msg.cpp)
-add_executable(shift src/shift.cpp include/msg.cpp)
-add_executable(genrandspec src/genrandspec.cpp include/msg.cpp)
-add_executable(marker src/marker.cpp include/msg.cpp)
-add_executable(elemlist src/elemlist.cpp include/msg.cpp)
+add_executable(threshold src/threshold.cpp include/msg.cpp include/log.cpp)
+add_executable(findncopy src/findncopy.cpp include/msg.cpp include/log.cpp)
+add_executable(trim src/trim.cpp include/msg.cpp include/log.cpp)
+add_executable(der_snr src/der_snr.cpp include/msg.cpp include/log.cpp)
+add_executable(shift src/shift.cpp include/msg.cpp include/log.cpp)
+add_executable(genrandspec src/genrandspec.cpp include/msg.cpp include/log.cpp)
+add_executable(marker src/marker.cpp include/msg.cpp include/log.cpp)
+add_executable(elemlist src/elemlist.cpp include/msg.cpp include/log.cpp)
 
-add_library(msg include/msg.cpp include/msg.h)
+add_library(msg include/msg.cpp include/msg.h include/log.h)
+add_library(log include/log.cpp include/log.h)
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
@@ -64,10 +65,14 @@ set_property(TARGET elemlist PROPERTY CXX_STANDARD_REQUIRED ON)
 set_property(TARGET msg PROPERTY CXX_STANDARD 17)
 set_property(TARGET msg PROPERTY CXX_STANDARD_REQUIRED ON)
 
+set_property(TARGET log PROPERTY CXX_STANDARD 17)
+set_property(TARGET log PROPERTY CXX_STANDARD_REQUIRED ON)
+
 find_package( Boost 1.40 COMPONENTS program_options 
                          REQUIRED timer filesystem unit_test_framework)
 
 target_link_libraries(msg LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
+target_link_libraries(log LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 
 target_link_libraries(threshold LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 target_link_libraries(findncopy LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)

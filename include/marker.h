@@ -22,9 +22,24 @@
 #include <boost/spirit/include/qi_parse.hpp>
 #include <boost/spirit/include/qi_numeric.hpp>
 
+#if __has_include (<filesystem>)
+#include <filesystem>
+#define FS_STD /**< std::filesystem availability (C++17) */
+namespace fs = std::filesystem;
+#elif __has_include (<experimental/filesystem>) && !__has_include (<filesystem>)
+#include <experimental/filesystem>
+#define FS_STDEXP /**< std::experimental::filesystem availability */
+namespace fs = std::experimental::filesystem;
+#elif __has_include(<boost/filesystem.hpp>) && !__has_include (<filesystem>) && !__has_include (<experimental/filesystem>)
+#include <boost/filesystem.hpp>
+#define FS_BOOST /**< boost::filesystem availability */
+namespace fs = boost::filesystem;
+#else
+#error "No filesystem header found"
+#endif
+
 #include <csv.h>
 #include <msg.h>
-
 
 /**
  * \class _marker
@@ -141,25 +156,25 @@ public:
     
     /**
      * \fn void set_wide(bool bWide)
-     * \brief Define if the spectrum range is wide in order to reduce marker size with no overlaps
+     * \brief Define if the spectrum range is wide in order to reduce marker size with no overlaps.
      */
     void set_wide(bool bWide);
     
     /**
      * \fn void set_scriptname(const std::string &sScriptname)
-     * \brief Set the name of the py script. Default is .plot.py
+     * \brief Set the name of the py script. Default is .plot.py.
      */
     bool set_scriptname(const std::string &sScriptname);
     
     /**
      * \fn void set_log(const std::string& sLog)
-     * \brief Enable or disable log file. Default is .marker.log
+     * \brief Enable or disable log file. Default is .marker.log.
      */
     bool set_log(const std::string& sLog);
     
     /**
      * \fn void add_line(_T TWl, const std::string &sName)
-     * \brief Add a marker with a name on the figure
+     * \brief Add a marker with a name on the figure.
      */
     bool add_line(_T TWl, const std::string &sName);
     
@@ -171,7 +186,7 @@ public:
     
     /**
      * \fn add_data(const std::vector<_T>& vTX, const std::vector<_T>& vTY)
-     * \brief Add an additionnal spectrum which has to be plot
+     * \brief Add an additionnal spectrum which has to be plot.
      */
     bool add_data(const std::vector<_T>& vTX, 
                   const std::vector<_T>& vTY);
@@ -213,15 +228,21 @@ public:
 
     /**
      * \fn bool make()
-     * \brief Write spectra, write script with markers
+     * \brief Write spectra, write script with markers.
      */
     bool make();
     
     /**
      * \fn int plot()
-     * \brief Run the py script
+     * \brief Run the py script?
      */
     int plot();
+    
+    /**
+     * \fn static bool sort_elemlist(const std::string &sElemlist)
+     * \brief Sort the elemlist.
+     */
+    static bool sort_elemlist(const std::string &sElemlist);
     
 protected:
     _msg msgM; /**< Interface to print message to std output */
