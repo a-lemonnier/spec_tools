@@ -11,12 +11,12 @@ _marker<_T>::_marker():
     sScriptname(".plot.py"),
     sXlabel("x"), sYlabel("y"),
     TYcontinuum(1),
-//TYmin(0), TYmax(1),
-    bIsymindef(false),
+    TYmin(0),// TYmax(1),
+    bIsymindef(true),
     bIsymaxdef(false),
     iDpi(150),
     sColorline("black"),
-    fLinewidth(0.3),
+    fLinewidth(0.2),
     iTitlesize(6),
     iLabelsize(6),
     iTicklabelsize(6),
@@ -593,7 +593,7 @@ bool _marker<_T>::make() {
             msgM.msg(_msg::eMsg::MID,"make(): write data");
         int iSize=this->X.size();
         for(int i=0; i<iSize; i++) 
-            sfFlux_d << this->X[i] << " " << this->Y[i] << "\n";
+            sfFlux_d << this->X[i] << " " << this->Y[i] << std::endl;
         
         sfFlux_d.close();
     }
@@ -610,7 +610,7 @@ bool _marker<_T>::make() {
         if (sfFlux) {
             int iSize=vvPlot[0].size();
             for(int i=0; i<iSize; i++) 
-                sfFlux << vvPlot[0][i] << " " << vvPlot[1][i] << "\n";
+                sfFlux << vvPlot[0][i] << " " << vvPlot[1][i] << std::endl;
          
             sfFlux.close();
         }
@@ -782,11 +782,14 @@ bool _marker<_T>::make() {
     if (bIsymindef && bIsymaxdef)
         add_cmd("ax0.set_ylim("+std::to_string(this->TYmin)+
             ", "+std::to_string(this->TYmax)+")");
-    if (bIsymindef && !bIsymindef)
+    if (bIsymindef && !bIsymaxdef)
         add_cmd("ax0.set_ylim(bottom="+std::to_string(this->TYmin)+")");
-    if (!bIsymindef && bIsymindef)
+    if (!bIsymindef && bIsymaxdef)
         add_cmd("ax0.set_ylim(top="+std::to_string(this->TYmax)+")");
-        
+    
+    if (!bIsymaxdef)
+        add_cmd("ax0.set_ylim(top=ax0.get_ylim()[1]*1.04)");
+    
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"add title and labels");
     if (!this->sTitle.empty())
@@ -860,13 +863,15 @@ bool _marker<_T>::make() {
             if (!line.bBold)
                 add_cmd("ax0.plot(["+
                 std::to_string(line.TWl) + ", " +
-                std::to_string(line.TWl) + "], [0, " +
+                std::to_string(line.TWl) + "], ["+
+                std::to_string(this->TYmin)+", " +
                 std::to_string(get_continuum()) +
                 "],  color='grey', linestyle=':', zorder=2, linewidth="+std::to_string(fLinewidth)+")\n");
             else
                 add_cmd("ax0.plot(["+
                 std::to_string(line.TWl) + ", " +
-                std::to_string(line.TWl) + "], [0, " +
+                std::to_string(line.TWl) + "], ["+
+                std::to_string(this->TYmin)+", " +
                 std::to_string(get_continuum()) +
                 "],  color='black', linestyle='--', zorder=2, linewidth="+std::to_string(fLinewidth)+")\n"); 
         }
@@ -875,13 +880,15 @@ bool _marker<_T>::make() {
             if (!line.bBold)
                 add_cmd("ax0.plot(["+
                 std::to_string(line.TWl) + ", " +
-                std::to_string(line.TWl) + "], [0, " +
+                std::to_string(line.TWl) + "], ["+
+                std::to_string(this->TYmin)+", " +
                 std::to_string(get_continuum()) +
                 "],  color='grey', linestyle=':', zorder=2, linewidth="+std::to_string(this->fLinewidth)+")\n");
             else 
                 add_cmd("ax0.plot(["+
                 std::to_string(line.TWl) + ", " +
-                std::to_string(line.TWl) + "], [0, " +
+                std::to_string(line.TWl) + "], ["+
+                std::to_string(this->TYmin)+", " +
                 std::to_string(get_continuum()) +
                 "],  color='black', linestyle='--', zorder=2, linewidth="+std::to_string(this->fLinewidth)+")\n"); 
         }
@@ -964,9 +971,11 @@ bool _marker<_T>::make() {
     add_cmd(" ");
  
 // End of Script ------------------------------------------------
-    if (this->bLegend) 
+    if (this->bLegend && !bIsymaxdef) 
+        add_cmd("ax0.legend(loc='upper right', fontsize="+std::to_string(iLegendsize)+").get_frame().set_linewidth(0.0)\n");
+    if (this->bLegend && bIsymaxdef)
         add_cmd("ax0.legend(loc='best', fontsize="+std::to_string(iLegendsize)+").get_frame().set_linewidth(0.0)\n");
-        
+    
     if (bVerbose)
         msgM.msg(_msg::eMsg::MID,"make(): write savefig");
     add_cmd("fig.savefig('"+
@@ -1013,3 +1022,4 @@ bool _marker<_T>::is_float(const std::string &val) const {
    std::string::const_iterator first(val.begin()), last(val.end());
    return boost::spirit::qi::parse(first, last, boost::spirit::double_) && first == last;
 }
+

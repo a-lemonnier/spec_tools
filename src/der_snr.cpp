@@ -165,7 +165,7 @@ int main(int argc, char** argv) {
      if (vm.count("help") || vm.size()<1 || !(vm.count("filename") ^ vm.count("directory"))) {
         msgM.enable_log(false);
         std::cout << description;
-        std::cout << "\n";
+        std::cout << std::endl;
         std::cout << "Examples:\n";
         std::cout << "./der_snr -f CPD-591792.obs\n";
         msgM.msg(_msg::eMsg::START);
@@ -174,7 +174,7 @@ int main(int argc, char** argv) {
         msgM.msg(_msg::eMsg::MID, "CPD-591792.obs: S/N = 95.68");
         msgM.msg(_msg::eMsg::MID, "output: output.csv");
         msgM.msg(_msg::eMsg::END, " 0.039347s wall, 0.040000s user + 0.000000s system = 0.040000s CPU (101.7%)\n");
-        std::cout << "\n";
+        std::cout << std::endl;
         
         std::cout << "./der_snr -d data\n";
         msgM.msg(_msg::eMsg::START);
@@ -245,7 +245,7 @@ int main(int argc, char** argv) {
             if (arg.second.value().type()==typeid(char))
                 ssS << " --" << arg.first.c_str() << " "<< arg.second.as<char>();
         }
-        ssS << "\n";
+        ssS << std::endl;
     
         sfFlux.close();
     }
@@ -515,7 +515,7 @@ bool merge(const std::string &sPattern) {
             std::string sLine;
             
             while(std::getline(fFlux1, sLine))
-                fFlux0 << sLine << "\n";
+                fFlux0 << sLine << std::endl;
             fFlux1.close();
             
             fs::remove(pTmp);

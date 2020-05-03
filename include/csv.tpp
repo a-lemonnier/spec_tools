@@ -915,13 +915,13 @@ template<typename _T>
 void _csv<_T>::debug(const std::string &msg) const { 
     if (evVerbose==DEBUG)
         std::cout << "\033[3;32m\u2690\033[0m \033[1;30m_csv<>()\033[0m: " 
-                  << msg << ".\n"; // 
+                  << msg << "." << std::endl; // 
 }
 
 template<typename _T> 
 void _csv<_T>::error(const std::string &msg) const { 
     std::cerr << "\033[5;31m\u2639\033[0m \033[1;30m_csv<>()\033[0m: " 
-              << msg << ".\n";
+              << msg << "." << std::endl;
 }
 
 template<typename _T> 

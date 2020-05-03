@@ -182,7 +182,7 @@ int main(int argc, char** argv) {
                     ssS << " --" << arg.first.c_str() << " \""<< sS << "\"";
             }
         }
-        ssS << "\n";
+        ssS << std::endl;
     
         sfFlux << ssS.str();
         
@@ -217,7 +217,7 @@ int main(int argc, char** argv) {
         
         sfFlux=std::fstream(HISTFILE, std::ios::out | std::ios::trunc);
         for(auto sS: vsLine)
-            sfFlux << sS << "\n";
+            sfFlux << sS << std::endl;
         sfFlux.close();
     }
     else

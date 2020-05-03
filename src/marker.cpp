@@ -17,6 +17,11 @@
 #include <iterator>
 #include <limits>
 
+#ifdef __linux__
+#include <libintl.h>
+#include <locale.h>
+#endif
+
 #include <boost/program_options.hpp>
 
 #if __has_include (<boost/timer/timer.hpp>)
@@ -51,7 +56,7 @@ namespace fs = boost::filesystem;
 #define HISTFILE ".history" /**< Define the default histfile (shared)  */
 
 int main(int argc, char** argv) {
-    
+
 #ifdef HAS_BOOST_TIMER    
     boost::timer::cpu_timer btTimer;
 #endif

@@ -33,7 +33,7 @@ _msg::~_msg() {
     std::lock_guard<std::mutex> lgG(this->mLock);
     
     if (sfFlux.is_open()) {
-        sfFlux << "\n";
+        sfFlux << std::endl;
         sfFlux.close();
     }
 }
@@ -52,8 +52,8 @@ bool _msg::msg(const std::string& sMsg) {
      ssS << sMid_pre << sName << sSuf
                << ":"
                << sMsg
-               << "\n";
-    ssSw << sName << ": " << sMsg << "\n";
+               << std::endl;
+    ssSw << sName << ": " << sMsg << std::endl;
     
     std::cout << ssS.str();
     if (bLog)
@@ -77,22 +77,22 @@ bool _msg::msg(eMsg emType, const std::string& sMsg) {
            ssS << sSta_pre << sName << sSuf
                       << " "
                       << sMsg
-                      << "\n";
-            ssSw << sName << " " << sMsg << "\n";
+                      << std::endl;
+            ssSw << sName << " " << sMsg << std::endl;
             break;
         case eMsg::MID:
             ssS << sMid_pre << sName << sSuf
                       << " "
                       << sMsg
-                      << "\n";
-            ssSw << sName << ": " << sMsg << "\n";
+                      << std::endl;
+            ssSw << sName << ": " << sMsg << std::endl;
             break;
         case eMsg::END:
             ssS << sEnd_pre << sName << sSuf
                       << " "
                       << sMsg
-                      << "\n";
-            ssSw << sName << ": " << sMsg << "\n";
+                      << std::endl;
+            ssSw << sName << ": " << sMsg << std::endl;
             break;
         case eMsg::THREADS:
             ssS << sThd_pre << sThreadname 
@@ -105,15 +105,15 @@ bool _msg::msg(eMsg emType, const std::string& sMsg) {
                       << "): "
                       << sSuf
                       << sMsg
-                      << "\n";
-            ssSw << sThreadname << "("<< syscall(__NR_gettid) << "): " << sMsg << "\n";
+                      << std::endl;
+            ssSw << sThreadname << "("<< syscall(__NR_gettid) << "): " << sMsg << std::endl;
             break;
         case eMsg::ERROR:
             ssS << sErr_pre << sName << sSuf
                       << " "
                       << sMsg
-                      << "\n";
-            ssSw << "Error: " << sName << ": " << sMsg << "\n";
+                      << std::endl;
+            ssSw << "Error: " << sName << ": " << sMsg << std::endl;
             break;
     }
     std::cout << ssS.str();
@@ -135,7 +135,7 @@ bool _msg::error(const std::string& sMsg) {
     std::cout << sErr_pre << sName << sSuf
                << " "
                << sMsg
-               << "\n";
+               << std::endl;
                
     std::cout << ssS.str();
     if (bLog)
@@ -148,9 +148,9 @@ bool _msg::set_name(const std::string sName) {
         this->sName=sName;
         return true;
     }
-    std::cerr << "- _msg::set_name(): empty string\n";
+    std::cerr << "- _msg::set_name(): empty string" << std::endl;
     if (sfFlux)
-        sfFlux << "- _msg::set_name(): empty string\n";
+        sfFlux << "- _msg::set_name(): empty string" << std::endl;
     return false;
 }
 
@@ -160,17 +160,17 @@ bool _msg::set_threadname(const std::string sName) {
         this->sThreadname=sName;
         return true;
     }
-    std::cerr << "- _msg::set_threadname(): empty string\n";
+    std::cerr << "- _msg::set_threadname(): empty string" << std::endl;
     if (sfFlux)
-        sfFlux << "- _msg::set_threadname(): empty string\n";
+        sfFlux << "- _msg::set_threadname(): empty string" << std::endl;
     return false;
 }
 
 bool _msg::set_log(const std::string sLog) {
     if (sLog.empty()) {
-        std::cerr << "- _msg::set_log(): empty string\n";
+        std::cerr << "- _msg::set_log(): empty string" << std::endl;
         if (sfFlux)
-            sfFlux << "- _msg::set_log(): empty string\n";
+            sfFlux << "- _msg::set_log(): empty string" << std::endl;
         return false;
     }
     this->sLog=sLog;
@@ -186,7 +186,7 @@ bool _msg::write(const std::string& sS) {
         sfFlux.close();
         return true;
     }
-    std::cerr << "- _msg::write(): flux not available\n";
+    std::cerr << "- _msg::write(): flux not available" << std::endl;
     return false;
 }
 
