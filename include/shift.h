@@ -79,8 +79,6 @@ std::tuple<double long, double long> get_stat();
 // ----------------------------------------------------
 // ----------------------------------------------------
 
-
-
 void add(const std::vector<std::string> &vsList, float fWavelength) {    
     _msg msgM;
     msgM.set_threadname("add");

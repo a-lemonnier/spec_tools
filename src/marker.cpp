@@ -83,7 +83,7 @@ int main(int argc, char** argv) {
     ("yunit", po::value<std::string>(), "Set yunit.")
     ("width", po::value<float>()->default_value(0.25), "Set the width of curves.")
     ("rgb", po::value<std::string>(), "Set the color of the first spectrum as RGBalpha: '#rrggbbaa'.")
-    ("contsize", po::value<float>()->default_value(0.6), "Set the continnum width.")
+    ("contsize", po::value<float>()->default_value(0.6), "Set the continuum width.")
     ("nolegend", "Disable the legend.")
     ("halfbox", "Show only left and bottom axis.")
     ("dotted", "Dotted curve.")

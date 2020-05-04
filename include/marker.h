@@ -65,8 +65,6 @@ public:
     typedef std::vector<Line> vlList;
     
     explicit _marker();
-    
-//     exlicit _marker(const _marker<_T>& other);
 
     virtual ~_marker();
 

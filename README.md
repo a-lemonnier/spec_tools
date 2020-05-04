@@ -1,21 +1,20 @@
 # spec_tools [![Build Status](https://cloud.drone.io/api/badges/a-lemonnier/spec_tools/status.svg)](https://cloud.drone.io/a-lemonnier/spec_tools) ![C/C++ CI](https://github.com/a-lemonnier/spec_tools/workflows/C/C++%20CI/badge.svg)
 
 
-A set of codes for csv and for spectrum manipulation with a py wrapper or not.
+A set of codes for csv and for spectrum manipulation.
 
 List:
 
  - **threshold**.cpp: remove lines below a threshold
  - **trim**.cpp: cut a spectrum or more between two wavelengths 
  - **findncopy**.cpp: find and copy files from a file list
- - **der_snr**.cpp: compute the Signal-to-Noise of a spectrum or of a set of spectra from a folder
+ - **der_snr**.cpp: compute the Signal-to-Noise of a spectrum
  - **shift**.cpp: shift whole spectrum by a given wavelength
- - **gen_rand_spec**.cpp: generate a set of randomized-flux spectra between two wavelengths for test purposes
+ - **gen_rand_spec**.cpp: generate a set of randomized-flux spectra
  - **marker**.cpp: highlight lines on spectrum with matplotlib
  - **elemlist**.cpp: fill elemlist interactively
  
 TODO:
- - **marker**.cpp: Fix duplicates remover
  - Decrease thread numbers as function of the CPU utilization
  - **msg**.h: Fix _msg::_msg(const _msg&)
  - Implement boost:: recursive directory copy
@@ -33,7 +32,6 @@ Dependencies:
 - Boost::unit_test_framework
 - python: matplotlib, numpy, csv
 
-
 ---
 
 > marker
@@ -43,7 +41,6 @@ Dependencies:
 ![marker](doc/plot_wide.png)
 
 ```
-
 gentoo - spec_tools/ % ./marker -h
 Usage:
   -h [ --help ]                 Display this help message
@@ -67,7 +64,7 @@ Usage:
   --width arg (=0.25)           Set the width of curves.
   --rgb arg                     Set the color of the first spectrum as 
                                 RGBalpha: '#rrggbbaa'.
-  --contsize arg (=0.600000024) Set the continnum width.
+  --contsize arg (=0.600000024) Set the continuum width.
   --nolegend                    Disable the legend.
   --halfbox                     Show only left and bottom axis.
   --dotted                      Dotted curve.
@@ -126,7 +123,7 @@ Usage:
 Example:
 % ls
 data findncopy star_list.txt
-# cat tar_list.txt
+# cat star_list.txt
 HD87205
 HD87309
 HD304836
