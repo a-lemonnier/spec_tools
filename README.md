@@ -5,12 +5,12 @@ A set of codes for csv and for spectrum manipulation with a py wrapper or not.
 
 List:
 
- - **threshold**.cpp: remove lines below a wavelength threshold (multi-threaded)
- - **trim**.cpp: cut a spectrum or more between two wavelengths (multi-threaded)
+ - **threshold**.cpp: remove lines below a threshold
+ - **trim**.cpp: cut a spectrum or more between two wavelengths 
  - **findncopy**.cpp: find and copy files from a file list
- - **der_snr**.cpp: compute the Signal-to-Noise of a spectrum or of a set set of spectra from a folder (multi-threaded)
- - **shift**.cpp: shift whole spectrum by a given wavelength (multi-threaded)
- - **gen_rand_spec**.cpp: generate a set of randomized-flux spectra between two wavelengths for test purposes (multi-threaded)
+ - **der_snr**.cpp: compute the Signal-to-Noise of a spectrum or of a set of spectra from a folder
+ - **shift**.cpp: shift whole spectrum by a given wavelength
+ - **gen_rand_spec**.cpp: generate a set of randomized-flux spectra between two wavelengths for test purposes
  - **marker**.cpp: highlight lines on spectrum with matplotlib
  - **elemlist**.cpp: fill elemlist interactively
  
@@ -21,8 +21,6 @@ TODO:
  - Implement boost:: recursive directory copy
  
 ---
-
-This repo. works on Gentoo 17.0 x64 and Ubuntu x64: bionic and eoan.
 
 Dependencies:
 
