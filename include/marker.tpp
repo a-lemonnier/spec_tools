@@ -861,8 +861,8 @@ bool _marker<_T>::make() {
         fMax=this->get_continuum();
     
     float fNorm=0.08/(1+7*std::pow(this->TYmin,3)); // espacement des annotation rescaled
-    if (bWide)
-        fNorm=0.05;
+//     if (bWide)
+//         fNorm=0.05;
     
     iCount=1;
     for(auto line: vllSet) {

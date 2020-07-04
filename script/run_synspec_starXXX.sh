@@ -1,8 +1,8 @@
 #!/bin/bash
 EXEC=synspec53r
-NAME=HD87240
+NAME=HD87581
 PART=p1
-MODEL=HD87240_t13000g4v2.dat
+MODEL=HD87581_t13629g4v0.dat
 DIR=stars
 LINELIST=R3900_6800_08Jan2020.dat
 
@@ -40,4 +40,4 @@ CMD=$SUBCMD1$SUBCMD2$SUBCMD3$SUBCMD0
 
 #fityk  -c "$CMD" 2>&1 &
 
-./mark.sh $1 $2 $3 "stars"/$NAME/$NAME"_"$PART".synspec" "stars"/$NAME/$NAME"_"$PART".obs.norm" "stars"/$NAME/$NAME"_"$PART".sub.obs.norm" "$NAME" "$NAME sub" $4 $5 && okular plot_$1-$2.pdf
+./mark.sh $1 $2 $3 "stars"/$NAME/$NAME"_"$PART".synspec" "stars"/$NAME/$NAME"_"$PART".obs.norm" "stars"/$NAME/$NAME"_"$PART".sub.obs.norm" "$NAME" "$NAME sub" $4 $5 $6 $7 && okular plot_$1-$2.pdf

@@ -15,9 +15,9 @@ List:
  - **elemlist**.cpp: fill elemlist interactively
  
 TODO:
- - Decrease thread numbers as function of the CPU utilization
+ - ncurses elemlist
  - **msg**.h: Fix _msg::_msg(const _msg&)
- - Implement boost:: recursive directory copy
+ - boost::copy recursive directory
  
 ---
 
@@ -360,10 +360,14 @@ Usage:
 ⚐ elemlist  0.001048s wall, 0.000000s user + 0.000000s system = 0.000000s CPU (n/a%)
 
 ```
+TODO:
+
+![elemlist-ncurses](doc/elemlist-ncurses.png)
+
 
 ---
 
-> Get it:
+> Download:
 
 
 ```
