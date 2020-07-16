@@ -32,6 +32,7 @@ add_executable(shift src/shift.cpp include/msg.cpp include/log.cpp)
 add_executable(genrandspec src/genrandspec.cpp include/msg.cpp include/log.cpp)
 add_executable(marker src/marker.cpp include/msg.cpp include/log.cpp)
 add_executable(elemlist src/elemlist.cpp include/msg.cpp include/log.cpp)
+add_executable(waverage src/waverage.cpp include/waverage.hpp)
 
 add_library(msg include/msg.cpp include/msg.h include/log.h)
 add_library(log include/log.cpp include/log.h)
@@ -68,6 +69,9 @@ set_property(TARGET msg PROPERTY CXX_STANDARD_REQUIRED ON)
 set_property(TARGET log PROPERTY CXX_STANDARD 17)
 set_property(TARGET log PROPERTY CXX_STANDARD_REQUIRED ON)
 
+set_property(TARGET waverage PROPERTY CXX_STANDARD 17)
+set_property(TARGET waverage PROPERTY CXX_STANDARD_REQUIRED ON)
+
 find_package( Boost 1.40 COMPONENTS program_options 
                          REQUIRED timer filesystem unit_test_framework)
 
@@ -83,6 +87,8 @@ target_link_libraries(genrandspec LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstd
 target_link_libraries(marker LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 target_link_libraries(elemlist LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 
+target_link_libraries(waverage LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs -lCCfits -lcfitsio)
+
 install(TARGETS threshold RUNTIME DESTINATION bin)
 install(TARGETS findncopy RUNTIME DESTINATION bin)
 install(TARGETS trim RUNTIME DESTINATION bin)
@@ -90,6 +96,7 @@ install(TARGETS der_snr RUNTIME DESTINATION bin)
 install(TARGETS shift RUNTIME DESTINATION bin)
 install(TARGETS genrandspec RUNTIME DESTINATION bin)
 install(TARGETS marker RUNTIME DESTINATION bin)
+install(TARGETS waverage RUNTIME DESTINATION bin)
 
 function(create_test exe)
     add_executable (test_${exe} ./test/test_${exe}.cpp) 

@@ -686,7 +686,7 @@ bool _marker<_T>::make() {
             if (!this->bDotted && !this->bDotdashed)          
                 add_cmd("ax0.plot(x"+std::to_string(i)+
                                 ",y"+std::to_string(i)+
-                                ",'--'"+
+                                ",'-'"+
                                 ", color=\""+ssS.str()+"\""+
                                 ", linewidth="+std::to_string(fLinewidth)+
                                 ", zorder=15, label='"+
@@ -735,7 +735,7 @@ bool _marker<_T>::make() {
             if (!this->bDotted && !this->bDotdashed)          
                 add_cmd("ax0.plot(x"+std::to_string(i)+
                                 ",y"+std::to_string(i)+
-                                ",'--'"+
+                                ",'-'"+
                                 ", color=\""+ssS.str()+"\""+
                                 ", linewidth="+std::to_string(fLinewidth)+
                                 ", zorder=15, label='"+

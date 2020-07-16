@@ -15,6 +15,7 @@ steps:
     - apt-get install -y make gcc g++ clang cmake perl
     - apt-get install -y libboost-all-dev libboost-test-dev
     - apt-get install -y python3-matplotlib python3-numpy 
+    - apt-get install -y libcfitsio-dev libccfits-dev 
     - cmake .
     - make -j$(nproc)
     - ./genrandspec

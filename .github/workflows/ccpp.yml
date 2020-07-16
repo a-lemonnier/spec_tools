@@ -19,6 +19,8 @@ jobs:
       run: sudo apt install -y libboost-all-dev libboost-test-dev
     - name: install py
       run: sudo apt install -y python3-matplotlib python3-numpy 
+    - name: install ccfits
+      run: apt-get install -y libcfitsio-dev libccfits-dev 
     - name: configure
       run: mkdir build && cd build && cmake ..
     - name: build
