@@ -1,7 +1,6 @@
 #ifndef _WAVERAGE_H_
 #define _WAVERAGE_H_
 
-#include <filesystem>
 #include <fstream>
 #include <memory>
 

@@ -368,6 +368,47 @@ TODO:
 
 ![elemlist-ncurses](doc/elemlist-ncurses.png)
 
+---
+
+> elemlist
+
+```
+./waverage
+* Weighted arithmetic mean *
+
+- read__fits_dir(): start reading fits in the directory.
+        -> flushing previous data... done
+        -> creating the sorted list of files...  done
+        -> reading fits ./ADP.2019-01-30T19:52:54.739.fits... done
+        -> filling vector... 4960 rows done
+        -> spectrum stacked.
+        -> reading fits ./ADP.2019-01-30T19:52:54.740.fits... done
+        -> filling vector... 4960 rows done
+        -> spectrum stacked.
+        -> reading fits ./ADP.2019-01-30T19:52:54.741.fits... done
+        -> filling vector... 4960 rows done
+        -> spectrum stacked.
+        -> reading fits ./ADP.2019-01-30T19:52:54.742.fits... done
+        -> filling vector... 4960 rows done
+        -> spectrum stacked.
+        -> reading fits ./ADP.2019-01-30T20:53:18.821.fits... done
+        -> filling vector... 4960 rows done
+        -> spectrum stacked.
+        -> reading fits ./ADP.2019-01-30T20:53:18.822.fits... done
+        -> filling vector... 4960 rows done
+        -> spectrum stacked.
+        -> reading fits ./ADP.2019-01-30T20:53:18.823.fits... done
+        -> filling vector... 4960 rows done
+        -> spectrum stacked.
+        -> reading fits ./ADP.2019-01-30T20:53:18.824.fits... done
+        -> filling vector... 4960 rows done
+        -> spectrum stacked.
+        - read_fits_dir(): all done.
+
+
+- flushing data... done
+
+```
 
 ---
 
