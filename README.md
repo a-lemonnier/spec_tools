@@ -13,8 +13,10 @@ List:
  - **gen_rand_spec**.cpp: generate a set of randomized-flux spectra
  - **marker**.cpp: highlight lines on spectrum with matplotlib
  - **elemlist**.cpp: fill elemlist interactively
+ - **waverage**.cpp: compute average of spectra from FITS weighted by the SNR or the exposition time
  
 TODO:
+ - waverage
  - ncurses elemlist
  - **msg**.h: Fix _msg::_msg(const _msg&)
  - boost::copy recursive directory
@@ -30,7 +32,9 @@ Dependencies:
 - Boost::spirit
 - Boost::tokenizer
 - Boost::unit_test_framework
+- Boost::algorithm
 - python: matplotlib, numpy, csv
+- CCfits / CFITSIO
 
 ---
 

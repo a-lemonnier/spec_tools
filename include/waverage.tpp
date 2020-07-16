@@ -86,12 +86,12 @@ template<typename _T> void _io<_T>::set_fileOut(std::string sFilename) {
 template<typename _T> bool _io<_T>::write(std::string sFilename) { return true; }
 
 template<typename _T> 
-const std::vector<typename _io<_T>::_vec> _io<_T>::get_vector() const {
+const std::vector<typename _io<_T>::vec> _io<_T>::get_vector() const {
     return this->vvSpec;
 }
 
 template<typename _T> 
-const std::vector<std::vector<typename _io<_T>::_vec> > _io<_T>::get_vectors() const {
+const std::vector<std::vector<typename _io<_T>::vec> > _io<_T>::get_vectors() const {
     return this->vvvSpec;
 }
 
