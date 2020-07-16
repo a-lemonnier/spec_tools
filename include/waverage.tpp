@@ -28,7 +28,7 @@ bool _io<_T>::read_dir(std::string sExtension) {
     
     // -- List of files
     std::cout << "\t-> creating the sorted list of files... ";
-    for(const auto &file: std::filesystem::directory_iterator("./")) {
+    for(const auto &file: fs::directory_iterator("./")) {
         std::string sFName(file.path());
         if (sFName.find(sExtension)!=std::string::npos) 
             this->vsFileList.emplace_back(sFName);
@@ -202,7 +202,7 @@ bool _io<_T>::read_fits_dir(std::string sExtension) {
     
     // -- List of files
     std::cout << "\t-> creating the sorted list of files... ";
-    for(const auto &file: std::filesystem::directory_iterator("./")) {
+    for(const auto &file: fs::directory_iterator("./")) {
         std::string sFName(file.path());
         if (sFName.find(sExtension)!=std::string::npos) 
             this->vsFileList.emplace_back(sFName);

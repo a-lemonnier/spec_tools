@@ -25,6 +25,21 @@
 #include <CCfits/PHDU.h>
 
 
+#if __has_include (<filesystem>)
+#include <filesystem>
+#define FS_STD /**< std::filesystem availability (C++17) */
+namespace fs = std::filesystem;
+#elif __has_include (<experimental/filesystem>) && !__has_include (<filesystem>)
+#include <experimental/filesystem>
+#define FS_STDEXP /**< std::experimental::filesystem availability */
+namespace fs = std::experimental::filesystem;
+#elif __has_include(<boost/filesystem.hpp>) && !__has_include (<filesystem>) && !__has_include (<experimental/filesystem>)
+#include <boost/filesystem.hpp>
+#define FS_BOOST /**< boost::filesystem availability */
+namespace fs = boost::filesystem;
+#else
+#error "No filesystem header found"
+#endif
 
 // the purpose of this class is only to provide methods to read or write file, and to convert vector to valarray
 template<typename _T=double>
