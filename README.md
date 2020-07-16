@@ -16,7 +16,7 @@ List:
  - **waverage**.cpp: compute average of spectra from FITS weighted by the SNR or the exposition time
  
 TODO:
- - waverage: auto continnum normalization ?
+ - waverage: auto continuum normalization ? (Savitzky-Golay)
  - ncurses elemlist
  - **msg**.h: Fix _msg::_msg(const _msg&)
  - boost::copy recursive directory
