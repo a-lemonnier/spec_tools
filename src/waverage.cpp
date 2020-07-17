@@ -40,14 +40,20 @@ namespace fs = boost::filesystem;
 
 
 int main(int argc, char **argv) {
-    std::cout << "******************************\n";
-    std::cout << "*  Weighted arithmetic mean  *\n";
-    std::cout << "******************************\n\n";
+
+    hello();
     
     _io<double> io;
 
-    io.read_fits_dir(".fits");
-
+    io.read_fits_dir("./data/GIRAFFE_fits",".fits");
+    io.set_WaveScale(10.);
+    
+    std::vector< std::valarray< std::valarray< double > > > Spectra(io.get_valarrays());
+    
+//     io.show_data();
+//     io.show_data("ADP.2019-01-30T19:52:54.741.fits");
+    io.write();
+    
     return EXIT_SUCCESS;
 }
 

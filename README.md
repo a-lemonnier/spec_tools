@@ -374,39 +374,76 @@ TODO:
 
 ```
 ./waverage
-* Weighted arithmetic mean *
+
+******************************
+*  Weighted arithmetic mean  *
+******************************
 
 - read__fits_dir(): start reading fits in the directory.
-        -> flushing previous data... done
-        -> creating the sorted list of files...  done
-        -> reading fits ./ADP.2019-01-30T19:52:54.739.fits... done
-        -> filling vector... 4960 rows done
-        -> spectrum stacked.
-        -> reading fits ./ADP.2019-01-30T19:52:54.740.fits... done
-        -> filling vector... 4960 rows done
-        -> spectrum stacked.
-        -> reading fits ./ADP.2019-01-30T19:52:54.741.fits... done
-        -> filling vector... 4960 rows done
-        -> spectrum stacked.
-        -> reading fits ./ADP.2019-01-30T19:52:54.742.fits... done
-        -> filling vector... 4960 rows done
-        -> spectrum stacked.
-        -> reading fits ./ADP.2019-01-30T20:53:18.821.fits... done
-        -> filling vector... 4960 rows done
-        -> spectrum stacked.
-        -> reading fits ./ADP.2019-01-30T20:53:18.822.fits... done
-        -> filling vector... 4960 rows done
-        -> spectrum stacked.
-        -> reading fits ./ADP.2019-01-30T20:53:18.823.fits... done
-        -> filling vector... 4960 rows done
-        -> spectrum stacked.
-        -> reading fits ./ADP.2019-01-30T20:53:18.824.fits... done
-        -> filling vector... 4960 rows done
-        -> spectrum stacked.
-        - read_fits_dir(): all done.
+                -> flushing previous data... done.
+                -> creating the sorted list of files...  done.
+                -> reading fits ./data/GIRAFFE_fits/ADP.2019-01-30T19:52:54.739.fits... (SNR) (FLUX_REDUCED) (SNR_REDUCED)  done.
+                -> filling vector... 4960 rows done.
+                -> spectrum stacked.
+                -> reading fits ./data/GIRAFFE_fits/ADP.2019-01-30T19:52:54.740.fits... (SNR) (FLUX_REDUCED) (SNR)  done.
+                -> filling vector... 4960 rows done.
+                -> spectrum stacked.
+                -> reading fits ./data/GIRAFFE_fits/ADP.2019-01-30T19:52:54.741.fits... (SNR) (FLUX_REDUCED) (SNR)  done.
+                -> filling vector... 4960 rows done.
+                -> spectrum stacked.
+                -> reading fits ./data/GIRAFFE_fits/ADP.2019-01-30T19:52:54.742.fits... (SNR) (FLUX_REDUCED) (SNR)  done.
+                -> filling vector... 4960 rows done.
+                -> spectrum stacked.
+                -> reading fits ./data/GIRAFFE_fits/ADP.2019-01-30T20:53:18.821.fits... (SNR) (FLUX_REDUCED) (SNR_REDUCED)  done.
+                -> filling vector... 4960 rows done.
+                -> spectrum stacked.
+                -> reading fits ./data/GIRAFFE_fits/ADP.2019-01-30T20:53:18.822.fits... (SNR) (FLUX_REDUCED) (SNR)  done.
+                -> filling vector... 4960 rows done.
+                -> spectrum stacked.
+                -> reading fits ./data/GIRAFFE_fits/ADP.2019-01-30T20:53:18.823.fits... (SNR) (FLUX_REDUCED) (SNR)  done.
+                -> filling vector... 4960 rows done.
+                -> spectrum stacked.
+                -> reading fits ./data/GIRAFFE_fits/ADP.2019-01-30T20:53:18.824.fits... (SNR) (FLUX_REDUCED) (SNR)  done.
+                -> filling vector... 4960 rows done.
+                -> spectrum stacked.
+                - read_fits_dir(): all done.
+
+- set_WaveScale().
+                -> multiplying wavelengths by 10 ... done.
+
+- get_valarrays(): start converting vectors to valarrays.
+                -> initializing arrays... done.
+                -> filling arrays... 8 arrays done.
+
+- write(): start writing all spectra in './converted'.
+- write(): writing ./data/GIRAFFE_fits/ADP.2019-01-30T19:52:54.739.fits.
+                -> deleting previous file converted/ADP.2019-01-30T19:52:54.739.fits.csv ... done.
+                -> moving file... done.
+- write(): writing ./data/GIRAFFE_fits/ADP.2019-01-30T19:52:54.740.fits.
+                -> deleting previous file converted/ADP.2019-01-30T19:52:54.740.fits.csv ... done.
+                -> moving file... done.
+- write(): writing ./data/GIRAFFE_fits/ADP.2019-01-30T19:52:54.741.fits.
+                -> deleting previous file converted/ADP.2019-01-30T19:52:54.741.fits.csv ... done.
+                -> moving file... done.
+- write(): writing ./data/GIRAFFE_fits/ADP.2019-01-30T19:52:54.742.fits.
+                -> deleting previous file converted/ADP.2019-01-30T19:52:54.742.fits.csv ... done.
+                -> moving file... done.
+- write(): writing ./data/GIRAFFE_fits/ADP.2019-01-30T20:53:18.821.fits.
+                -> deleting previous file converted/ADP.2019-01-30T20:53:18.821.fits.csv ... done.
+                -> moving file... done.
+- write(): writing ./data/GIRAFFE_fits/ADP.2019-01-30T20:53:18.822.fits.
+                -> deleting previous file converted/ADP.2019-01-30T20:53:18.822.fits.csv ... done.
+                -> moving file... done.
+- write(): writing ./data/GIRAFFE_fits/ADP.2019-01-30T20:53:18.823.fits.
+                -> deleting previous file converted/ADP.2019-01-30T20:53:18.823.fits.csv ... done.
+                -> moving file... done.
+- write(): writing ./data/GIRAFFE_fits/ADP.2019-01-30T20:53:18.824.fits.
+                -> deleting previous file converted/ADP.2019-01-30T20:53:18.824.fits.csv ... done.
+                -> moving file... done.
+- write(): all done.
 
 
-- flushing data... done
+- flushing data... done.
 
 ```
 
