@@ -2,6 +2,11 @@
 // _IO                      -
 // --------------------------
 
+void hello() {
+    std::cout << "******************************\n";
+    std::cout << "*  Weighted arithmetic mean  *\n";
+    std::cout << "******************************\n\n";   
+}
 
 template<typename _T> _io<_T>::_io(): exists_SNR(true), Precision(PRECISION) { }
 template<typename _T> _io<_T>::~_io() { 
@@ -104,20 +109,20 @@ template<typename _T> bool _io<_T>::write(std::string sName) const {
             for(const auto Spec: this->VvvSpec[n])
                 fFlux << std::left 
                 << std::setprecision(Precision) << Spec.x << " " 
-                                                << Spec.y << " "                          
-                                                << Spec.SNR << "\n";
+                << Spec.y << " "                          
+                << Spec.SNR << "\n";
             
             else
                 for(const auto Spec: this->VvvSpec[n])
                     fFlux << std::left 
-                          << std::setprecision(Precision) << Spec.x << " " 
-                                                          << Spec.y << "\n";
+                    << std::setprecision(Precision) << Spec.x << " " 
+                    << Spec.y << "\n";
                 
                 fFlux.close();
-           
+            
             fs::path Path(sName+".csv");
             std::cout << "\t\t-> deleting previous file " << ("converted/"+Path.filename().string()) << " ... ";
-           
+            
             if (fs::exists("converted/"+Path.filename().string()))
                 fs::remove("converted/"+Path.filename().string());
             std::cout << "done.\n";
@@ -284,7 +289,7 @@ bool _io<_T>::read_fits_dir(std::string sDirectory, std::string sExtension) {
         
         std::cout << "\t\t-> reading fits " << sFName << "...";
         
-//         CCfits::FITS::setVerboseMode(true);
+        //         CCfits::FITS::setVerboseMode(true);
         CCfits::FITS FIn(sFName,CCfits::Read,true);
         
         CCfits::ExtHDU& table = FIn.extension(1);
@@ -388,10 +393,104 @@ void _io<_T>::set_WaveScale(_T Scale) {
 }
 
 
+// --------------------------
+// _OP                      -
+// --------------------------
+
+//     bool resize_spectr(); /**< resize all spectra to the same size (maximal). */
+//     bool rebuild_wlStep(_T Step); /**< rebuild wavelength axis. */
+// 
+//     void remove_zero(); /**< trim spectra where flux is 0. */
+//         
+//     const vv& compute_mean() const; /**< compute arithmetic mean*/
+//     const vv& compute_wmean() const; /**< compute weighted arithmetic mean */
 
 
-void hello() {
-    std::cout << "******************************\n";
-    std::cout << "*  Weighted arithmetic mean  *\n";
-    std::cout << "******************************\n\n";   
+
+template<typename _T> _op<_T>::_op() { }
+template<typename _T> _op<_T>::_op(Vvv& VvvSpectr): VvvSpectr(VvvSpectr) { }
+template<typename _T> _op<_T>::~_op() { this->VvvSpectr.clear(); }
+
+template<typename _T> 
+void _op<_T>::set_data(Vvv& VvvSpectr) { this->VvvSpectr=VvvSpectr; }
+
+template<typename _T> 
+std::pair<_T, _T> _op<_T>::get_wlRange(int n) const {
+    if (n>-1 && n<this->VvvSpectr.size()) 
+        return { this->VvvSpectr[n][0].min(),
+            this->VvvSpectr[n][0].max()};
+            return {-1,-1};
 }
+
+template<typename _T> 
+std::pair<_T, _T> _op<_T>::get_wlRangeMin() const {
+    std::vector<_T> vWl_min, vWl_max;
+    for(int i=0; i<this->VvvSpectr.size(); i++) {
+        auto [min, max]=this->get_wlRange(i);
+        vWl_min.emplace_back(min);
+        vWl_max.emplace_back(max);
+    }
+    return {*std::min_element(vWl_min.begin(),vWl_min.end()), 
+            *std::max_element(vWl_max.begin(), vWl_max.end())};
+}
+
+
+template<typename _T> 
+bool _op<_T>::resize_spectr() {
+    auto [min,max]=this->get_wlRangeMin();
+    
+    if (min>=max)
+        return false;
+    
+    for(auto &vvSpec: this->VvvSpectr) {
+        std::vector<_T> X, Y;
+        
+        for(int i=0; i<vvSpec.size(); i++) {
+            _T x=vvSpec[0][i], y=vvSpec[1][i];
+            if (x>=min && x<=max) {
+                X.emplace_back(x);
+                Y.emplace_back(y);
+            }
+        }
+        vvSpec[0]=std::valarray<_T>(X.data(), X.size());
+        vvSpec[1]=std::valarray<_T>(Y.data(), Y.size());
+    }
+    
+    
+    return true;
+}
+
+
+template<typename _T> 
+void _op<_T>::remove_zero() {
+    std::cout << "- remove_zero():\n";
+    int iCount=0;
+    for(auto &vvSpectr: this->VvvSpectr) {
+        std::cout << "\t\t-> removing 0 from spectrum " << iCount << "\n";
+        VV VVSpectr(2);
+        
+        std::cout << "\t\t-> size before: (" << vvSpectr[0].size() << ", " << vvSpectr[1].size() << ").\n"; 
+        
+        for(int i=0; i<vvSpectr[1].size(); i++) {
+            _T x=vvSpectr[0][i], y=vvSpectr[1][i];
+            if (y>0) {
+                VVSpectr[0].emplace_back(x);
+                VVSpectr[1].emplace_back(y);
+            }
+        }
+        
+        vv vvNewSpectr(2);
+        
+        vvNewSpectr[0]=std::valarray<_T>(VVSpectr[0].data(), VVSpectr[0].size());
+        vvNewSpectr[1]=std::valarray<_T>(VVSpectr[1].data(), VVSpectr[1].size());
+        
+        vvSpectr=vvNewSpectr;
+        
+        std::cout << "\t\t-> size after: (" << vvSpectr[0].size() << ", " << vvSpectr[1].size() << ").\n";  
+        
+        iCount++;
+        
+    }
+    std::cout << "\t\t-> remove_zero(): all done.\n\n";
+}
+

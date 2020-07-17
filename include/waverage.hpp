@@ -119,19 +119,32 @@ private:
 template<typename _T=double> 
 class _op {
 public:
-    
-    explicit _op();
-    virtual ~_op();
-    
     typedef std::vector<std::valarray<std::valarray<_T> > > Vvv;
     typedef std::valarray<std::valarray<_T> > vv;
+    typedef std::vector<std::vector<_T> > VV;
     
-    const Vvv& resize_spectr(Vvv VvvSpectr); /**< resize all spectra to the same size (maximal). */
-    bool rebuild_wlStep(Vvv VvvSpectr, _T Step); /**< rebuild wavelength axis. */
+    explicit _op();
+    explicit _op(Vvv &VvvSpectr);
     
-    const vv& compute_mean(Vvv VvvSpectr) const; /**< compute arithmetic mean*/
-    const vv& compute_wmean(Vvv VvvSpectr) const; /**< compute weighted arithmetic mean */
+    virtual ~_op();
+
+    bool resize_spectr(); /**< resize all spectra to the same size (maximal). */
+    bool rebuild_wlStep(_T Step); /**< rebuild wavelength axis. */
+
+    void remove_zero(); /**< trim spectra where flux is 0 (assuming zeros are at the beginning or the end). */
+        
+    const vv& compute_mean() const; /**< compute arithmetic mean*/
+    const vv& compute_wmean() const; /**< compute weighted arithmetic mean */
+
+    std::pair<_T, _T> get_wlRange(int n) const; /**< get the minimum and maximum wavelength */
+    std::pair<_T, _T> get_wlRangeMin() const; /**< return the smallest support */
     
+    void set_data(Vvv &VvvSpectr);
+    
+private:
+    Vvv VvvSpectr;
+    
+    _T Step;
 };
 
 

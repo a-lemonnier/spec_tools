@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
 
     hello();
     
-    _io<double> io;
+    _io<> io;
 
     io.read_fits_dir("./data/GIRAFFE_fits",".fits");
     io.set_WaveScale(10.);
@@ -54,6 +54,10 @@ int main(int argc, char **argv) {
 //     io.show_data("ADP.2019-01-30T19:52:54.741.fits");
     io.write();
     
+    _op<> op(Spectra);
+ 
+    op.remove_zero();
+    op.resize_spectr(); 
     return EXIT_SUCCESS;
 }
 
