@@ -5,6 +5,7 @@
 #include <memory>
 
 #include <cmath>
+#include <numeric>
 
 #include <string>
 #include <sstream>
@@ -129,7 +130,7 @@ public:
     virtual ~_op();
 
     bool resize_spectr(); /**< resize all spectra to the same size (maximal). */
-    bool rebuild_wlStep(_T Step); /**< rebuild wavelength axis. */
+    bool rebuild_wlStep(); /**< rebuild wavelength axis. */
 
     void remove_zero(); /**< trim spectra where flux is 0 (assuming zeros are at the beginning or the end). */
         

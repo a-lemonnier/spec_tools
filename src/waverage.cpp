@@ -56,8 +56,9 @@ int main(int argc, char **argv) {
     
     _op<> op(Spectra);
  
-    op.remove_zero();
-    op.resize_spectr(); 
+//     op.remove_zero();
+//     op.resize_spectr();
+    op.rebuild_wlStep();
     return EXIT_SUCCESS;
 }
 

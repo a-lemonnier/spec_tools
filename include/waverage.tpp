@@ -494,3 +494,28 @@ void _op<_T>::remove_zero() {
     std::cout << "\t\t-> remove_zero(): all done.\n\n";
 }
 
+
+template<typename _T> 
+bool _op<_T>::rebuild_wlStep() {
+    
+    int iCount=0;
+     for(auto &vvSpectr: this->VvvSpectr) {
+         std::vector<_T> X;
+         
+         auto [min, max]=this->get_wlRange(iCount);
+         
+         _T Step=(max-min)/vvSpectr[1].size();
+         
+         Step=ceil(10000*Step)/10000;
+         
+         std::cout << "new step for spectrum "<< iCount << ": " <<  Step << "\n";
+         
+         std::iota(X.begin(), X.end(), Step);
+         
+         vvSpectr[0]=std::valarray<_T>(X.data(), X.size());
+         
+         iCount++;
+     }
+    
+    return true;
+}

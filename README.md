@@ -19,6 +19,7 @@ TODO:
  - waverage: auto continuum normalization ? (Savitzky-Golay)
  - waverage: optimize _op::remove_zero() 
  - waverage: optimize _op::resize_spectr()
+ - waverage: user should provide the step ?
  - ncurses elemlist
  - **msg**.h: Fix _msg::_msg(const _msg&)
  - boost::copy recursive directory
