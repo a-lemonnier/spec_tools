@@ -58,9 +58,14 @@ int main(int argc, char **argv) {
     op.rebuild_wlStep();
 
     op.filter_SG();
+    
 
     
+    op.compute_wmean();
+    
     op.write(io);
+    op.write_mean("wmean.dat");
+    
     
     return EXIT_SUCCESS;
 }

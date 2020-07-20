@@ -142,8 +142,8 @@ public:
     inline bool filter_SG(int n); /**< Savitzky-Golay on spectrum n.*/
     bool filter_SG(); /**< Savitzky-Golay on all spectra n.*/
     
-    const vv& compute_mean() const; /**< compute arithmetic mean*/
-    const vv& compute_wmean() const; /**< compute weighted arithmetic mean */
+    const vv compute_mean() const; /**< compute arithmetic mean*/
+    void compute_wmean(); /**< compute weighted arithmetic mean */
 
     std::pair<_T, _T> get_wlRange(int n) const; /**< get the minimum and maximum wavelength */
     std::pair<_T, _T> get_wlRangeMin() const; /**< return the smallest support */
@@ -151,11 +151,15 @@ public:
     void set_data(Vvv &VvvSpectr); /**< set external spectra. **/
     
     bool write(_io<_T>& ioInterface); /**< write the data using a _io class. */
+    bool write_mean(std::string sFilename) const; /**< write only the w mean. */
     
 private:
     Vvv VvvSpectr;
+    vv vvWMean;
     
     _T Step;
+    
+    bool bHaveSNR;
     
     inline std::vector<_T> SG_conv(std::valarray<_T> &X,int i1, int i2, int PolyDeg) const; /**< Savitzky-Golay coefficients. */
     inline _T mean_step(const std::valarray<_T> &vArray) const; /**< mean step for a given support. */
