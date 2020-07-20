@@ -16,9 +16,9 @@ List:
  - **waverage**.cpp: compute average of spectra from FITS weighted by the SNR or the exposition time
  
 TODO:
- - waverage: auto continuum normalization ? (Savitzky-Golay)
  - waverage: optimize _op::remove_zero() 
  - waverage: optimize _op::resize_spectr()
+ - waverage: optimize _op::SG_conv()
  - waverage: user should provide the step ?
  - ncurses elemlist
  - **msg**.h: Fix _msg::_msg(const _msg&)
@@ -38,6 +38,7 @@ Dependencies:
 - Boost::algorithm
 - python: matplotlib, numpy, csv
 - CCfits / CFITSIO
+- Eigen3
 
 ---
 

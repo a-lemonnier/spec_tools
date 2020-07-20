@@ -50,15 +50,18 @@ int main(int argc, char **argv) {
     
     std::vector< std::valarray< std::valarray< double > > > Spectra(io.get_valarrays());
     
-//     io.show_data();
-//     io.show_data("ADP.2019-01-30T19:52:54.741.fits");
-    io.write();
     
     _op<> op(Spectra);
  
-//     op.remove_zero();
-//     op.resize_spectr();
+    op.remove_zero();
+    op.resize_spectr();
     op.rebuild_wlStep();
+
+    op.filter_SG();
+
+    
+    op.write(io);
+    
     return EXIT_SUCCESS;
 }
 

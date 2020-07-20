@@ -75,6 +75,8 @@ set_property(TARGET waverage PROPERTY CXX_STANDARD_REQUIRED ON)
 find_package( Boost 1.40 COMPONENTS program_options 
                          REQUIRED timer filesystem unit_test_framework)
 
+find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+
 target_link_libraries(msg LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 target_link_libraries(log LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 
@@ -87,7 +89,7 @@ target_link_libraries(genrandspec LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstd
 target_link_libraries(marker LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 target_link_libraries(elemlist LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 
-target_link_libraries(waverage LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs -lCCfits -lcfitsio)
+target_link_libraries(waverage LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs -lCCfits -lcfitsio Eigen3::Eigen)
 
 install(TARGETS threshold RUNTIME DESTINATION bin)
 install(TARGETS findncopy RUNTIME DESTINATION bin)

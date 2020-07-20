@@ -9,6 +9,11 @@ void hello() {
 }
 
 template<typename _T> _io<_T>::_io(): exists_SNR(true), Precision(PRECISION) { }
+
+template<typename _T> _io<_T>::_io(Vvv &VvvSpectr): exists_SNR(true), Precision(PRECISION) { 
+    this->VvvSpectr=VvvSpectr;
+}
+
 template<typename _T> _io<_T>::~_io() { 
     std::cout << "\n- flushing data...";
     this->vvSpec.clear();
@@ -105,6 +110,7 @@ template<typename _T> bool _io<_T>::write(std::string sName) const {
     std::fstream fFlux(sName+".csv", std::ios::out);
     
     if (fFlux.is_open() && n>-1) {
+        std::cout << "\t\t-> " << sName << ".csv" << " opened.\n";
         if (VvvSpec[n][0].SNR>0)
             for(const auto Spec: this->VvvSpec[n])
                 fFlux << std::left 
@@ -121,7 +127,7 @@ template<typename _T> bool _io<_T>::write(std::string sName) const {
                 fFlux.close();
             
             fs::path Path(sName+".csv");
-            std::cout << "\t\t-> deleting previous file " << ("converted/"+Path.filename().string()) << " ... ";
+            std::cout << "\t\t-> deleting previous file " << ("converted/"+Path.filename().string()) << "... ";
             
             if (fs::exists("converted/"+Path.filename().string()))
                 fs::remove("converted/"+Path.filename().string());
@@ -384,7 +390,7 @@ void _io<_T>::show_data(std::string sName) const {
 template<typename _T> 
 void _io<_T>::set_WaveScale(_T Scale) {
     std::cout << "- set_WaveScale().\n";
-    std::cout << "\t\t-> multiplying wavelengths by " << Scale << " ... "; 
+    std::cout << "\t\t-> multiplying wavelengths by " << Scale << "... "; 
     this->Scale=Scale;
     for(auto &vvSpec: this->VvvSpec)
         for(auto &vSpec: vvSpec)
@@ -392,6 +398,33 @@ void _io<_T>::set_WaveScale(_T Scale) {
         std::cout << "done.\n\n";
 }
 
+
+template<typename _T> 
+void _io<_T>::set_data(Vvv& VvvSpectr) {
+    std::cout << "- set_data(): setting data.\n";
+
+    std::cout << "\t\t-> clear data.\n";
+    this->VvvSpec.clear();
+
+    int iCount=0;
+    for(auto const vvSpectr: VvvSpectr) {
+        std::cout << "\t\t-> copy spectrum " << iCount << "... ";
+        int Dim=vvSpectr[0].size();
+        std::vector<vec> vSpec;
+        
+        for(int i=0;i<Dim;i++) 
+            vSpec.emplace_back(vec{vvSpectr[0][i],vvSpectr[1][i],-1});
+        
+        this->VvvSpec.emplace_back(vSpec);
+        
+        std::cout << " done.\n";
+        
+        iCount++;
+    } 
+    
+    
+    std::cout << "\t\t-> set_data(): all done.\n\n";
+}
 
 // --------------------------
 // _OP                      -
@@ -437,15 +470,29 @@ std::pair<_T, _T> _op<_T>::get_wlRangeMin() const {
 
 template<typename _T> 
 bool _op<_T>::resize_spectr() {
+    std::cout << "- resize_spectr().\n";
+    
+    std::cout << "\t\t-> get best support\n.";
     auto [min,max]=this->get_wlRangeMin();
     
     if (min>=max)
         return false;
     
+    std::cout << "\t\t-> get the minimum dimension: ";
+    int MinDim=0;
+    std::vector<int> vDim;
+    for(const auto vvSpec: this->VvvSpectr) 
+        vDim.emplace_back(vvSpec[0].size()); // assuming dim(X)==dim(Y)
+        
+    MinDim=*std::min_element(vDim.begin(), vDim.end());
+    std::cout << MinDim << " .\n";
+    
+    int iCount=0;
     for(auto &vvSpec: this->VvvSpectr) {
+        std::cout << "\t\t-> resizing spectrum "<< iCount <<": "<< vvSpec[0].size() << " -> ";
         std::vector<_T> X, Y;
         
-        for(int i=0; i<vvSpec.size(); i++) {
+        for(int i=0; i<MinDim; i++) {
             _T x=vvSpec[0][i], y=vvSpec[1][i];
             if (x>=min && x<=max) {
                 X.emplace_back(x);
@@ -454,8 +501,12 @@ bool _op<_T>::resize_spectr() {
         }
         vvSpec[0]=std::valarray<_T>(X.data(), X.size());
         vvSpec[1]=std::valarray<_T>(Y.data(), Y.size());
+        
+        std::cout << vvSpec[0].size() << ".\n";
+        
+        iCount++;
     }
-    
+    std::cout << "\t\t-> resize_spectr(): all done.\n\n";
     
     return true;
 }
@@ -498,6 +549,8 @@ void _op<_T>::remove_zero() {
 template<typename _T> 
 bool _op<_T>::rebuild_wlStep() {
     
+    std::cout << "- rebuild_wlStep(): start rebuilding support.\n";
+    
     int iCount=0;
      for(auto &vvSpectr: this->VvvSpectr) {
          std::vector<_T> X;
@@ -508,14 +561,127 @@ bool _op<_T>::rebuild_wlStep() {
          
          Step=ceil(10000*Step)/10000;
          
-         std::cout << "new step for spectrum "<< iCount << ": " <<  Step << "\n";
+         std::cout << "\t\t-> rebuilding with new step for spectrum "<< iCount << ": " <<  Step << " for [" << max << ", " << min << "] ...";
          
-         std::iota(X.begin(), X.end(), Step);
+//          std::iota(X.begin(), X.end(), Step);
+         for(_T f=min;f<max;f+=Step)
+             X.push_back(f);
          
          vvSpectr[0]=std::valarray<_T>(X.data(), X.size());
          
+         std::cout << " done.\n";
+         
+         std::cout << "\t\t-> size is: (" << vvSpectr[0].size() << ", " << vvSpectr[0].size() << ").\n";
+         
          iCount++;
      }
+     
+    std::cout << "\t\t-> rebuild_wlStep(): all done.\n\n";
     
     return true;
+}
+
+
+template<typename _T> 
+bool _op<_T>::filter_SG(int n) {
+       
+    if (n>this->VvvSpectr.size() || n<0)
+        return false;
+    
+    std::cout << "- filter_SG(): filtering spectrum " << n << " with Savitzky-Golay algorithm.\n";
+        
+    int Dim=this->VvvSpectr[n][0].size();
+    int window=200;
+    int poly_deg=9;
+    
+    std::cout << "\t\t-> set polynomial degree: " << poly_deg << " and window size: " << window << ".\n";
+        
+    std::vector<_T> vRes;
+    
+    std::cout << "\t\t-> computing...";
+    for(unsigned int i=0;i<(window-1)/2;++i) 
+        vRes.push_back(VvvSpectr[n][1][i]);
+    
+    for(unsigned int i=(window-1)/2;i<Dim-(window-1)/2;i++) {
+        // Calcul des coeffs à la volée en cas de changement de pas
+        std::vector<_T> Coeff=this->SG_conv(VvvSpectr[n][0],i-(window-1)/2,i+window-(window-1)/2, poly_deg);
+        _T mid=0;
+        for(unsigned int j=0;j<window;j++) 
+            mid+=Coeff[j]*VvvSpectr[n][1][i+j-(window-1)/2];
+        vRes.push_back(mid);
+    }
+    
+    for(unsigned int i=vRes.size();i<Dim;i++) 
+        vRes.push_back(VvvSpectr[n][1][i]);
+    
+    for(int i=0; i<vRes.size(); i++)
+        if (vRes[i]!=0) // bofbof voir precision
+            VvvSpectr[n][1][i]/=vRes[i];
+
+    VvvSpectr[n][1]+=1/200;
+    
+    std::cout << " done.\n";
+    
+    return true;
+}
+
+template<typename _T> 
+bool _op<_T>::filter_SG() {
+    bool bStatus=true;
+    std::cout << "- filter_SG(): filtering all spectra.\n";
+    for(int i=0; i<this->VvvSpectr.size();i++)
+        bStatus&=this->filter_SG(i);
+    std::cout << "- filter_SG(): all done.\n\n";
+    return bStatus;
+}
+
+
+template<typename _T> 
+std::vector<_T> _op<_T>::SG_conv(std::valarray<_T> &X, int i1, int i2, int PolyDeg) const {
+    std::vector<_T> res;
+    int trim_dim=abs(i1-i2);
+
+    std::valarray<int> X_CR(trim_dim);
+    std::valarray<_T> X_tmp(trim_dim);
+
+    Eigen::MatrixXd Jac(trim_dim,PolyDeg+1);
+    Eigen::MatrixXd Conv(trim_dim,PolyDeg+1);
+
+    X_tmp=X[std::slice(i1,trim_dim,1)];
+
+    _T mean=std::accumulate(std::begin(X_tmp), std::end(X_tmp), 0.0)/X_tmp.size();
+
+    // Centrage et reduisage de l'abscisse: -2 -1 0 1 2
+    _T m_step=this->mean_step(X_tmp);
+    for(int i=0;i<trim_dim;i++) 
+       X_CR[i]=round((X_tmp[i]-mean)/m_step);
+
+    // Ecriture du Jacobien discret (Vandermonde)
+    for(int i=0;i<trim_dim;i++) 
+      for(int j=0;j<PolyDeg+1;j++)  
+        Jac(i,j)=static_cast<double>(pow(X_CR[i],j));
+
+    // Calcul des coeffs: (tJ.J)^-1 *tJ
+    Conv=(Jac.transpose()*Jac).inverse()*Jac.transpose();
+
+    for(int i=0;i<trim_dim;i++) 
+        res.emplace_back(Conv(0,i));
+
+    return res;
+}
+
+
+
+template <typename _T>
+_T _op<_T>::mean_step(const std::valarray<_T> &vArray) const {
+    std::vector<_T> shift;
+    for(unsigned int i=0; i<vArray.size()-1;i++) 
+        shift.emplace_back(abs(vArray[i]-vArray[i+1]));
+    return std::accumulate(shift.begin(), shift.end(), 0.0)/shift.size();
+}
+
+template<typename _T> 
+bool _op<_T>::write(_io<_T>& ioInterface) {
+    ioInterface.set_data(VvvSpectr);
+    return ioInterface.write();
 }

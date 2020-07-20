@@ -24,6 +24,7 @@
 #include <CCfits/CCfits.h>
 #include <CCfits/PHDU.h>
 
+#include <Eigen/Dense>
 
 #if __has_include (<filesystem>)
 #include <filesystem>
@@ -54,9 +55,9 @@ template<typename _T=double> // double ?
 class _io {
 public:
     
-    explicit _io();
-    virtual ~_io();
-
+    typedef std::vector<std::valarray<std::valarray<_T> > > Vvv;
+    typedef std::valarray<std::valarray<_T> > vv;
+    
     /**
      * \struct vec
      * \brief Define a (x,y) vector (seems better than std::pair)
@@ -67,8 +68,10 @@ public:
         _T SNR=-1;
     } vec;
     
-    typedef std::vector<std::valarray<std::valarray<_T> > > Vvv;
-    typedef std::valarray<std::valarray<_T> > vv;
+    explicit _io();
+    explicit _io(Vvv& VvvSpectr);
+
+    virtual ~_io();
     
     bool read(std::string sFilename); /**<  read one file */
     bool read_dir(std::string sExtension); /**< read the whole directory, only need the extension of files */
@@ -86,6 +89,8 @@ public:
     
     void set_fileIn(std::string sFilename); /**< set the input file name */
     void set_fileOut(std::string sFilename); /**< set the output name */
+    
+    void set_data(Vvv& VvvSpectr);
     
     void set_WaveScale(_T Scale); /**< multiply wavelength by Scale */
     
@@ -133,19 +138,27 @@ public:
     bool rebuild_wlStep(); /**< rebuild wavelength axis. */
 
     void remove_zero(); /**< trim spectra where flux is 0 (assuming zeros are at the beginning or the end). */
-        
+    
+    inline bool filter_SG(int n); /**< Savitzky-Golay on spectrum n.*/
+    bool filter_SG(); /**< Savitzky-Golay on all spectra n.*/
+    
     const vv& compute_mean() const; /**< compute arithmetic mean*/
     const vv& compute_wmean() const; /**< compute weighted arithmetic mean */
 
     std::pair<_T, _T> get_wlRange(int n) const; /**< get the minimum and maximum wavelength */
     std::pair<_T, _T> get_wlRangeMin() const; /**< return the smallest support */
     
-    void set_data(Vvv &VvvSpectr);
+    void set_data(Vvv &VvvSpectr); /**< set external spectra. **/
+    
+    bool write(_io<_T>& ioInterface); /**< write the data using a _io class. */
     
 private:
     Vvv VvvSpectr;
     
     _T Step;
+    
+    inline std::vector<_T> SG_conv(std::valarray<_T> &X,int i1, int i2, int PolyDeg) const; /**< Savitzky-Golay coefficients. */
+    inline _T mean_step(const std::valarray<_T> &vArray) const; /**< mean step for a given support. */
 };
 
 
