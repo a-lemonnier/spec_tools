@@ -28,7 +28,7 @@ TODO:
 
 Dependencies:
 
-- gcc >= 7 or clang >= 5 (smaller and slower (?) binary)
+- gcc >= 7 or clang >= 5 
 - CMake
 - Boost >= 1.40
 - Boost::program_options
@@ -36,10 +36,12 @@ Dependencies:
 - Boost::tokenizer
 - Boost::unit_test_framework
 - Boost::algorithm
-- python: matplotlib, numpy, csv
-- CCfits / CFITSIO
-- Eigen3
+- python: matplotlib, numpy, csv (marker)
+- CCfits / CFITSIO (waverage)
+- Eigen3 (waverage)
 
+- GTK2.0 (optional)
+- libnotify (optional)
 ---
 
 > marker
@@ -413,38 +415,173 @@ TODO:
                 - read_fits_dir(): all done.
 
 - set_WaveScale().
-                -> multiplying wavelengths by 10 ... done.
+                -> multiplying wavelengths by 10... done.
 
-- get_valarrays(): start converting vectors to valarrays.
+- get_valarrays(): start converting vectors to valarrays
                 -> initializing arrays... done.
-                -> filling arrays... 8 arrays done.
+                -> filling array with 3 columns...  done.
+                -> filling array with 3 columns...  done.
+                -> filling array with 3 columns...  done.
+                -> filling array with 3 columns...  done.
+                -> filling array with 3 columns...  done.
+                -> filling array with 3 columns...  done.
+                -> filling array with 3 columns...  done.
+                -> filling array with 3 columns...  done.
+                -> total: 8 arrays done.
+
+- _op(): Initialisation with spectra assuming structure:
+                ->      (WAVE)  (FLUX)  (SNR)
+                ->      (WAVE)  (FLUX)  (SNR)
+                ->      (WAVE)  (FLUX)  (SNR)
+                ->      (WAVE)  (FLUX)  (SNR)
+                ->      (WAVE)  (FLUX)  (SNR)
+                ->      (WAVE)  (FLUX)  (SNR)
+                ->      (WAVE)  (FLUX)  (SNR)
+                ->      (WAVE)  (FLUX)  (SNR)
+
+- remove_zero():
+                -> removing 0 from spectrum 0
+                -> size before: (4960, 4960, 4960).
+                -> size after: (4868, 4868).
+                -> removing 0 from spectrum 1
+                -> size before: (4960, 4960, 4960).
+                -> size after: (4868, 4868).
+                -> removing 0 from spectrum 2
+                -> size before: (4960, 4960, 4960).
+                -> size after: (4868, 4868).
+                -> removing 0 from spectrum 3
+                -> size before: (4960, 4960, 4960).
+                -> size after: (4868, 4868).
+                -> removing 0 from spectrum 4
+                -> size before: (4960, 4960, 4960).
+                -> size after: (4869, 4869).
+                -> removing 0 from spectrum 5
+                -> size before: (4960, 4960, 4960).
+                -> size after: (4869, 4869).
+                -> removing 0 from spectrum 6
+                -> size before: (4960, 4960, 4960).
+                -> size after: (4869, 4869).
+                -> removing 0 from spectrum 7
+                -> size before: (4960, 4960, 4960).
+                -> size after: (4869, 4869).
+                -> remove_zero(): all done.
+
+- resize_spectr().
+                -> get best support
+.               -> get the minimum iDimension: 4868 .
+                -> resizing spectrum 0: 4868 -> 4868.
+                -> resizing spectrum 1: 4868 -> 4868.
+                -> resizing spectrum 2: 4868 -> 4868.
+                -> resizing spectrum 3: 4868 -> 4868.
+                -> resizing spectrum 4: 4869 -> 4868.
+                -> resizing spectrum 5: 4869 -> 4868.
+                -> resizing spectrum 6: 4869 -> 4868.
+                -> resizing spectrum 7: 4869 -> 4868.
+                -> resize_spectr(): all done.
+
+- rebuild_wlStep(): start rebuilding support.
+                -> rebuilding with new step for spectrum 0: 0.05 for [5835.1, 5591.76] ... done.
+                -> size is: (4867, 4867).
+                -> rebuilding with new step for spectrum 1: 0.05 for [5835.1, 5591.76] ... done.
+                -> size is: (4867, 4867).
+                -> rebuilding with new step for spectrum 2: 0.05 for [5835.1, 5591.76] ... done.
+                -> size is: (4867, 4867).
+                -> rebuilding with new step for spectrum 3: 0.05 for [5835.1, 5591.76] ... done.
+                -> size is: (4867, 4867).
+                -> rebuilding with new step for spectrum 4: 0.05 for [5835.14, 5591.8] ... done.
+                -> size is: (4867, 4867).
+                -> rebuilding with new step for spectrum 5: 0.05 for [5835.14, 5591.8] ... done.
+                -> size is: (4867, 4867).
+                -> rebuilding with new step for spectrum 6: 0.05 for [5835.14, 5591.8] ... done.
+                -> size is: (4867, 4867).
+                -> rebuilding with new step for spectrum 7: 0.05 for [5835.14, 5591.8] ... done.
+                -> size is: (4867, 4867).
+                -> rebuild_wlStep(): all done.
+
+- filter_SG(): filtering all spectra.
+- filter_SG(): filtering spectrum 0 with Savitzky-Golay algorithm.
+                -> set polynomial degree: 12 and window size: 500 values or 25 Å.
+                -> computing... done.
+- filter_SG(): filtering spectrum 1 with Savitzky-Golay algorithm.
+                -> set polynomial degree: 12 and window size: 500 values or 25 Å.
+                -> computing... done.
+- filter_SG(): filtering spectrum 2 with Savitzky-Golay algorithm.
+                -> set polynomial degree: 12 and window size: 500 values or 25 Å.
+                -> computing... done.
+- filter_SG(): filtering spectrum 3 with Savitzky-Golay algorithm.
+                -> set polynomial degree: 12 and window size: 500 values or 25 Å.
+                -> computing... done.
+- filter_SG(): filtering spectrum 4 with Savitzky-Golay algorithm.
+                -> set polynomial degree: 12 and window size: 500 values or 25 Å.
+                -> computing... done.
+- filter_SG(): filtering spectrum 5 with Savitzky-Golay algorithm.
+                -> set polynomial degree: 12 and window size: 500 values or 25 Å.
+                -> computing... done.
+- filter_SG(): filtering spectrum 6 with Savitzky-Golay algorithm.
+                -> set polynomial degree: 12 and window size: 500 values or 25 Å.
+                -> computing... done.
+- filter_SG(): filtering spectrum 7 with Savitzky-Golay algorithm.
+                -> set polynomial degree: 12 and window size: 500 values or 25 Å.
+                -> computing... done.
+- filter_SG(): all done.
+
+- compute_wmean(): computing weighted mean.
+                -> Number of spectra:   8.
+                -> Number of rows:      4867.
+                -> Computing... done.
+                -> <SNR>=11.2505.
+                -> Size of the result: (4867, 4867).
+                -> compute_wmean(): all done.
+
+- set_data(): setting data.
+                -> clear data.
+                -> copy spectrum 0(SNR)...  done.
+                -> copy spectrum 1(SNR)...  done.
+                -> copy spectrum 2(SNR)...  done.
+                -> copy spectrum 3(SNR)...  done.
+                -> copy spectrum 4(SNR)...  done.
+                -> copy spectrum 5(SNR)...  done.
+                -> copy spectrum 6(SNR)...  done.
+                -> copy spectrum 7(SNR)...  done.
+                -> set_data(): all done.
 
 - write(): start writing all spectra in './converted'.
 - write(): writing ./data/GIRAFFE_fits/ADP.2019-01-30T19:52:54.739.fits.
-                -> deleting previous file converted/ADP.2019-01-30T19:52:54.739.fits.csv ... done.
+                -> ./data/GIRAFFE_fits/ADP.2019-01-30T19:52:54.739.fits.csv opened.
+                -> deleting previous file converted/ADP.2019-01-30T19:52:54.739.fits.csv... done.
                 -> moving file... done.
 - write(): writing ./data/GIRAFFE_fits/ADP.2019-01-30T19:52:54.740.fits.
-                -> deleting previous file converted/ADP.2019-01-30T19:52:54.740.fits.csv ... done.
+                -> ./data/GIRAFFE_fits/ADP.2019-01-30T19:52:54.740.fits.csv opened.
+                -> deleting previous file converted/ADP.2019-01-30T19:52:54.740.fits.csv... done.
                 -> moving file... done.
 - write(): writing ./data/GIRAFFE_fits/ADP.2019-01-30T19:52:54.741.fits.
-                -> deleting previous file converted/ADP.2019-01-30T19:52:54.741.fits.csv ... done.
+                -> ./data/GIRAFFE_fits/ADP.2019-01-30T19:52:54.741.fits.csv opened.
+                -> deleting previous file converted/ADP.2019-01-30T19:52:54.741.fits.csv... done.
                 -> moving file... done.
 - write(): writing ./data/GIRAFFE_fits/ADP.2019-01-30T19:52:54.742.fits.
-                -> deleting previous file converted/ADP.2019-01-30T19:52:54.742.fits.csv ... done.
+                -> ./data/GIRAFFE_fits/ADP.2019-01-30T19:52:54.742.fits.csv opened.
+                -> deleting previous file converted/ADP.2019-01-30T19:52:54.742.fits.csv... done.
                 -> moving file... done.
 - write(): writing ./data/GIRAFFE_fits/ADP.2019-01-30T20:53:18.821.fits.
-                -> deleting previous file converted/ADP.2019-01-30T20:53:18.821.fits.csv ... done.
+                -> ./data/GIRAFFE_fits/ADP.2019-01-30T20:53:18.821.fits.csv opened.
+                -> deleting previous file converted/ADP.2019-01-30T20:53:18.821.fits.csv... done.
                 -> moving file... done.
 - write(): writing ./data/GIRAFFE_fits/ADP.2019-01-30T20:53:18.822.fits.
-                -> deleting previous file converted/ADP.2019-01-30T20:53:18.822.fits.csv ... done.
+                -> ./data/GIRAFFE_fits/ADP.2019-01-30T20:53:18.822.fits.csv opened.
+                -> deleting previous file converted/ADP.2019-01-30T20:53:18.822.fits.csv... done.
                 -> moving file... done.
 - write(): writing ./data/GIRAFFE_fits/ADP.2019-01-30T20:53:18.823.fits.
-                -> deleting previous file converted/ADP.2019-01-30T20:53:18.823.fits.csv ... done.
+                -> ./data/GIRAFFE_fits/ADP.2019-01-30T20:53:18.823.fits.csv opened.
+                -> deleting previous file converted/ADP.2019-01-30T20:53:18.823.fits.csv... done.
                 -> moving file... done.
 - write(): writing ./data/GIRAFFE_fits/ADP.2019-01-30T20:53:18.824.fits.
-                -> deleting previous file converted/ADP.2019-01-30T20:53:18.824.fits.csv ... done.
+                -> ./data/GIRAFFE_fits/ADP.2019-01-30T20:53:18.824.fits.csv opened.
+                -> deleting previous file converted/ADP.2019-01-30T20:53:18.824.fits.csv... done.
                 -> moving file... done.
 - write(): all done.
+
+- write_mean(): writing result in wmean.dat.
+                -> done.
 
 
 - flushing data... done.
@@ -484,8 +621,8 @@ Toggle compiler in CMakeLists.txt:
 ```
 
 gentoo - spec_tools/ % cmake .
--- The C compiler identification is GNU 9.3.0
--- The CXX compiler identification is GNU 9.3.0
+-- The C compiler identification is GNU 10.1.0
+-- The CXX compiler identification is GNU 10.1.0
 -- Check for working C compiler: /usr/bin/cc
 -- Check for working C compiler: /usr/bin/cc - works
 -- Detecting C compiler ABI info
@@ -498,95 +635,93 @@ gentoo - spec_tools/ % cmake .
 -- Detecting CXX compiler ABI info - done
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
--- Found Boost: /usr/include (found suitable version "1.72.0", minimum required is "1.40") found components: program_options timer filesystem chrono 
+CC: gcc
+CXX: g++
+-- Found Boost: /usr/include (found suitable version "1.73.0", minimum required is "1.40") 
+found components: program_options timer filesystem unit_test_framework chrono 
+-- Found GTK2_GTK: /usr/lib64/libgtk-x11-2.0.so  
+-- Found PkgConfig: /usr/bin/pkg-config (found version "1.7.3") 
 -- Configuring done
 -- Generating done
 
+
 gentoo - spec_tools/ % make -j$(nproc)
--- The C compiler identification is GNU 9.3.0
--- The CXX compiler identification is GNU 9.3.0
--- Check for working C compiler: /usr/bin/cc
--- Check for working C compiler: /usr/bin/cc -- works
--- Detecting C compiler ABI info
--- Detecting C compiler ABI info - done
--- Detecting C compile features
--- Detecting C compile features - done
--- Check for working CXX compiler: /usr/bin/c++
--- Check for working CXX compiler: /usr/bin/c++ -- works
--- Detecting CXX compiler ABI info
--- Detecting CXX compiler ABI info - done
--- Detecting CXX compile features
--- Detecting CXX compile features - done
--- Boost version: 1.72.0
--- Found the following Boost libraries:
---   program_options
---   timer
---   filesystem
---   chrono
---   system
--- Configuring done
--- Generating done
--- Build files have been written to: /drone/src
-+ make -j$(nproc)
 Scanning dependencies of target msg
-Scanning dependencies of target der_snr
-Scanning dependencies of target trim
 Scanning dependencies of target threshold
 Scanning dependencies of target shift
 Scanning dependencies of target findncopy
-Scanning dependencies of target marker
+Scanning dependencies of target waverage
+Scanning dependencies of target trim
 Scanning dependencies of target genrandspec
-[  3%] Building CXX object CMakeFiles/msg.dir/include/msg.cpp.o
-[  9%] Building CXX object CMakeFiles/findncopy.dir/src/findncopy.cpp.o
+Scanning dependencies of target marker
+[  2%] Building CXX object CMakeFiles/threshold.dir/src/threshold.cpp.o
+[  4%] Building CXX object CMakeFiles/shift.dir/src/shift.cpp.o
 [  9%] Building CXX object CMakeFiles/trim.dir/src/trim.cpp.o
-[ 12%] Building CXX object CMakeFiles/der_snr.dir/src/der_snr.cpp.o
-[ 15%] Building CXX object CMakeFiles/genrandspec.dir/src/genrandspec.cpp.o
-[ 18%] Building CXX object CMakeFiles/threshold.dir/src/threshold.cpp.o
-[ 21%] Building CXX object CMakeFiles/marker.dir/src/marker.cpp.o
-[ 25%] Building CXX object CMakeFiles/shift.dir/src/shift.cpp.o
-[ 28%] Linking CXX static library libmsg.a
-[ 28%] Built target msg
-[ 31%] Building CXX object CMakeFiles/shift.dir/include/msg.cpp.o
-[ 34%] Building CXX object CMakeFiles/marker.dir/include/msg.cpp.o
-[ 37%] Building CXX object CMakeFiles/findncopy.dir/include/msg.cpp.o
-[ 40%] Building CXX object CMakeFiles/der_snr.dir/include/msg.cpp.o
-[ 43%] Linking CXX executable findncopy
-[ 43%] Built target findncopy
-[ 46%] Building CXX object CMakeFiles/trim.dir/include/msg.cpp.o
+[  9%] Building CXX object CMakeFiles/findncopy.dir/src/findncopy.cpp.o
+[ 11%] Building CXX object CMakeFiles/genrandspec.dir/src/genrandspec.cpp.o
+[ 13%] Building CXX object CMakeFiles/marker.dir/src/marker.cpp.o
+[ 15%] Building CXX object CMakeFiles/msg.dir/include/msg.cpp.o
+[ 18%] Building CXX object CMakeFiles/waverage.dir/src/waverage.cpp.o
+[ 20%] Linking CXX static library libmsg.a
+[ 20%] Built target msg
+[ 22%] Building CXX object CMakeFiles/marker.dir/include/msg.cpp.o
+[ 25%] Building CXX object CMakeFiles/findncopy.dir/include/msg.cpp.o
+[ 27%] Building CXX object CMakeFiles/threshold.dir/include/msg.cpp.o
+[ 29%] Building CXX object CMakeFiles/findncopy.dir/include/log.cpp.o
+[ 31%] Linking CXX executable waverage
+[ 34%] Building CXX object CMakeFiles/threshold.dir/include/log.cpp.o
+[ 34%] Built target waverage
+Scanning dependencies of target log
+[ 36%] Building CXX object CMakeFiles/log.dir/include/log.cpp.o
+[ 38%] Linking CXX executable findncopy
+[ 38%] Built target findncopy
 Scanning dependencies of target elemlist
-[ 50%] Building CXX object CMakeFiles/elemlist.dir/src/elemlist.cpp.o
-Scanning dependencies of target test_csv
-[ 53%] Building CXX object CMakeFiles/test_csv.dir/test/test_csv.cpp.o
-[ 59%] Linking CXX executable genrandspec
-[ 59%] Built target genrandspec
-[ 62%] Building CXX object CMakeFiles/elemlist.dir/include/msg.cpp.o
-Scanning dependencies of target test_msg
-[ 65%] Building CXX object CMakeFiles/test_msg.dir/test/test_msg.cpp.o
-[ 68%] Building CXX object CMakeFiles/threshold.dir/include/msg.cpp.o
-[ 71%] Linking CXX executable trim
-[ 75%] Linking CXX executable elemlist
-[ 75%] Built target elemlist
+[ 40%] Building CXX object CMakeFiles/elemlist.dir/src/elemlist.cpp.o
+[ 43%] Building CXX object CMakeFiles/genrandspec.dir/include/msg.cpp.o
+[ 45%] Linking CXX static library liblog.a
+[ 45%] Built target log
+Scanning dependencies of target der_snr
+[ 47%] Building CXX object CMakeFiles/der_snr.dir/src/der_snr.cpp.o
+[ 50%] Building CXX object CMakeFiles/genrandspec.dir/include/log.cpp.o
+[ 52%] Building CXX object CMakeFiles/trim.dir/include/msg.cpp.o
+[ 54%] Linking CXX executable threshold
+[ 56%] Building CXX object CMakeFiles/der_snr.dir/include/msg.cpp.o
+[ 59%] Building CXX object CMakeFiles/shift.dir/include/msg.cpp.o
+[ 59%] Built target threshold
+[ 61%] Building CXX object CMakeFiles/shift.dir/include/log.cpp.o
+[ 63%] Building CXX object CMakeFiles/marker.dir/include/log.cpp.o
+[ 65%] Linking CXX executable genrandspec
+[ 65%] Built target genrandspec
 Scanning dependencies of target test_marker
-[ 78%] Building CXX object CMakeFiles/test_marker.dir/test/test_marker.cpp.o
-[ 78%] Built target trim
-[ 81%] Linking CXX executable shift
-[ 81%] Built target shift
-[ 84%] Linking CXX executable threshold
-[ 87%] Linking CXX executable der_snr
-[ 90%] Linking CXX executable marker
-[ 90%] Built target threshold
-[ 90%] Built target der_snr
-[ 90%] Built target marker
-[ 93%] Linking CXX executable test_msg
-[ 93%] Built target test_msg
-[ 96%] Linking CXX executable test_csv
-[ 96%] Built target test_csv
-[100%] Linking CXX executable test_marker
-[100%] Built target test_marker
+[ 68%] Building CXX object CMakeFiles/test_marker.dir/test/test_marker.cpp.o
+[ 70%] Building CXX object CMakeFiles/trim.dir/include/log.cpp.o
+[ 72%] Building CXX object CMakeFiles/der_snr.dir/include/log.cpp.o
+[ 75%] Building CXX object CMakeFiles/elemlist.dir/include/msg.cpp.o
+[ 77%] Linking CXX executable shift
+[ 77%] Built target shift
+Scanning dependencies of target test_msg
+[ 79%] Building CXX object CMakeFiles/test_msg.dir/test/test_msg.cpp.o
+[ 81%] Linking CXX executable marker
+[ 81%] Built target marker
+[ 84%] Building CXX object CMakeFiles/elemlist.dir/include/log.cpp.o
+Scanning dependencies of target test_csv
+[ 86%] Building CXX object CMakeFiles/test_csv.dir/test/test_csv.cpp.o
+[ 88%] Linking CXX executable trim
+[ 88%] Built target trim
+[ 90%] Linking CXX executable test_msg
+[ 90%] Built target test_msg
+[ 93%] Linking CXX executable elemlist
+[ 93%] Built target elemlist
+[ 95%] Linking CXX executable der_snr
+[ 95%] Built target der_snr
+[ 97%] Linking CXX executable test_marker
+[ 97%] Built target test_marker
+[100%] Linking CXX executable test_csv
+[100%] Built target test_csv
 
 ```
 
-> BUG:
+> ISSUES:
 
  - **marker**.cpp with Intel compiler: std::tuple
  
@@ -603,5 +738,15 @@ Scanning dependencies of target test_marker
             instantiation of "void std::__partial_sort(_RandomAccessIterator, _RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator=__gnu_cxx::__normal_iterator<std::tuple<float, std::string, bool> *, std::vector<std::tuple<float, std::string, bool>, std::allocator<std::tuple<float, std::string, bool>>>>, _Compare=__gnu_cxx::__ops::_Iter_less_iter]" at line 1947 of "/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include/g++-v9/bits/stl_algo.h"
             instantiation of "void std::__introsort_loop(_RandomAccessIterator, _RandomAccessIterator, _Size, _Compare) [with _RandomAccessIterator=__gnu_cxx::__normal_iterator<std::tuple<float, std::string, bool> *, std::vector<std::tuple<float, std::string, bool>, std::allocator<std::tuple<float, std::string, bool>>>>, _Size=long, _Compare=__gnu_cxx::__ops::_Iter_less_iter]" at line 1969 of "/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include/g++-v9/bits/stl_algo.h"
             instantiation of "void std::__sort(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator=__gnu_cxx::__normal_iterator<std::tuple<float, std::string, bool> *, std::vector<std::tuple<float, std::string, bool>, std::allocator<std::tuple<float, std::string, bool>>>>, _Compare=__gnu_cxx::__ops::_Iter_less_iter]" at line 4867 of "/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include/g++-v9/bits/stl_algo.h"
-            instantiation of "void std::sort(_RAIter, _RAIter) [with _RAIter=__gnu_cxx::__normal_iterator<std::tuple<float, std::string, bool> *, std::vector<std::tuple<float, std::string, bool>, std::allocator<std::tuple<float, std::string, bool>>>>]" at line 227 of "/home/gentoo/Prog/cpp/spec_tools/src/marker.cpp"
+            instantiation of "void std::sort(_RAIter, _RAIter) [with _RAIter=__gnu_cxx::__normal_iterator<std::tuple<float, std::string, bool> *, std::vector<std::tuple<float, std::string, bool>, std::allocator<std::tuple<float, std::string, bool>>>>]" at line 227 of "Prog/cpp/spec_tools/src/marker.cpp"
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/10.1.0/include/g++-v10/tuple(566): error: pack "_UElements" does not have the same number of elements as "_Elements"
+  	    __and_<is_nothrow_constructible<_Elements, _UElements>...>::value;
+  	                                               ^
+          detected during:
+            instantiation of "bool std::tuple<_Elements...>::__nothrow_constructible<_UElements...>() [with _Elements=<void (*)(const std::vector<std::string, std::allocator<std::string>> &, double), std::vector<std::string, std::allocator<std::string>>, double>, _UElements=<>]" at line 287 of "/usr/lib/gcc/x86_64-pc-linux-gnu/10.1.0/include/g++-v10/thread"
+            instantiation of "std::thread::_Invoker<std::thread::__decayed_tuple<_Callable, _Args...>> std::thread::__make_invoker(_Callable &&, _Args &&...) [with _Callable=void (&)(const std::vector<std::string, std::allocator<std::string>> &, double), _Args=<std::vector<std::string, std::allocator<std::string>> &, const double &>]" at line 1729 of "/usr/lib/gcc/x86_64-pc-linux-gnu/10.1.0/include/g++-v10/future"
+            instantiation of "std::future<std::__async_result_of<_Fn, _Args...>> std::async(std::launch, _Fn &&, _Args &&...) [with _Fn=void (&)(const std::vector<std::string, std::allocator<std::string>> &, double), _Args=<std::vector<std::string, std::allocator<std::string>> &, const double &>]" at line 219 of "Prog/cpp/spec_tools/src/threshold.cpp"
+
+... blablabla
 ```

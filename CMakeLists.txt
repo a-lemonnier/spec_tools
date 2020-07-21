@@ -76,11 +76,10 @@ find_package( Boost 1.40 COMPONENTS program_options
                          REQUIRED timer filesystem unit_test_framework)
 
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
-find_package (GTK2 REQUIRED)
+find_package (GTK2 QUIET)
 
 find_package(PkgConfig REQUIRED)
 pkg_search_module(GLIB QUIET glib-2.0)
-# pkg_search_module(GTK3 QUIET)
 pkg_search_module(GTK QUIET 2.0)
 
 
