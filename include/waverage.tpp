@@ -705,7 +705,7 @@ void _op<_T>::compute_wmean() {
     }
     std::cout << " done.\n";
     
-    std::cout << "\t\t-> <SNR>=" << SNR_t/iRow/iNbSpec << ".\n";
+    std::cout << "\t\t-> <SNR>=" << pow(SNR_t/iRow/iNbSpec,2) << ".\n";
     std::cout << "\t\t-> Size of the result: (" << vvWMean[0].size() 
               << ", " << vvWMean[1].size() << ").\n";
     

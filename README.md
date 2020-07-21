@@ -20,6 +20,7 @@ TODO:
  - waverage: optimize _op::resize_spectr()
  - waverage: optimize _op::SG_conv()
  - waverage: user should provide the step ?
+ - der_snr: segfault when blank rows are added
  - ncurses elemlist
  - **msg**.h: Fix _msg::_msg(const _msg&)
  - boost::copy recursive directory
