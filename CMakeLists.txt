@@ -24,7 +24,7 @@ endif()
 
 
 
-add_executable(threshold src/threshold.cpp include/msg.cpp include/log.cpp)
+add_executable(threshold  STATIC src/threshold.cpp include/msg.cpp include/log.cpp)
 add_executable(findncopy src/findncopy.cpp include/msg.cpp include/log.cpp)
 add_executable(trim src/trim.cpp include/msg.cpp include/log.cpp)
 add_executable(der_snr src/der_snr.cpp include/msg.cpp include/log.cpp)
