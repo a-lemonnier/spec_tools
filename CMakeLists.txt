@@ -76,12 +76,15 @@ find_package( Boost 1.40 COMPONENTS program_options
                          REQUIRED timer filesystem unit_test_framework)
 
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+find_package (GTK2 REQUIRED)
 
-find_package(PkgConfig QUIET)
+find_package(PkgConfig REQUIRED)
 pkg_search_module(GLIB QUIET glib-2.0)
-pkg_search_module(GTK3 QUIET)
+# pkg_search_module(GTK3 QUIET)
+pkg_search_module(GTK QUIET 2.0)
 
-include_directories(./src ./include ${Boost_INCLUDE_DIRS} ${GLIB_INCLUDE_DIRS} ${GTK3_INCLUDE_DIRS} ./test)
+
+include_directories(./src ./include ${Boost_INCLUDE_DIRS} ${GLIB_INCLUDE_DIRS} ${GTK2_INCLUDE_DIRS} ./test)
 link_directories(${GLIB_LIBRARY_DIRS})
 
 target_link_libraries(msg LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
@@ -96,7 +99,7 @@ target_link_libraries(genrandspec LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstd
 target_link_libraries(marker LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 target_link_libraries(elemlist LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 
-target_link_libraries(waverage LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs -lCCfits -lcfitsio Eigen3::Eigen -lnotify )
+target_link_libraries(waverage LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs -lCCfits -lcfitsio Eigen3::Eigen -lnotify)
 
 install(TARGETS threshold RUNTIME DESTINATION bin)
 install(TARGETS findncopy RUNTIME DESTINATION bin)
