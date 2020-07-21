@@ -64,10 +64,10 @@ int main(int argc, char **argv) {
     _io<>::notify("rebuilding supports...", "", 3);
     op.rebuild_wlStep();
 
-    _io<>::notify("filtering spectra...", "", 3);
+    _io<>::notify("filtering spectra...", "", 10);
     op.filter_SG();
     
-    _io<>::notify("computing weighted mean...", "", 3);
+    _io<>::notify("computing weighted mean...", "", 5);
     op.compute_wmean();
     
     _io<>::notify("writing data...", "", 3);

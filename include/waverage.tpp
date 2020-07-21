@@ -433,7 +433,6 @@ void _io<_T>::set_data(Vvv& VvvSpectr) {
 }
 
 
-
 template<typename _T>
 void _io<_T>::notify(std::string sTitle, std::string sMsg, int iTime) {
 
@@ -445,8 +444,6 @@ void _io<_T>::notify(std::string sTitle, std::string sMsg, int iTime) {
     notify_notification_show(n, 0);    
 #endif
 }
-
-
 
 // --------------------------
 // _OP                      -

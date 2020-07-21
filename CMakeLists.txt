@@ -78,7 +78,6 @@ find_package( Boost 1.40 COMPONENTS program_options
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
 find_package(PkgConfig REQUIRED)
-
 pkg_search_module(GLIB REQUIRED glib-2.0)
 pkg_search_module(GTK3 REQUIRED)
 
