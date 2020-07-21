@@ -693,7 +693,7 @@ void _op<_T>::compute_wmean() {
         _T SNR=0;
         _T wl=0;
         for(int k=0; k<iNbSpec; k++) {
-            _T SNR_tmp=sqrt(this->VvvSpectr[k][2][i]);
+            _T SNR_tmp=sqrtl(this->VvvSpectr[k][2][i]);
             wl+=this->VvvSpectr[k][0][i];
             P+=this->VvvSpectr[k][1][i]*SNR_tmp;
             SNR+=SNR_tmp;
