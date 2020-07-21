@@ -177,13 +177,13 @@ const std::valarray<std::valarray<_T> > _io<_T>::get_valarray() {
     std::cout << " done.\n";
     
     std::cout << "\t\t-> filling array... ";
-    int iDim=this->vvSpec.size();
-    for(int i=0; i<iDim; i++) {
+    int iiDim=this->vvSpec.size();
+    for(int i=0; i<iiDim; i++) {
         vvRes[0][i]=this->vvSpec[i].x;
         vvRes[1][i]=this->vvSpec[i].y;
         vvRes[2][i]=this->vvSpec[i].SNR;
     }
-    std::cout << iDim << " values done.\n\n";    
+    std::cout << iiDim << " values done.\n\n";    
     return vvRes;
 }
 
@@ -210,8 +210,8 @@ const std::vector<std::valarray<std::valarray<_T> > > _io<_T>::get_valarrays()  
     
     for(int n=0; n<iNbSpec;n++) {
         std::cout << "\t\t-> filling array with "<< VvvRes[n].size() <<" columns... ";
-        int iDim=this->VvvSpec[n].size();
-        for(int i=0; i<iDim; i++) {
+        int iiDim=this->VvvSpec[n].size();
+        for(int i=0; i<iiDim; i++) {
             VvvRes[n][0][i]=this->VvvSpec[n][i].x;
             VvvRes[n][1][i]=this->VvvSpec[n][i].y;
             VvvRes[n][2][i]=this->VvvSpec[n][i].SNR; // Check this !
@@ -412,11 +412,11 @@ void _io<_T>::set_data(Vvv& VvvSpectr) {
         bool nHasSNR=vvSpectr.size()==3;
         if (nHasSNR) std::cout << "\t\t-> copy spectrum " << iCount << "(SNR)... ";
         else         std::cout << "\t\t-> copy spectrum " << iCount << "... ";
-        int Dim=vvSpectr[0].size();
+        int iDim=vvSpectr[0].size();
         
         std::vector<vec> vSpec;
         
-        for(int i=0;i<Dim;i++) {
+        for(int i=0;i<iDim;i++) {
             if (nHasSNR) vSpec.emplace_back(vec{vvSpectr[0][i],vvSpectr[1][i],vvSpectr[2][i]});
             else         vSpec.emplace_back(vec{vvSpectr[0][i],vvSpectr[1][i],-1});
         }
@@ -452,7 +452,8 @@ void _io<_T>::notify(std::string sTitle, std::string sMsg, int iTime) {
 
 template<typename _T> _op<_T>::_op() { }
 
-template<typename _T> _op<_T>::_op(Vvv& VvvSpectr): VvvSpectr(VvvSpectr), bHaveSNR(true) { 
+template<typename _T> _op<_T>::_op(Vvv& VvvSpectr): VvvSpectr(VvvSpectr), 
+                                                    bHaveSNR(true) { 
     std::cout << "- _op(): Initialisation with spectra assuming structure:\n";
     for(const auto vvSpectr: VvvSpectr) {
         this->bHaveSNR&=vvSpectr.size()==3;
@@ -496,21 +497,22 @@ bool _op<_T>::resize_spectr() {
     
     if (min>=max) return false;
     
-    std::cout << "\t\t-> get the minimum dimension: ";
-    int MinDim=0;
-    std::vector<int> vDim;
+    std::cout << "\t\t-> get the minimum iDimension: ";
+    int MiniDim=0;
+    std::vector<int> viDim;
     for(const auto vvSpec: this->VvvSpectr) 
-        vDim.emplace_back(vvSpec[0].size()); // assuming dim(X)==dim(Y)
+        viDim.emplace_back(vvSpec[0].size()); // assuming iDim(X)==iDim(Y)
         
-        MinDim=*std::min_element(vDim.begin(), vDim.end());
-    std::cout << MinDim << " .\n";
+        MiniDim=*std::min_element(viDim.begin(), viDim.end());
+    std::cout << MiniDim << " .\n";
     
     int iCount=0;
     for(auto &vvSpec: this->VvvSpectr) {
-        std::cout << "\t\t-> resizing spectrum "<< iCount <<": "<< vvSpec[0].size() << " -> ";
+        std::cout << "\t\t-> resizing spectrum "<< iCount <<": "
+                  << vvSpec[0].size() << " -> ";
         std::vector<_T> X, Y, SNR;
         
-        for(int i=0; i<MinDim; i++) {
+        for(int i=0; i<MiniDim; i++) {
             _T x=vvSpec[0][i], y=vvSpec[1][i];
             if (x>=min && x<=max) {
                 X.emplace_back(x);
@@ -546,9 +548,11 @@ void _op<_T>::remove_zero() {
         else                VVSpectr=VV(2);
         
         if (this->bHaveSNR)
-            std::cout << "\t\t-> size before: (" << vvSpectr[0].size() << ", " << vvSpectr[1].size() << ", " << vvSpectr[2].size() << ").\n"; 
+            std::cout << "\t\t-> size before: (" << vvSpectr[0].size() << ", " 
+                      << vvSpectr[1].size() << ", " << vvSpectr[2].size() << ").\n"; 
         else
-            std::cout << "\t\t-> size before: (" << vvSpectr[0].size() << ", " << vvSpectr[1].size() << ").\n"; 
+            std::cout << "\t\t-> size before: (" << vvSpectr[0].size() << ", " 
+                      << vvSpectr[1].size() << ").\n"; 
         
         for(int i=0; i<vvSpectr[1].size(); i++) {
             _T x=vvSpectr[0][i], y=vvSpectr[1][i];
@@ -571,7 +575,8 @@ void _op<_T>::remove_zero() {
         
         vvSpectr=vvNewSpectr;
         
-        std::cout << "\t\t-> size after: (" << vvSpectr[0].size() << ", " << vvSpectr[1].size() << ").\n";  
+        std::cout << "\t\t-> size after: (" << vvSpectr[0].size() 
+                  << ", " << vvSpectr[1].size() << ").\n";  
         
         iCount++;
     }
@@ -592,14 +597,17 @@ bool _op<_T>::rebuild_wlStep() {
         _T Step=(max-min)/vvSpectr[1].size();
         Step=ceil(10000*Step)/10000; // Check this !
         
-        std::cout << "\t\t-> rebuilding with new step for spectrum "<< iCount << ": " <<  Step << " for [" << max << ", " << min << "] ...";
+        std::cout << "\t\t-> rebuilding with new step for spectrum "
+                  << iCount << ": " <<  Step << " for [" << max << ", " 
+                  << min << "] ...";
         
         for(_T f=min;f<max;f+=Step) X.push_back(f); // Check this !
         vvSpectr[0]=std::valarray<_T>(X.data(), X.size());
         
         std::cout << " done.\n";
         
-        std::cout << "\t\t-> size is: (" << vvSpectr[0].size() << ", " << vvSpectr[0].size() << ").\n";
+        std::cout << "\t\t-> size is: (" << vvSpectr[0].size() 
+                  << ", " << vvSpectr[0].size() << ").\n";
         
         iCount++;
     }
@@ -614,40 +622,44 @@ bool _op<_T>::filter_SG(int n) {
     if (n>this->VvvSpectr.size() || n<0)
         return false;
     
-    std::cout << "- filter_SG(): filtering spectrum " << n << " with Savitzky-Golay algorithm.\n";
+    std::cout << "- filter_SG(): filtering spectrum " << n 
+              << " with Savitzky-Golay algorithm.\n";
     
-    int Dim=this->VvvSpectr[n][0].size();
-    int window=500;
-    int poly_deg=12;
+    int iDim=this->VvvSpectr[n][0].size();
+    int iWindow=500;
+    int iPolyDeg=12;
     
-    std::cout << "\t\t-> set polynomial degree: " << poly_deg << " and window size: " << window << " values or " << (abs(VvvSpectr[n][0][1]-VvvSpectr[n][0][0])*window) << " \u212B.\n";
+    std::cout << "\t\t-> set polynomial degree: " << iPolyDeg 
+              << " and window size: " << iWindow << " values or " 
+              << (abs(VvvSpectr[n][0][1]-VvvSpectr[n][0][0])*iWindow) 
+              << " \u212B.\n";
     
     std::vector<_T> vRes;
     
     std::cout << "\t\t-> computing...";
-    for(unsigned int i=0;i<(window-1)/2;++i) 
+    for(unsigned int i=0;i<(iWindow-1)/2;++i) 
         vRes.push_back(VvvSpectr[n][1][i]);
     
-    for(unsigned int i=(window-1)/2;i<Dim-(window-1)/2;i++) {
+    for(unsigned int i=(iWindow-1)/2;i<iDim-(iWindow-1)/2;i++) {
         // Calcul des coeffs à la volée en cas de changement de pas
-        std::vector<_T> Coeff=this->SG_conv(VvvSpectr[n][0],i-(window-1)/2,i+window-(window-1)/2, poly_deg);
+        std::vector<_T> Coeff=this->SG_conv(VvvSpectr[n][0],
+                                            i-(iWindow-1)/2,
+                                            i+iWindow-(iWindow-1)/2, 
+                                            iPolyDeg);
         _T mid=0;
-        for(unsigned int j=0;j<window;j++) 
-            mid+=Coeff[j]*VvvSpectr[n][1][i+j-(window-1)/2];
+        for(unsigned int j=0;j<iWindow;j++) 
+            mid+=Coeff[j]*VvvSpectr[n][1][i+j-(iWindow-1)/2];
         vRes.push_back(mid);
     }
     
-    for(unsigned int i=vRes.size();i<Dim;i++) 
+    for(unsigned int i=vRes.size();i<iDim;i++) 
         vRes.push_back(VvvSpectr[n][1][i]);
     
     for(int i=0; i<vRes.size(); i++)
         if (vRes[i]!=0) // bofbof voir precision
             VvvSpectr[n][1][i]/=vRes[i];
-        
-        VvvSpectr[n][1]+=1/200;
     
     std::cout << " done.\n";
-    
     return true;
 }
 
@@ -664,7 +676,6 @@ bool _op<_T>::filter_SG() {
 
 template<typename _T> 
 void _op<_T>::compute_wmean() {
-    
     std::cout << "- compute_wmean(): computing weighted mean.\n";
     
     int iNbSpec=this->VvvSpectr.size();
@@ -695,13 +706,11 @@ void _op<_T>::compute_wmean() {
     std::cout << " done.\n";
     
     std::cout << "\t\t-> <SNR>=" << SNR_t/iRow/iNbSpec << ".\n";
-    std::cout << "\t\t-> Size of the result: (" << vvWMean[0].size() << ", " << vvWMean[1].size() << ").\n";
+    std::cout << "\t\t-> Size of the result: (" << vvWMean[0].size() 
+              << ", " << vvWMean[1].size() << ").\n";
     
     std::cout << "\t\t-> compute_wmean(): all done.\n\n";
 }
-
-
-
 
 template<typename _T> 
 bool _op<_T>::write(_io<_T>& ioInterface) {
@@ -722,7 +731,6 @@ bool _op<_T>::write_mean(std::string sFilename) const {
     for(int i=0; i< this->vvWMean[0].size(); i++)
         fFlux << this->vvWMean[0][i] << " " << this->vvWMean[1][i] << "\n";
     
-    
     fFlux.close();
     std::cout << "\t\t-> done.\n\n";
     
@@ -731,40 +739,41 @@ bool _op<_T>::write_mean(std::string sFilename) const {
 
 
 template<typename _T> 
-std::vector<_T> _op<_T>::SG_conv(std::valarray<_T> &X, int i1, int i2, int PolyDeg) const {
-    std::vector<_T> res;
-    int trim_dim=abs(i1-i2);
+std::vector<_T> _op<_T>::SG_conv(std::valarray<_T> &vX, 
+                                 int i1, int i2, 
+                                 int iPolyDeg) const {
+    std::vector<_T> vRes;
+    int TrimiDim=abs(i1-i2);
     
-    std::valarray<int> X_CR(trim_dim);
-    std::valarray<_T> X_tmp(trim_dim);
+    std::valarray<int> vX_CR(TrimiDim);
+    std::valarray<_T> vX_tmp(TrimiDim);
     
-    Eigen::MatrixXd Jac(trim_dim,PolyDeg+1);
-    Eigen::MatrixXd Conv(trim_dim,PolyDeg+1);
+    Eigen::MatrixXd Jac(TrimiDim,iPolyDeg+1);
+    Eigen::MatrixXd Conv(TrimiDim,iPolyDeg+1);
     
-    X_tmp=X[std::slice(i1,trim_dim,1)];
+    vX_tmp=vX[std::slice(i1,TrimiDim,1)];
     
-    _T mean=std::accumulate(std::begin(X_tmp), std::end(X_tmp), 0.0)/X_tmp.size();
+    _T mean=std::accumulate(std::begin(vX_tmp), 
+                            std::end(vX_tmp), 0.0)/vX_tmp.size();
     
     // Centrage et reduisage de l'abscisse: -2 -1 0 1 2
-    _T m_step=this->mean_step(X_tmp);
-    for(int i=0;i<trim_dim;i++) 
-        X_CR[i]=round((X_tmp[i]-mean)/m_step);
+    _T mStep=this->mean_step(vX_tmp);
+    for(int i=0;i<TrimiDim;i++) 
+        vX_CR[i]=round((vX_tmp[i]-mean)/mStep);
     
     // Ecriture du Jacobien discret (Vandermonde)
-    for(int i=0;i<trim_dim;i++) 
-        for(int j=0;j<PolyDeg+1;j++)  
-            Jac(i,j)=static_cast<double>(pow(X_CR[i],j));
+    for(int i=0;i<TrimiDim;i++) 
+        for(int j=0;j<iPolyDeg+1;j++)  
+            Jac(i,j)=static_cast<double>(pow(vX_CR[i],j));
         
         // Calcul des coeffs: (tJ.J)^-1 *tJ
         Conv=(Jac.transpose()*Jac).inverse()*Jac.transpose();
     
-    for(int i=0;i<trim_dim;i++) 
-        res.emplace_back(Conv(0,i));
+    for(int i=0;i<TrimiDim;i++) 
+        vRes.emplace_back(Conv(0,i));
     
-    return res;
+    return vRes;
 }
-
-
 
 template <typename _T>
 _T _op<_T>::mean_step(const std::valarray<_T> &vArray) const {

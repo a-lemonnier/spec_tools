@@ -43,8 +43,8 @@ namespace fs = boost::filesystem;
 #endif
 
 #if __has_include(<libnotify/notify.h>)
-#include <libnotify/notify.h>
-#define LNOTIFY
+#include <libnotify/notify.h> 
+#define LNOTIFY  /**< check libnotify library availability. */
 #endif
 
 #define PRECISION 10

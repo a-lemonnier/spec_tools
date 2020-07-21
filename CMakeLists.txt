@@ -77,9 +77,9 @@ find_package( Boost 1.40 COMPONENTS program_options
 
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
-find_package(PkgConfig REQUIRED)
-pkg_search_module(GLIB REQUIRED glib-2.0)
-pkg_search_module(GTK3 REQUIRED)
+find_package(PkgConfig QUIET)
+pkg_search_module(GLIB QUIET glib-2.0)
+pkg_search_module(GTK3 QUIET)
 
 include_directories(./src ./include ${Boost_INCLUDE_DIRS} ${GLIB_INCLUDE_DIRS} ${GTK3_INCLUDE_DIRS} ./test)
 link_directories(${GLIB_LIBRARY_DIRS})
