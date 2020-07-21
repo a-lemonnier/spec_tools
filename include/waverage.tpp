@@ -410,7 +410,7 @@ void _io<_T>::set_data(Vvv& VvvSpectr) {
     int iCount=0;
     for(auto const vvSpectr: VvvSpectr) {
         bool nHasSNR=vvSpectr.size()==3;
-        if (nHasSNR) std::cout << "\t\t-> copy spectrum " << iCount << "(SNR)... ";
+        if (nHasSNR) std::cout << "\t\t-> copy spectrum " << iCount << " (SNR)... ";
         else         std::cout << "\t\t-> copy spectrum " << iCount << "... ";
         int iDim=vvSpectr[0].size();
         
@@ -622,7 +622,7 @@ bool _op<_T>::filter_SG(int n) {
         return false;
 
     int iDim=this->VvvSpectr[n][0].size();
-    int iWindow=1000;
+    int iWindow=500;
     int iPolyDeg=12;
     
     std::cout << "\n- filter_SG(): n=" << n << " - PolyDeg="<< iPolyDeg << "- \u03C3=" << (abs(VvvSpectr[n][0][1]-VvvSpectr[n][0][0])*iWindow) <<  "\u212B.\n";
@@ -729,6 +729,9 @@ void _op<_T>::compute_wmean() {
     std::cout << " done.\n";
     
     std::cout << "\t\t-> <SNR>=" << pow(SNR_t/iRow/iNbSpec,2) << ".\n";
+    
+    std::cout << "\t\t-> new spectrum has SNR=" << this->der_snr(vvWMean[1]) << " (DER_SNR).\n";
+    
     std::cout << "\t\t-> Size of the result: (" << vvWMean[0].size() 
               << ", " << vvWMean[1].size() << ").\n";
     
@@ -854,4 +857,71 @@ std::tuple<double long, double long>  _op<_T>::get_stat() {
         std::cerr << "/!\\ cannot open /proc/stat.\n\n";
     
     return {-1,1};
+}
+
+template <typename _T>
+_T _op<_T>::der_snr(const std::valarray<_T> &vFlux) const {
+    if (vFlux.size()<1) {
+        std::cerr << "/!\\ error flux is empty.\n";
+        return -1;
+    }
+    
+    if (vFlux.size()>4) {
+        std::vector<_T> vNo0;
+        vNo0.assign(std::begin(vFlux), std::end(vFlux));
+        
+        vNo0.erase(std::remove_if(vNo0.begin(), vNo0.end(), 
+                                   [&](_T fF) { return fF<0; }),vNo0.end());
+        
+        int iSize=vNo0.size();
+        
+        std::vector<_T> vSum; vSum.resize(iSize);
+        std::vector<_T> vSum0=std::vector<_T>(vNo0.begin()+2, vNo0.end()-2);
+        std::vector<_T> vSum1=std::vector<_T>(vNo0.begin()  , vNo0.end()-4);
+        std::vector<_T> vSum2=std::vector<_T>(vNo0.begin()+4, vNo0.end()  );
+        
+        // Sum1 = Sum1 + Sum2 
+        std::transform(vSum1.begin(), vSum1.end(), 
+                       vSum2.begin(), vSum1.begin(), 
+                       std::plus<_T>());
+        
+        // Sum0 = 2*Sum0 
+        std::transform(vSum0.begin(), vSum0.end(), 
+                       vSum0.begin(),
+                       std::bind(std::multiplies<_T>(), std::placeholders::_1, 2.0));
+        
+        // Sum0 = Sum0 - Sum1
+        std::transform(vSum0.begin(), vSum0.end(), 
+                       vSum1.begin(), vSum0.begin(), 
+                       std::minus<_T>());
+        
+        // Sum0 = abs(Sum0)
+        std::for_each(vSum0.begin(), vSum0.end(), 
+                      [](_T &fF) { fF=abs(fF);});
+        
+        _T fNoise=1.482602/sqrt(6)*median(std::valarray<_T>(vSum0.data(), vSum0.size()));
+        _T fSignal=median(vFlux);
+        
+        return fSignal/fNoise;
+    }
+    return -1;
+}
+
+
+template <typename _T>
+_T _op<_T>::median(const std::valarray<_T> &vFlux) const {    
+    int iSize=vFlux.size();
+    
+    if (iSize==0) {
+        std::cerr << "/!\\ error flux is empty.\n";
+        return -1;
+    }
+    
+    std::valarray<_T> vVec(vFlux);
+    std::sort(std::begin(vVec), std::end(vVec));
+    
+    if (iSize%2==0)     
+        return (vVec[iSize/2-1]+vVec[iSize/2])/2;
+    else
+        return vVec[iSize/2];
 }

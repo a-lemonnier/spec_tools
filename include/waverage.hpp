@@ -187,6 +187,8 @@ private:
     
     inline std::vector<_T> SG_conv(std::valarray<_T> &X,int i1, int i2, int PolyDeg) const; /**< Savitzky-Golay coefficients. */
     inline _T mean_step(const std::valarray<_T> &vArray) const; /**< mean step for a given support. */
+    _T der_snr(const std::valarray<_T> &vFlux) const;
+    _T median(const std::valarray<_T> &vFlux) const;
     
     /**
     * \fn double long CPU_utilization()
