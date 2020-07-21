@@ -22,7 +22,13 @@ elseif (COMPILER STREQUAL "intel") #does not work atm
   message("CXX: icpc")
 endif()
 
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
 
+set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 add_executable(threshold src/threshold.cpp include/msg.cpp include/log.cpp)
 add_executable(findncopy src/findncopy.cpp include/msg.cpp include/log.cpp)
