@@ -30,6 +30,7 @@ steps:
     - ./shift  -v 1.0e5 -i rand_spectra
     - ./marker -v -i rand_spectra/0/0.dat -i rand_spectra/0/1.dat -l 0.dat -l 1.dat  -t Spectra -l "Spectrum 1" -l "Spectrum 2" --elemlist data/line.list --shift 0.1 
     - ./elemlist -e "Fe II" -w 5001.59 -B
+    - ./waverage
 
 
 - name: Unit tests
