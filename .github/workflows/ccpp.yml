@@ -30,7 +30,7 @@ jobs:
     - name: build
       run: cmake --build build
     - name: test
-      run: cd build && ctest
+      run: cd build && ctest -VV
     - name: doxygen
       run: cd doc; doxygen Doxyfile; cd latex; make;
     - name: git conf
