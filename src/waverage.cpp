@@ -42,7 +42,10 @@ namespace fs = boost::filesystem;
 
 int main(int argc, char **argv) {
 
-    
+#ifdef HAS_BOOST_TIMER    
+    boost::timer::cpu_timer btTimer;
+#endif
+        
     hello();
     
     _io<> io;
@@ -74,6 +77,9 @@ int main(int argc, char **argv) {
     op.write(io);
     op.write_mean("wmean.dat");
     
+#ifdef HAS_BOOST_TIMER
+    std::cout << "*" << btTimer.format()<< "\n";
+#endif
     
     return EXIT_SUCCESS;
 }

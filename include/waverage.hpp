@@ -16,6 +16,10 @@
 #include <valarray>
 #include <tuple>
 
+#include <thread>
+#include <future>
+#include <chrono>
+
 #include <boost/algorithm/string/split.hpp>       
 #include <boost/algorithm/string.hpp>      
 #include <boost/any.hpp>
@@ -25,6 +29,16 @@
 #include <CCfits/PHDU.h>
 
 #include <Eigen/Dense>
+
+#if __has_include (<boost/timer/timer.hpp>)
+#include <boost/timer/timer.hpp> 
+#define HAS_BOOST_TIMER /**< boost::timer availability */
+#endif
+
+#if __has_include (<sys/syscall.h>)
+#include <sys/syscall.h>
+#define HAS_SYSCALL /**< linux syscall availability */
+#endif
 
 #if __has_include (<filesystem>)
 #include <filesystem>
@@ -147,7 +161,10 @@ public:
     void remove_zero(); /**< trim spectra where flux is 0 (assuming zeros are at the beginning or the end). */
     
     inline bool filter_SG(int n); /**< Savitzky-Golay on spectrum n.*/
+    inline void filter_SG_th(int n); /**< Savitzky-Golay on a given spectrum (for threads). */
     bool filter_SG(); /**< Savitzky-Golay on all spectra n.*/
+    
+    void test();
     
     const vv compute_mean() const; /**< compute arithmetic mean*/
     void compute_wmean(); /**< compute weighted arithmetic mean */
@@ -170,6 +187,13 @@ private:
     
     inline std::vector<_T> SG_conv(std::valarray<_T> &X,int i1, int i2, int PolyDeg) const; /**< Savitzky-Golay coefficients. */
     inline _T mean_step(const std::valarray<_T> &vArray) const; /**< mean step for a given support. */
+    
+    /**
+    * \fn double long CPU_utilization()
+    * \brief Get the CPU usage (%)
+    */
+    double long CPU_utilization();
+    std::tuple<double long, double long> get_stat();
 };
 
 

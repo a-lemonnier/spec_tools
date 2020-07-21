@@ -21,6 +21,7 @@ TODO:
  - waverage: optimize _op::SG_conv()
  - waverage: user should provide the step ?
  - der_snr: segfault when blank rows are added
+ - *test_marker*.cpp: error: in "SetXmin_float": check rMarker.set_xmin(static_cast<real>(0.)) has failed
  - ncurses elemlist
  - **msg**.h: Fix _msg::_msg(const _msg&)
  - boost::copy recursive directory

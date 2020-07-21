@@ -435,14 +435,14 @@ void _io<_T>::set_data(Vvv& VvvSpectr) {
 
 template<typename _T>
 void _io<_T>::notify(std::string sTitle, std::string sMsg, int iTime) {
-
-#ifdef LNOTIFY
+    
+    #ifdef LNOTIFY
     notify_init("waverage");
     NotifyNotification* n = notify_notification_new (sTitle.c_str(), 
-                                 sMsg.c_str(), 0);
+                                                     sMsg.c_str(), 0);
     notify_notification_set_timeout(n, iTime*1000); 
     notify_notification_show(n, 0);    
-#endif
+    #endif
 }
 
 // --------------------------
@@ -453,7 +453,7 @@ void _io<_T>::notify(std::string sTitle, std::string sMsg, int iTime) {
 template<typename _T> _op<_T>::_op() { }
 
 template<typename _T> _op<_T>::_op(Vvv& VvvSpectr): VvvSpectr(VvvSpectr), 
-                                                    bHaveSNR(true) { 
+bHaveSNR(true) { 
     std::cout << "- _op(): Initialisation with spectra assuming structure:\n";
     for(const auto vvSpectr: VvvSpectr) {
         this->bHaveSNR&=vvSpectr.size()==3;
@@ -509,7 +509,7 @@ bool _op<_T>::resize_spectr() {
     int iCount=0;
     for(auto &vvSpec: this->VvvSpectr) {
         std::cout << "\t\t-> resizing spectrum "<< iCount <<": "
-                  << vvSpec[0].size() << " -> ";
+        << vvSpec[0].size() << " -> ";
         std::vector<_T> X, Y, SNR;
         
         for(int i=0; i<MiniDim; i++) {
@@ -549,10 +549,10 @@ void _op<_T>::remove_zero() {
         
         if (this->bHaveSNR)
             std::cout << "\t\t-> size before: (" << vvSpectr[0].size() << ", " 
-                      << vvSpectr[1].size() << ", " << vvSpectr[2].size() << ").\n"; 
+            << vvSpectr[1].size() << ", " << vvSpectr[2].size() << ").\n"; 
         else
             std::cout << "\t\t-> size before: (" << vvSpectr[0].size() << ", " 
-                      << vvSpectr[1].size() << ").\n"; 
+            << vvSpectr[1].size() << ").\n"; 
         
         for(int i=0; i<vvSpectr[1].size(); i++) {
             _T x=vvSpectr[0][i], y=vvSpectr[1][i];
@@ -576,7 +576,7 @@ void _op<_T>::remove_zero() {
         vvSpectr=vvNewSpectr;
         
         std::cout << "\t\t-> size after: (" << vvSpectr[0].size() 
-                  << ", " << vvSpectr[1].size() << ").\n";  
+        << ", " << vvSpectr[1].size() << ").\n";  
         
         iCount++;
     }
@@ -598,8 +598,8 @@ bool _op<_T>::rebuild_wlStep() {
         Step=ceil(10000*Step)/10000; // Check this !
         
         std::cout << "\t\t-> rebuilding with new step for spectrum "
-                  << iCount << ": " <<  Step << " for [" << max << ", " 
-                  << min << "] ...";
+        << iCount << ": " <<  Step << " for [" << min << ", " 
+        << max << "] ...";
         
         for(_T f=min;f<max;f+=Step) X.push_back(f); // Check this !
         vvSpectr[0]=std::valarray<_T>(X.data(), X.size());
@@ -607,7 +607,7 @@ bool _op<_T>::rebuild_wlStep() {
         std::cout << " done.\n";
         
         std::cout << "\t\t-> size is: (" << vvSpectr[0].size() 
-                  << ", " << vvSpectr[0].size() << ").\n";
+        << ", " << vvSpectr[0].size() << ").\n";
         
         iCount++;
     }
@@ -618,25 +618,18 @@ bool _op<_T>::rebuild_wlStep() {
 
 template<typename _T> 
 bool _op<_T>::filter_SG(int n) {
-    
     if (n>this->VvvSpectr.size() || n<0)
         return false;
-    
-    std::cout << "- filter_SG(): filtering spectrum " << n 
-              << " with Savitzky-Golay algorithm.\n";
-    
+
     int iDim=this->VvvSpectr[n][0].size();
-    int iWindow=500;
+    int iWindow=1000;
     int iPolyDeg=12;
     
-    std::cout << "\t\t-> set polynomial degree: " << iPolyDeg 
-              << " and window size: " << iWindow << " values or " 
-              << (abs(VvvSpectr[n][0][1]-VvvSpectr[n][0][0])*iWindow) 
-              << " \u212B.\n";
+    std::cout << "\n- filter_SG(): n=" << n << " - PolyDeg="<< iPolyDeg << "- \u03C3=" << (abs(VvvSpectr[n][0][1]-VvvSpectr[n][0][0])*iWindow) <<  "\u212B.\n";
     
     std::vector<_T> vRes;
     
-    std::cout << "\t\t-> computing...";
+//     std::cout << "\t\t-> computing...";
     for(unsigned int i=0;i<(iWindow-1)/2;++i) 
         vRes.push_back(VvvSpectr[n][1][i]);
     
@@ -658,18 +651,48 @@ bool _op<_T>::filter_SG(int n) {
     for(int i=0; i<vRes.size(); i++)
         if (vRes[i]!=0) // bofbof voir precision
             VvvSpectr[n][1][i]/=vRes[i];
-    
-    std::cout << " done.\n";
+        
+//     std::cout << " done.\n";
     return true;
 }
 
 template<typename _T> 
+void _op<_T>::filter_SG_th(int n) {
+        this->filter_SG(n);
+}
+
+
+template<typename _T> 
 bool _op<_T>::filter_SG() {
+    
+    int max_thread=std::thread::hardware_concurrency();
     bool bStatus=true;
-    std::cout << "- filter_SG(): filtering all spectra.\n";
-    for(int i=0; i<this->VvvSpectr.size();i++)
-        bStatus&=this->filter_SG(i);
-    std::cout << "- filter_SG(): all done.\n\n";
+    
+#if defined (__linux__)
+    std::cout << "- CPU load: "<< static_cast<int>(CPU_utilization()) << "%\n";
+    if (CPU_utilization()>50) {
+        max_thread=1;
+        std::cout << "\t\t-> reducing max thread.\n";
+    }
+#endif
+    
+    if (max_thread>1) {
+        std::launch flag=std::launch::async | std::launch::deferred;
+        std::vector<std::future<void> > thread;
+        
+        for(int i=0; i<this->VvvSpectr.size();i++)
+            thread.emplace_back(std::async(flag, &_op<_T>::filter_SG_th, this, i));   // solve the non-static error
+        std::for_each(thread.begin(), thread.end(), [](std::future<void> &th) { th.get(); });
+        
+        std::cout << "- filter_SG(): all done.\n\n";
+    }
+    else {
+        std::cout << "- filter_SG(): filtering all spectra.\n";
+        for(int i=0; i<this->VvvSpectr.size();i++)
+            bStatus&=this->filter_SG(i);
+        std::cout << "- filter_SG(): all done.\n\n";
+    }
+    
     return bStatus;
 }
 
@@ -783,4 +806,52 @@ _T _op<_T>::mean_step(const std::valarray<_T> &vArray) const {
     return std::accumulate(shift.begin(), shift.end(), 0.0)/shift.size();
 }
 
+template <typename _T>
+double long _op<_T>::CPU_utilization() {       
+    auto [fTime_A, fIdle_A]=get_stat();
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    auto [fTime_B, fIdle_B]=get_stat();
+    return 100.*(1.-((fIdle_B-fIdle_A)/(fTime_B-fTime_A)));
+}
 
+template <typename _T>
+std::tuple<double long, double long>  _op<_T>::get_stat() {
+    std::fstream sfCpu("/proc/stat", std::ios::in);
+    
+    if (sfCpu) {
+
+        std::string sLine;
+        std::getline(sfCpu, sLine);
+        
+        // erase "cpu"
+        sLine.erase(sLine.begin(), sLine.begin()+sLine.find_first_of("0123456789")); 
+        
+        // locate " " and push position into vec
+        std::vector<int> vPos;
+        std::vector<double long> vCol;
+        
+        vPos.push_back(0); 
+        
+        int iCount=0;
+        for(auto cC: sLine) {
+            if (cC==' ')
+                vPos.push_back(iCount);
+            iCount++;  
+        }
+        
+        // slice
+        for(int i=0; i<4; i++) {
+            std::string sVal=sLine.substr(vPos[i], vPos[i+1]-vPos[i]);
+            sVal.erase(std::remove(sVal.begin(), sVal.end(), ' '), sVal.end()); 
+            vCol.push_back(std::stod(sVal));
+        }
+        
+        sfCpu.close();
+                
+        return {static_cast<double long>(vCol[0]+vCol[1]+vCol[2]+vCol[3]), static_cast<double long>(vCol[3])};
+    }
+    else 
+        std::cerr << "/!\\ cannot open /proc/stat.\n\n";
+    
+    return {-1,1};
+}

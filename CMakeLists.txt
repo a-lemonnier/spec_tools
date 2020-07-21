@@ -28,7 +28,7 @@ endif()
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wno-unused-variable -Wno-sign-compare")
 
 add_executable(threshold src/threshold.cpp include/msg.cpp include/log.cpp)
 add_executable(findncopy src/findncopy.cpp include/msg.cpp include/log.cpp)
