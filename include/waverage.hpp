@@ -42,6 +42,11 @@ namespace fs = boost::filesystem;
 #error "No filesystem header found"
 #endif
 
+#if __has_include(<libnotify/notify.h>)
+#include <libnotify/notify.h>
+#define LNOTIFY
+#endif
+
 #define PRECISION 10
 
 
@@ -101,6 +106,8 @@ public:
     const vv get_valarray(); /**< convert vector to an valarray */
     const Vvv get_valarrays();
     
+    static void notify(std::string sTitle, std::string sMsg, int iTime); /**< send desktop notification using libnotify.*/
+    
 private:
     std::string sFnameIn, sFnameOut;
     std::vector<std::string> vsFileList;
@@ -152,7 +159,7 @@ public:
     
     bool write(_io<_T>& ioInterface); /**< write the data using a _io class. */
     bool write_mean(std::string sFilename) const; /**< write only the w mean. */
-    
+        
 private:
     Vvv VvvSpectr;
     vv vvWMean;

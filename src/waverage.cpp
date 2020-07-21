@@ -20,6 +20,7 @@
 #include <valarray>
 #include <tuple>
 
+
 #if __has_include (<filesystem>)
 #include <filesystem>
 #define FS_STD /**< std::filesystem availability (C++17) */
@@ -41,28 +42,35 @@ namespace fs = boost::filesystem;
 
 int main(int argc, char **argv) {
 
+    
     hello();
     
     _io<> io;
 
+    _io<>::notify("reading fits...", "", 3);
     io.read_fits_dir("./data/GIRAFFE_fits",".fits");
     io.set_WaveScale(10.);
     
-    std::vector< std::valarray< std::valarray< double > > > Spectra(io.get_valarrays());
     
-    
+    std::vector< std::valarray< std::valarray< double > > > Spectra(io.get_valarrays());    
     _op<> op(Spectra);
- 
+    
+    _io<>::notify("removing zeros...", "", 3);
     op.remove_zero();
+    
+    _io<>::notify("resizing spectra...", "", 3);
     op.resize_spectr();
+    
+    _io<>::notify("rebuilding supports...", "", 3);
     op.rebuild_wlStep();
 
+    _io<>::notify("filtering spectra...", "", 3);
     op.filter_SG();
     
-
-    
+    _io<>::notify("computing weighted mean...", "", 3);
     op.compute_wmean();
     
+    _io<>::notify("writing data...", "", 3);
     op.write(io);
     op.write_mean("wmean.dat");
     

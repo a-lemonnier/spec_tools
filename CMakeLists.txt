@@ -22,7 +22,7 @@ elseif (COMPILER STREQUAL "intel") #does not work atm
   message("CXX: icpc")
 endif()
 
-include_directories(./src ./include ${Boost_INCLUDE_DIRS} ./test)
+
 
 add_executable(threshold src/threshold.cpp include/msg.cpp include/log.cpp)
 add_executable(findncopy src/findncopy.cpp include/msg.cpp include/log.cpp)
@@ -77,6 +77,14 @@ find_package( Boost 1.40 COMPONENTS program_options
 
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
+find_package(PkgConfig REQUIRED)
+
+pkg_search_module(GLIB REQUIRED glib-2.0)
+pkg_search_module(GTK3 REQUIRED)
+
+include_directories(./src ./include ${Boost_INCLUDE_DIRS} ${GLIB_INCLUDE_DIRS} ${GTK3_INCLUDE_DIRS} ./test)
+link_directories(${GLIB_LIBRARY_DIRS})
+
 target_link_libraries(msg LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 target_link_libraries(log LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 
@@ -89,7 +97,7 @@ target_link_libraries(genrandspec LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstd
 target_link_libraries(marker LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 target_link_libraries(elemlist LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs)
 
-target_link_libraries(waverage LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs -lCCfits -lcfitsio Eigen3::Eigen)
+target_link_libraries(waverage LINK_PUBLIC ${Boost_LIBRARIES} -lpthread -lstdc++fs -lCCfits -lcfitsio Eigen3::Eigen -lnotify )
 
 install(TARGETS threshold RUNTIME DESTINATION bin)
 install(TARGETS findncopy RUNTIME DESTINATION bin)

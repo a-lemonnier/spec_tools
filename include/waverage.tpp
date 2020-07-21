@@ -432,6 +432,22 @@ void _io<_T>::set_data(Vvv& VvvSpectr) {
     std::cout << "\t\t-> set_data(): all done.\n\n";
 }
 
+
+
+template<typename _T>
+void _io<_T>::notify(std::string sTitle, std::string sMsg, int iTime) {
+
+#ifdef LNOTIFY
+    notify_init("waverage");
+    NotifyNotification* n = notify_notification_new (sTitle.c_str(), 
+                                 sMsg.c_str(), 0);
+    notify_notification_set_timeout(n, iTime*1000); 
+    notify_notification_show(n, 0);    
+#endif
+}
+
+
+
 // --------------------------
 // _OP                      -
 // --------------------------
@@ -669,7 +685,7 @@ void _op<_T>::compute_wmean() {
         _T SNR=0;
         _T wl=0;
         for(int k=0; k<iNbSpec; k++) {
-            _T SNR_tmp=this->VvvSpectr[k][2][i];
+            _T SNR_tmp=sqrt(this->VvvSpectr[k][2][i]);
             wl+=this->VvvSpectr[k][0][i];
             P+=this->VvvSpectr[k][1][i]*SNR_tmp;
             SNR+=SNR_tmp;
