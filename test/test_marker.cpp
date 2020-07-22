@@ -232,6 +232,7 @@ BOOST_AUTO_TEST_CASE(SetXmin_float) {
     typedef float real;
     _marker<real> rMarker;
     rMarker.set_verbose(false);
+    rMarker.set_xmax(static_cast<real>(1));
     BOOST_CHECK(rMarker.set_xmin(static_cast<real>(0)));
 }
 
@@ -239,6 +240,7 @@ BOOST_AUTO_TEST_CASE(SetXmin_double) {
     typedef double real;
     _marker<real> rMarker;
     rMarker.set_verbose(false);
+    rMarker.set_xmax(static_cast<real>(1));
     BOOST_CHECK(rMarker.set_xmin(static_cast<real>(0)));
 }
 
@@ -246,6 +248,7 @@ BOOST_AUTO_TEST_CASE(SetXmin_double_long) {
     typedef double long real;
     _marker<real> rMarker;
     rMarker.set_verbose(false);
+    rMarker.set_xmax(static_cast<real>(1));
     BOOST_CHECK(rMarker.set_xmin(static_cast<real>(0)));
 }
 
