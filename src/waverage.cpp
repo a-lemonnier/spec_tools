@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
     io.set_WaveScale(10.);
     
     
-    std::vector< std::valarray< std::valarray< double > > > Spectra(io.get_valarrays());    
+    std::vector< std::valarray< std::valarray< double long > > > Spectra(io.get_valarrays());    
     _op<> op(Spectra);
     
     _io<>::notify("removing zeros...", "", 3);

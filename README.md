@@ -16,6 +16,7 @@ List:
  - **waverage**.cpp: compute average of spectra from FITS weighted by the SNR or the exposition time
  
 TODO:
+ - waverage: peak detection for SG
  - waverage: optimize _op::remove_zero() 
  - waverage: optimize _op::resize_spectr()
  - waverage: optimize _op::SG_conv()

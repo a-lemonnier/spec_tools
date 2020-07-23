@@ -291,10 +291,10 @@ bool _io<_T>::read_fits_dir(std::string sDirectory, std::string sExtension) {
     for(const auto sFName: this->vsFileList) {
         std::vector<vec> vvSpecTmp;
         
-        std::valarray<_T> vWave;
-        std::valarray<_T> vFlux;
-        std::valarray<_T> vSNR;
-        std::valarray<_T> vExpTimeTmp;
+        std::valarray<double> vWave;
+        std::valarray<double> vFlux;
+        std::valarray<double> vSNR;
+        std::valarray<double> vExpTimeTmp;
         
         std::cout << "\t\t-> reading fits " << sFName << "...";
         
@@ -622,10 +622,12 @@ bool _op<_T>::filter_SG(int n) {
         return false;
 
     int iDim=this->VvvSpectr[n][0].size();
-    int iWindow=500;
-    int iPolyDeg=12;
+    int iWindow=750;
+    int iPolyDeg=17;
     
-    std::cout << "\n- filter_SG(): n=" << n << " - PolyDeg="<< iPolyDeg << "- \u03C3=" << (abs(VvvSpectr[n][0][1]-VvvSpectr[n][0][0])*iWindow) <<  "\u212B.\n";
+    this->mLock.lock();
+    std::cout << "- filter_SG(): n=" << n << " - PolyDeg="<< iPolyDeg << " - \u03C3=" << (abs(VvvSpectr[n][0][1]-VvvSpectr[n][0][0])*iWindow) <<  "\u212B.\n";
+    this->mLock.unlock();
     
     std::vector<_T> vRes;
     
@@ -652,7 +654,6 @@ bool _op<_T>::filter_SG(int n) {
         if (vRes[i]!=0) // bofbof voir precision
             VvvSpectr[n][1][i]/=vRes[i];
         
-//     std::cout << " done.\n";
     return true;
 }
 
@@ -790,7 +791,7 @@ std::vector<_T> _op<_T>::SG_conv(std::valarray<_T> &vX,
     // Ecriture du Jacobien discret (Vandermonde)
     for(int i=0;i<TrimiDim;i++) 
         for(int j=0;j<iPolyDeg+1;j++)  
-            Jac(i,j)=static_cast<double>(pow(vX_CR[i],j));
+            Jac(i,j)=static_cast<_T>(pow(vX_CR[i],j));
         
         // Calcul des coeffs: (tJ.J)^-1 *tJ
         Conv=(Jac.transpose()*Jac).inverse()*Jac.transpose();
@@ -831,7 +832,7 @@ std::tuple<double long, double long>  _op<_T>::get_stat() {
         
         // locate " " and push position into vec
         std::vector<int> vPos;
-        std::vector<double long> vCol;
+        std::vector<_T> vCol;
         
         vPos.push_back(0); 
         
@@ -851,7 +852,7 @@ std::tuple<double long, double long>  _op<_T>::get_stat() {
         
         sfCpu.close();
                 
-        return {static_cast<double long>(vCol[0]+vCol[1]+vCol[2]+vCol[3]), static_cast<double long>(vCol[3])};
+        return {static_cast<_T>(vCol[0]+vCol[1]+vCol[2]+vCol[3]), static_cast<_T>(vCol[3])};
     }
     else 
         std::cerr << "/!\\ cannot open /proc/stat.\n\n";

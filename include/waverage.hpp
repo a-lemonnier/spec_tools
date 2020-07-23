@@ -19,6 +19,7 @@
 #include <thread>
 #include <future>
 #include <chrono>
+#include <mutex>
 
 #include <boost/algorithm/string/split.hpp>       
 #include <boost/algorithm/string.hpp>      
@@ -70,7 +71,7 @@ void hello();
  * \class _io
  * \brief The purpose of this class is only to provide methods to read ascii or FITS spectrum, and to convert vector to valarray.
  */
-template<typename _T=double> // double ?
+template<typename _T=double long> // double ?
 class _io {
 public:
     
@@ -143,7 +144,7 @@ private:
  * \brief This class is a set of spectrum manipulation methods. It is work with std::valarray.
  * \TODO everything.
  */
-template<typename _T=double> 
+template<typename _T=double long> 
 class _op {
 public:
     typedef std::vector<std::valarray<std::valarray<_T> > > Vvv;
@@ -196,6 +197,8 @@ private:
     */
     double long CPU_utilization();
     std::tuple<double long, double long> get_stat();
+    
+    std::mutex mLock;
 };
 
 
