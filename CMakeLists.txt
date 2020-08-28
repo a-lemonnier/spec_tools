@@ -43,7 +43,6 @@ add_executable(waverage src/waverage.cpp include/waverage.hpp)
 add_library(msg include/msg.cpp include/msg.h include/log.h)
 add_library(log include/log.cpp include/log.h)
 
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set_property(TARGET threshold PROPERTY CXX_STANDARD 17)
 set_property(TARGET threshold PROPERTY CXX_STANDARD_REQUIRED ON)

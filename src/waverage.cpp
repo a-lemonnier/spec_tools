@@ -68,7 +68,9 @@ int main(int argc, char **argv) {
     op.rebuild_wlStep();
 
     _io<>::notify("filtering spectra...", "", 10);
-    op.filter_SG();
+//     op.filter_SG();
+    
+    op.remove_peaks(0);
     
     _io<>::notify("computing weighted mean...", "", 5);
     op.compute_wmean();

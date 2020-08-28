@@ -162,10 +162,10 @@ public:
     void remove_zero(); /**< trim spectra where flux is 0 (assuming zeros are at the beginning or the end). */
     
     inline bool filter_SG(int n); /**< Savitzky-Golay on spectrum n.*/
-    inline void filter_SG_th(int n); /**< Savitzky-Golay on a given spectrum (for threads). */
+    inline vv compute_SG2(vv &vvSpectr) const; /**< Savitzky-Golay 2nd order. */
     bool filter_SG(); /**< Savitzky-Golay on all spectra n.*/
     
-    void test();
+    inline void remove_peaks(int n);
     
     const vv compute_mean() const; /**< compute arithmetic mean*/
     void compute_wmean(); /**< compute weighted arithmetic mean */
@@ -186,7 +186,8 @@ private:
     
     bool bHaveSNR;
     
-    inline std::vector<_T> SG_conv(std::valarray<_T> &X,int i1, int i2, int PolyDeg) const; /**< Savitzky-Golay coefficients. */
+    inline void filter_SG_th(int n); /**< Savitzky-Golay on a given spectrum (for threads). */
+    inline std::vector<_T> SG_conv(std::valarray<_T> &X,int i1, int i2, int PolyDeg, int iOrder) const; /**< Savitzky-Golay coefficients. */
     inline _T mean_step(const std::valarray<_T> &vArray) const; /**< mean step for a given support. */
     _T der_snr(const std::valarray<_T> &vFlux) const;
     _T median(const std::valarray<_T> &vFlux) const;

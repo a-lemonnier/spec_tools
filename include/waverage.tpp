@@ -631,7 +631,6 @@ bool _op<_T>::filter_SG(int n) {
     
     std::vector<_T> vRes;
     
-//     std::cout << "\t\t-> computing...";
     for(unsigned int i=0;i<(iWindow-1)/2;++i) 
         vRes.push_back(VvvSpectr[n][1][i]);
     
@@ -640,7 +639,8 @@ bool _op<_T>::filter_SG(int n) {
         std::vector<_T> Coeff=this->SG_conv(VvvSpectr[n][0],
                                             i-(iWindow-1)/2,
                                             i+iWindow-(iWindow-1)/2, 
-                                            iPolyDeg);
+                                            iPolyDeg,
+                                            0);
         _T mid=0;
         for(unsigned int j=0;j<iWindow;j++) 
             mid+=Coeff[j]*VvvSpectr[n][1][i+j-(iWindow-1)/2];
@@ -695,6 +695,61 @@ bool _op<_T>::filter_SG() {
     }
     
     return bStatus;
+}
+
+template<typename _T> 
+void _op<_T>::remove_peaks(int n) {
+    std::cout << "- remove_peaks(): removing peak using SG 2nd order.\n\n";
+    
+    this->VvvSpectr[n]=this->compute_SG2(this->VvvSpectr[n]);
+ 
+    
+}
+
+template<typename _T> 
+std::valarray<std::valarray<_T> > _op<_T>::compute_SG2(std::valarray<std::valarray<_T> > &vvSpectr) const {
+    
+    int iDim=vvSpectr[1].size();
+    int iWindow=100;
+    int iPolyDeg=17;
+
+    std::valarray<std::valarray<_T> > vvRes(vvSpectr);
+    
+    
+    if (iDim>0) {
+        std::vector<_T> vRes;
+        
+        for(unsigned int i=0;i<(iWindow-1)/2;++i) 
+            vRes.push_back(vvSpectr[1][i]);
+        
+        for(unsigned int i=(iWindow-1)/2;i<iDim-(iWindow-1)/2;i++) {
+            // Calcul des coeffs à la volée en cas de changement de pas
+            std::vector<_T> Coeff=this->SG_conv(vvSpectr[0],
+                                                i-(iWindow-1)/2,
+                                                i+iWindow-(iWindow-1)/2, 
+                                                iPolyDeg,
+                                                0);
+            _T mid=0;
+            for(unsigned int j=0;j<iWindow;j++) 
+                mid+=Coeff[j]*vvSpectr[1][i+j-(iWindow-1)/2];
+            vRes.push_back(mid);
+        }
+        
+        for(unsigned int i=vRes.size();i<iDim;i++) 
+            vRes.push_back(vvSpectr[1][i]);
+  
+        for(auto &val: vRes)
+            if (abs(val)>1e6) val=0;
+        
+        vvRes[1]=std::valarray<_T>(vRes.data(), vRes.size());
+
+        
+        
+    }
+    else
+        std::cerr << "/!\\ compute_SG2(): empty valarray.\n\n";
+    
+    return vvRes;
 }
 
 
@@ -768,7 +823,8 @@ bool _op<_T>::write_mean(std::string sFilename) const {
 template<typename _T> 
 std::vector<_T> _op<_T>::SG_conv(std::valarray<_T> &vX, 
                                  int i1, int i2, 
-                                 int iPolyDeg) const {
+                                 int iPolyDeg,
+                                 int iOrder) const {
     std::vector<_T> vRes;
     int TrimiDim=abs(i1-i2);
     
@@ -797,7 +853,7 @@ std::vector<_T> _op<_T>::SG_conv(std::valarray<_T> &vX,
         Conv=(Jac.transpose()*Jac).inverse()*Jac.transpose();
     
     for(int i=0;i<TrimiDim;i++) 
-        vRes.emplace_back(Conv(0,i));
+        vRes.emplace_back(Conv(iOrder,i));
     
     return vRes;
 }
