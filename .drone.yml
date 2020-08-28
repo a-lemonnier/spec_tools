@@ -3,11 +3,11 @@ name: build-and-test-amd64
 
 platform:
   os: linux
-  arch: arm64
+  arch: amd64
 
 steps:
 - name: Build and run some stuff
-  image: ubuntu:19.10
+  image: ubuntu:20.04
   commands:
     - apt update -y
     - export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
